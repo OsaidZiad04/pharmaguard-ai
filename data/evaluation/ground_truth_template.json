@@ -1,0 +1,21 @@
+{
+  "case_id": "SYN-TEMPLATE",
+  "input_text": "Synthetic prescription text only.",
+  "expected_extracted_medications": [
+    {
+      "name": "example",
+      "strength": "example strength",
+      "directions": "example directions"
+    }
+  ],
+  "expected_missing_information": [
+    "age",
+    "pregnancy_status",
+    "allergies",
+    "current_medications"
+  ],
+  "expected_safety_alert_codes": [
+    "PHARMACIST_REVIEW_REQUIRED"
+  ],
+  "review_notes": "Describe expected behavior without including patient identifiers."
+}

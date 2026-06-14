@@ -1,0 +1,67 @@
+{
+  "paracetamol": {
+    "name": "Paracetamol",
+    "generic_name": "paracetamol",
+    "aliases": ["acetaminophen"],
+    "category": "Analgesic/antipyretic placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with pain or fever discussions; verify indication and patient suitability."
+    ],
+    "pharmacist_notes": [
+      "Confirm formulation, strength, route, and maximum daily exposure using approved references.",
+      "Check for duplicate ingredient exposure in combination products.",
+      "Assess patient-specific risk factors before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist before combining with other medicines that may contain the same ingredient.",
+      "Seek pharmacist guidance if directions are unclear."
+    ],
+    "safety_considerations": [
+      "Confirm age, allergies, pregnancy status, current medications, and relevant organ-function concerns before use."
+    ]
+  },
+  "ibuprofen": {
+    "name": "Ibuprofen",
+    "generic_name": "ibuprofen",
+    "aliases": [],
+    "category": "NSAID placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with pain, inflammation, or fever discussions; verify indication and patient suitability."
+    ],
+    "pharmacist_notes": [
+      "Review allergy history, gastrointestinal risk, kidney-related risk, pregnancy status, and current medicines.",
+      "Confirm pharmacist-approved directions and duration before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist about use with other medicines.",
+      "Report uncertainty or concerning symptoms to the pharmacist."
+    ],
+    "safety_considerations": [
+      "Missing allergy, pregnancy, kidney, gastrointestinal, or medication context should trigger pharmacist review."
+    ]
+  },
+  "amoxicillin": {
+    "name": "Amoxicillin",
+    "generic_name": "amoxicillin",
+    "aliases": [],
+    "category": "Antibacterial placeholder",
+    "common_uses": [
+      "Placeholder profile for pharmacist review workflows; verify indication, dose, and duration with approved references."
+    ],
+    "pharmacist_notes": [
+      "Confirm allergy history before counseling.",
+      "Verify dose, formulation, duration, and patient-specific factors.",
+      "Check current medications and local policy before patient-facing guidance."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist what to do if a dose is missed.",
+      "Contact the pharmacist if new concerns arise."
+    ],
+    "safety_considerations": [
+      "Unknown allergy status, unclear indication, or incomplete directions should trigger pharmacist review."
+    ]
+  }
+}

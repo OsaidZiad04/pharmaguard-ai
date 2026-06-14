@@ -1,0 +1,32 @@
+[
+  {
+    "case_id": "SYN-001",
+    "raw_text": "Rx: Paracetamol 500 mg tablets. Take 1 tablet every 6 hours as needed. Synthetic adult case; no real patient data.",
+    "expected_medications": ["paracetamol"],
+    "notes": "Clean synthetic example with one known medication."
+  },
+  {
+    "case_id": "SYN-002",
+    "raw_text": "Ibuprofen 200 mg capsule. Take with food as directed by pharmacist. Synthetic case missing allergy and pregnancy context.",
+    "expected_medications": ["ibuprofen"],
+    "notes": "Known medication with missing patient context."
+  },
+  {
+    "case_id": "SYN-003",
+    "raw_text": "Amoxicillin 250 mg/5 mL suspension. Give as written on final pharmacy label. Synthetic pediatric-style text without real identifiers.",
+    "expected_medications": ["amoxicillin"],
+    "notes": "Known medication, formulation mentioned."
+  },
+  {
+    "case_id": "SYN-004",
+    "raw_text": "Medication unclear: Xyzmed 10 mg once daily. Synthetic test case for unknown medication handling.",
+    "expected_medications": [],
+    "notes": "Unknown medication should not be guessed."
+  },
+  {
+    "case_id": "SYN-005",
+    "raw_text": "Paracetamol 500 mg and Ibuprofen 200 mg listed together. Directions incomplete. Synthetic combination review case.",
+    "expected_medications": ["paracetamol", "ibuprofen"],
+    "notes": "Multiple candidates and incomplete directions."
+  }
+]
