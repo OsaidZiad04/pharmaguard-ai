@@ -1,6 +1,6 @@
 # Roadmap
 
-## Phase 0: Scaffolding
+## Phase 0: Scaffolding - Complete
 
 - Create repository structure.
 - Add FastAPI placeholder endpoints.
@@ -8,13 +8,16 @@
 - Add synthetic data and safety documentation.
 - Add initial pytest coverage.
 
-## Phase 1: RAG MVP
+## Phase 1: RAG MVP - In Progress
 
-- Load local Markdown drug profiles.
-- Chunk documents.
-- Generate mock or local embeddings.
-- Retrieve top-k context snippets.
-- Produce grounded draft responses with citations.
+- Load local Markdown drug profiles. Complete.
+- Chunk documents by headings and paragraphs with source metadata. Complete.
+- Generate local TF-IDF embeddings. Complete.
+- Retrieve top-k context snippets with a relevance threshold. Complete.
+- Produce grounded pharmacist-support draft responses with local citations. Complete.
+- Add more evaluation cases for retrieval quality. Next.
+- Add stronger citation validation and unsupported-claim tests. Next.
+- Decide whether to add dense retrieval after TF-IDF baseline evaluation. Next.
 
 ## Phase 2: OCR Integration
 

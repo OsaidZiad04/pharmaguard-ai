@@ -8,10 +8,12 @@ import type {
   CounselingResponse,
   DrugLookupResponse,
   PrescriptionAnalysisResponse,
+  RetrievedChunk,
   SafetyAlert
 } from "@/lib/types";
 import { AppHeader } from "@/components/AppHeader";
 import { DrugInfoCard } from "@/components/DrugInfoCard";
+import { KnowledgeBaseContextPanel } from "@/components/KnowledgeBaseContextPanel";
 import { PatientCounselingSheet } from "@/components/PatientCounselingSheet";
 import { PharmacistReviewPanel } from "@/components/PharmacistReviewPanel";
 import { PrescriptionIntakeCard } from "@/components/PrescriptionIntakeCard";
@@ -38,6 +40,16 @@ export function PrescriptionDesk() {
         ...(counseling?.safety_alerts ?? [])
       ]),
     [analysis, drugLookup, counseling]
+  );
+
+  const knowledgeChunks = useMemo(
+    () =>
+      dedupeChunks([
+        ...(drugLookup?.retrieved_chunks ?? []),
+        ...(drugLookup?.rag_drug_card?.retrieved_sources ?? []),
+        ...(counseling?.retrieved_sources ?? [])
+      ]),
+    [drugLookup, counseling]
   );
 
   async function handleAnalyze() {
@@ -129,6 +141,7 @@ export function PrescriptionDesk() {
               onGenerateCounseling={handleGenerateCounseling}
             />
             <DrugInfoCard lookup={drugLookup} />
+            <KnowledgeBaseContextPanel chunks={knowledgeChunks} />
             <SafetyAlertPanel alerts={alerts} />
           </div>
         </div>
@@ -145,6 +158,17 @@ function dedupeAlerts(alerts: SafetyAlert[]) {
       return false;
     }
     seen.add(key);
+    return true;
+  });
+}
+
+function dedupeChunks(chunks: RetrievedChunk[]) {
+  const seen = new Set<string>();
+  return chunks.filter((chunk) => {
+    if (seen.has(chunk.chunk_id)) {
+      return false;
+    }
+    seen.add(chunk.chunk_id);
     return true;
   });
 }

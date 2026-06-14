@@ -3,7 +3,8 @@ import type {
   CounselingResponse,
   DrugLookupResponse,
   PatientContext,
-  PrescriptionAnalysisResponse
+  PrescriptionAnalysisResponse,
+  RagQueryResponse
 } from "@/lib/types";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
@@ -48,5 +49,15 @@ export function generateCounseling(
   return request<CounselingResponse>("/counseling/generate", {
     method: "POST",
     body: JSON.stringify(payload)
+  });
+}
+
+export function queryKnowledgeBase(query: string, topK = 5): Promise<RagQueryResponse> {
+  return request<RagQueryResponse>("/rag/query", {
+    method: "POST",
+    body: JSON.stringify({
+      query,
+      top_k: topK
+    })
   });
 }

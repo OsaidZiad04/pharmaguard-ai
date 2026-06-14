@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+from app.schemas.rag import RetrievedChunk
 from app.schemas.safety import SafetyAlert
 
 
@@ -19,4 +20,10 @@ class CounselingRequest(BaseModel):
 class CounselingResponse(BaseModel):
     counseling_note: str
     safety_alerts: list[SafetyAlert]
+    retrieved_sources: list[RetrievedChunk] = Field(default_factory=list)
+    insufficient_context: bool = False
     pharmacist_review_required: bool = True
+
+
+class CounselingDraftWithSources(CounselingResponse):
+    pass

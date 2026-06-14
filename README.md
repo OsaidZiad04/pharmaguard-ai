@@ -2,7 +2,7 @@
 
 PharmaGuard AI is a pharmacist-centered AI copilot foundation for prescription text review, trusted medication information retrieval, patient counseling note drafting, and safety-first workflow enforcement.
 
-This repository is intentionally scoped as a scaffolding/MVP foundation. It uses mock logic, synthetic data, and local placeholder knowledge only. It is not a medical device, does not diagnose, and must never make final medical decisions.
+This repository is intentionally scoped as a scaffolding/MVP foundation. It uses synthetic data and local placeholder knowledge only. It is not a medical device, does not diagnose, and must never make final medical decisions.
 
 ## Problem Statement
 
@@ -13,7 +13,7 @@ Pharmacists often need to interpret incomplete prescription text, verify medicat
 PharmaGuard AI is designed as a review-first copilot:
 
 - Extract possible medication entities from prescription text.
-- Retrieve local trusted medication profile placeholders through a future RAG workflow.
+- Retrieve local trusted medication profile placeholders through a Phase 1 TF-IDF RAG workflow.
 - Surface missing patient context and confidence warnings.
 - Require pharmacist confirmation before generating counseling notes.
 - Keep every output framed as a draft for pharmacist review.
@@ -22,7 +22,7 @@ PharmaGuard AI is designed as a review-first copilot:
 
 Current scaffold:
 
-- `backend/`: FastAPI API, services, schemas, tests, and RAG module skeletons.
+- `backend/`: FastAPI API, services, schemas, tests, and local RAG modules.
 - `frontend/`: Next.js pharmacist dashboard with Tailwind CSS.
 - `data/`: synthetic prescriptions, mock drug profiles, and evaluation templates.
 - `docs/`: architecture, safety, privacy, roadmap, and challenge planning documents.
@@ -46,8 +46,9 @@ Implemented now:
 
 - FastAPI app with health, prescription analysis, drug lookup, and counseling endpoints.
 - Mock extraction and safety services.
-- Local mock drug index.
-- RAG class/function skeletons with TODO markers.
+- Local Markdown drug knowledge base.
+- Phase 1 local TF-IDF RAG: Markdown loading, chunking, in-memory indexing, retrieval, and grounded draft generation.
+- Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
 - Pytest coverage for core placeholder behavior.
 
@@ -55,7 +56,7 @@ Not implemented yet:
 
 - OCR.
 - External medical APIs.
-- Real embeddings or vector database.
+- Dense embeddings or persistent vector database.
 - Production clinical validation.
 - Real patient data handling.
 
@@ -72,6 +73,14 @@ uvicorn app.main:app --reload
 ```
 
 Open `http://localhost:8000/health`.
+
+Example local RAG query:
+
+```bash
+curl -X POST http://localhost:8000/rag/query ^
+  -H "Content-Type: application/json" ^
+  -d "{\"query\":\"paracetamol 500mg counseling\",\"top_k\":5}"
+```
 
 ### Frontend
 

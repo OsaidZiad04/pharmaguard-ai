@@ -1,7 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.api import routes_counseling, routes_drugs, routes_health, routes_prescriptions
+from app.api import (
+    routes_counseling,
+    routes_drugs,
+    routes_health,
+    routes_prescriptions,
+    routes_rag,
+)
 from app.core.config import get_settings
 
 
@@ -29,6 +35,7 @@ def create_app() -> FastAPI:
     app.include_router(routes_prescriptions.router)
     app.include_router(routes_drugs.router)
     app.include_router(routes_counseling.router)
+    app.include_router(routes_rag.router)
 
     return app
 

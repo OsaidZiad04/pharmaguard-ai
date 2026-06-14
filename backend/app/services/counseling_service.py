@@ -1,5 +1,9 @@
 from app.schemas.counseling import CounselingRequest, CounselingResponse
-from app.services.safety_service import assess_counseling_generation
+from app.services.rag_service import build_grounded_counseling_note
+from app.services.safety_service import (
+    assess_counseling_generation,
+    build_missing_knowledge_base_context_alert,
+)
 
 
 def generate_counseling_note(payload: CounselingRequest) -> CounselingResponse:
@@ -19,25 +23,20 @@ def generate_counseling_note(payload: CounselingRequest) -> CounselingResponse:
         )
 
     medication = payload.medication
-    strength = medication.strength or "strength not confirmed"
-    directions = medication.directions or "directions not confirmed"
-    additional = (
-        f" Pharmacist note: {payload.additional_notes.strip()}"
-        if payload.additional_notes
-        else ""
+    counseling_note, retrieved_sources, insufficient_context = build_grounded_counseling_note(
+        medication_name=medication.name,
+        strength=medication.strength,
+        directions=medication.directions,
+        additional_notes=payload.additional_notes,
     )
 
-    note = (
-        "Draft counseling note for pharmacist review: "
-        f"{medication.name} ({strength}). Confirmed directions: {directions}. "
-        "Verify patient-specific factors, including age, pregnancy status, allergies, "
-        "and current medications, before sharing any counseling. "
-        "This draft is not a final medical decision and must be reviewed by the pharmacist."
-        f"{additional}"
-    )
+    if insufficient_context:
+        alerts.append(build_missing_knowledge_base_context_alert(medication.name))
 
     return CounselingResponse(
-        counseling_note=note,
+        counseling_note=counseling_note,
         safety_alerts=alerts,
+        retrieved_sources=retrieved_sources,
+        insufficient_context=insufficient_context,
         pharmacist_review_required=True,
     )

@@ -40,6 +40,7 @@ frontend/uploads/
 model_cache/
 models/cache/
 vector_cache/
+.dev-logs/
 *.faiss
 *.index
 *.bin

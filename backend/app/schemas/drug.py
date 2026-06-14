@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+from app.schemas.rag import RagDrugCard, RetrievedChunk
 from app.schemas.safety import SafetyAlert
 
 
@@ -19,5 +20,9 @@ class DrugCard(BaseModel):
 class DrugLookupResponse(BaseModel):
     found: bool
     drug: DrugCard | None = None
+    rag_drug_card: RagDrugCard | None = None
+    retrieved_chunks: list[RetrievedChunk] = Field(default_factory=list)
+    grounded_answer: str | None = None
+    insufficient_context: bool = False
     safety_alerts: list[SafetyAlert] = Field(default_factory=list)
     pharmacist_review_required: bool = True

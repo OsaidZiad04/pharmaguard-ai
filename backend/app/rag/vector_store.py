@@ -1,34 +1,66 @@
 import math
 from dataclasses import dataclass
+from typing import Any
 
 from app.rag.chunker import DocumentChunk
 
 
-@dataclass
-class VectorRecord:
+@dataclass(frozen=True)
+class VectorSearchResult:
     chunk: DocumentChunk
-    embedding: list[float]
+    score: float
 
 
 class InMemoryVectorStore:
-    """Small placeholder vector store for tests and demos.
-
-    TODO: Replace with persistent vector storage and source metadata filters.
-    """
+    """Local in-memory vector index for Phase 1 RAG."""
 
     def __init__(self) -> None:
-        self._records: list[VectorRecord] = []
+        self._chunks: list[DocumentChunk] = []
+        self._vectors: Any | None = None
 
-    def add(self, chunk: DocumentChunk, embedding: list[float]) -> None:
-        self._records.append(VectorRecord(chunk=chunk, embedding=embedding))
+    @property
+    def chunks(self) -> list[DocumentChunk]:
+        return self._chunks
 
-    def search(self, query_embedding: list[float], top_k: int = 3) -> list[DocumentChunk]:
-        ranked = sorted(
-            self._records,
-            key=lambda record: _cosine_similarity(query_embedding, record.embedding),
+    def build(self, chunks: list[DocumentChunk], vectors: Any) -> None:
+        self._chunks = chunks
+        self._vectors = vectors
+
+    def search(self, query_vector: Any, top_k: int = 5) -> list[VectorSearchResult]:
+        if not self._chunks or self._vectors is None:
+            return []
+
+        scores = _similarity_scores(query_vector, self._vectors)
+        ranked_indices = sorted(
+            range(len(scores)),
+            key=lambda index: scores[index],
             reverse=True,
-        )
-        return [record.chunk for record in ranked[:top_k]]
+        )[:top_k]
+
+        return [
+            VectorSearchResult(
+                chunk=self._chunks[index],
+                score=round(float(scores[index]), 4),
+            )
+            for index in ranked_indices
+        ]
+
+
+def _similarity_scores(query_vector: Any, matrix: Any) -> list[float]:
+    if hasattr(matrix, "dot") and hasattr(query_vector, "T"):
+        raw_scores = matrix.dot(query_vector.T)
+        if hasattr(raw_scores, "toarray"):
+            return raw_scores.toarray().ravel().tolist()
+        return list(raw_scores)
+
+    query = _as_vector(query_vector[0] if query_vector and isinstance(query_vector[0], list) else query_vector)
+    return [_cosine_similarity(query, _as_vector(row)) for row in matrix]
+
+
+def _as_vector(value: Any) -> list[float]:
+    if hasattr(value, "tolist"):
+        return value.tolist()
+    return list(value)
 
 
 def _cosine_similarity(left: list[float], right: list[float]) -> float:

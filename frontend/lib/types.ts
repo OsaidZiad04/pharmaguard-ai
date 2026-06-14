@@ -30,6 +30,28 @@ export interface PrescriptionAnalysisResponse {
   pharmacist_review_required: boolean;
 }
 
+export interface RetrievedChunk {
+  chunk_id: string;
+  drug_name: string;
+  source_file: string;
+  section_title: string;
+  text: string;
+  score: number;
+}
+
+export interface RagDrugCard {
+  name: string;
+  overview: string[];
+  key_counseling_points: string[];
+  safety_notes: string[];
+  pharmacist_checks: string[];
+  retrieved_sources: RetrievedChunk[];
+  grounded_answer: string;
+  insufficient_context: boolean;
+  source: string;
+  pharmacist_review_required: boolean;
+}
+
 export interface DrugCard {
   name: string;
   generic_name: string;
@@ -46,6 +68,10 @@ export interface DrugCard {
 export interface DrugLookupResponse {
   found: boolean;
   drug: DrugCard | null;
+  rag_drug_card: RagDrugCard | null;
+  retrieved_chunks: RetrievedChunk[];
+  grounded_answer?: string | null;
+  insufficient_context: boolean;
   safety_alerts: SafetyAlert[];
   pharmacist_review_required: boolean;
 }
@@ -64,5 +90,15 @@ export interface CounselingRequest {
 export interface CounselingResponse {
   counseling_note: string;
   safety_alerts: SafetyAlert[];
+  retrieved_sources: RetrievedChunk[];
+  insufficient_context: boolean;
   pharmacist_review_required: boolean;
+}
+
+export interface RagQueryResponse {
+  query: string;
+  retrieved_chunks: RetrievedChunk[];
+  grounded_answer: string;
+  review_required: boolean;
+  insufficient_context: boolean;
 }

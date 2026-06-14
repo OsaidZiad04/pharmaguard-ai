@@ -131,6 +131,17 @@ def build_unknown_medication_alert(drug_name: str) -> SafetyAlert:
     )
 
 
+def build_missing_knowledge_base_context_alert(drug_name: str) -> SafetyAlert:
+    return SafetyAlert(
+        code="INSUFFICIENT_KNOWLEDGE_BASE_CONTEXT",
+        severity="warning",
+        message=(
+            f"Insufficient knowledge base context was retrieved for '{drug_name}'. "
+            "Do not generate medication-specific content from unsupported assumptions."
+        ),
+    )
+
+
 def build_missing_context_alert(missing_fields: list[str]) -> SafetyAlert:
     return SafetyAlert(
         code="MISSING_PATIENT_CONTEXT",

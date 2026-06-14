@@ -23,5 +23,6 @@ pytest
 - `POST /prescriptions/analyze-text`
 - `GET /drugs/{drug_name}`
 - `POST /counseling/generate`
+- `POST /rag/query`
 
-All current logic is placeholder/mock logic. Do not use outputs for final medical decisions.
+The RAG workflow is local-only and uses Markdown profiles with TF-IDF retrieval. Do not use outputs for final medical decisions.

@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation is a scaffold with mock logic and local placeholder data.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval.
 
 ## Pipeline
 
@@ -29,23 +29,36 @@ PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current im
    - Always: final decisions remain with the pharmacist.
 
 6. RAG Retrieval
-   - Current: package-style skeletons for chunking, embedding, vector storage, retrieval, and generation.
-   - Later: retrieve grounded snippets from trusted medication references.
+   - Current: loads local Markdown files from `data/drug_profiles/`, chunks them by headings and paragraphs, embeds chunks with local TF-IDF, stores vectors in memory, and retrieves top-k medication-specific context.
+   - Later: replace or supplement TF-IDF with dense vector retrieval after evaluation.
 
 7. Pharmacist Review
    - Current: UI requires a pharmacist confirmation action before counseling generation.
    - Later: support audit trails and structured review decisions.
 
 8. Patient Counseling
-   - Current: generates a safe placeholder draft based on confirmed pharmacist input.
-   - Later: generate grounded, source-backed counseling notes after validation.
+   - Current: generates a grounded draft from retrieved Markdown context after pharmacist confirmation.
+   - Later: add richer citation checks, evaluation gates, and approved reference sources.
+
+## Phase 1 Local RAG
+
+The local RAG MVP avoids external APIs and model downloads. It uses:
+
+- Markdown profiles in `data/drug_profiles/`.
+- `chunker.py` to preserve `drug_name`, `source_file`, `section_title`, and `chunk_id` metadata.
+- `embedder.py` with `scikit-learn` TF-IDF as the default embedder.
+- `vector_store.py` for an in-memory index.
+- `retriever.py` for medication-aware top-k retrieval with a minimum relevance threshold.
+- `generator.py` for deterministic pharmacist-support drafts based only on retrieved chunks.
+
+If no local chunk passes the threshold, the backend returns `insufficient knowledge base context` rather than guessing.
 
 ## Backend Modules
 
 - `app/api`: FastAPI routes.
 - `app/schemas`: Pydantic request/response contracts.
-- `app/services`: placeholder business logic.
-- `app/rag`: future RAG workflow components.
+- `app/services`: prescription, safety, lookup, counseling, and RAG orchestration logic.
+- `app/rag`: local TF-IDF RAG components.
 - `app/sample_data`: local mock drug index.
 
 ## Frontend Modules
