@@ -7,6 +7,15 @@ def test_chunker_loads_markdown_drug_profiles() -> None:
     drug_names = {chunk.metadata["drug_name"].lower() for chunk in chunks}
     section_titles = {chunk.metadata["section_title"] for chunk in chunks}
 
-    assert {"paracetamol", "ibuprofen", "amoxicillin"}.issubset(drug_names)
+    assert {
+        "paracetamol",
+        "ibuprofen",
+        "amoxicillin",
+        "cetirizine",
+        "loratadine",
+        "omeprazole",
+        "salbutamol",
+    }.issubset(drug_names)
+    assert "Knowledge Base Limitations" in section_titles
     assert "General Counseling Points" in section_titles
     assert all(chunk.metadata["source_file"].endswith(".md") for chunk in chunks)

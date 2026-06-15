@@ -12,8 +12,20 @@ This directory contains synthetic examples and placeholder medication knowledge 
 
 - `drug_profiles/`: neutral placeholder Markdown profiles.
 - `sample_prescriptions/`: synthetic prescription text cases only.
-- `evaluation/`: templates for future test/evaluation data.
+- `evaluation/`: synthetic RAG evaluation cases and templates.
 - `private/`: local-only storage for files that must not be committed.
+
+## Current Local Drug Profiles
+
+- paracetamol
+- ibuprofen
+- amoxicillin
+- cetirizine
+- loratadine
+- omeprazole
+- salbutamol
+
+The profiles are local educational placeholders for pharmacist-support retrieval tests. They are not clinical validation, final medication references, or patient-specific instructions.
 
 ## TODO
 

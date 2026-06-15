@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, plus Phase 1.5 hardening for evaluation and citation validation.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, and Phase 1.6 knowledge base/evaluation expansion.
 
 ## Pipeline
 
@@ -54,11 +54,27 @@ The local RAG MVP avoids external APIs and model downloads. It uses:
 
 If no local chunk passes the threshold, the backend returns `insufficient knowledge base context` rather than guessing.
 
+## Phase 1.6 Knowledge Base Expansion
+
+The local knowledge base now includes Markdown profiles for:
+
+- paracetamol
+- ibuprofen
+- amoxicillin
+- cetirizine
+- loratadine
+- omeprazole
+- salbutamol
+
+Each profile uses consistent sections: Overview, Common Uses, General Counseling Points, Safety Notes, When to Refer to Pharmacist or Physician, Patient Questions to Ask, and Knowledge Base Limitations.
+
+Alias handling remains conservative. Explicit aliases in the local mock index can map to supported medications, but condition-only or class-only queries do not choose a medication. For example, `ventolin` can resolve to salbutamol, while an allergy-condition query without a named medication returns insufficient context.
+
 ## Phase 1.5 RAG Hardening
 
-Phase 1.5 keeps the same local architecture and adds safeguards around it:
+Phase 1.5 and Phase 1.6 keep the same local architecture and add safeguards around it:
 
-- `data/evaluation/rag_eval_cases.json` defines synthetic supported, alias, unknown, weak-query, unsupported-information, and mixed prescription-like cases.
+- `data/evaluation/rag_eval_cases.json` defines 20 synthetic supported, alias, unknown, weak-query, condition-only, unsupported-information, exact-dose, final-advice, and mixed prescription-like cases.
 - `app/rag/evaluation.py` runs cases through the existing retriever/generator pipeline.
 - `app/rag/citation_validator.py` verifies chunk metadata and generated source references.
 - `backend/scripts/evaluate_rag.py` prints pass/fail status and summaries.
@@ -77,7 +93,7 @@ Current TF-IDF limitations:
 - It can miss semantically related wording if terms differ.
 - It has no clinical reasoning capability and should not be treated as validation.
 
-Dense retrieval is a documented future option only. It is deferred until the TF-IDF baseline has enough evaluation coverage. OCR stays in Phase 2 because image intake and privacy handling should not be mixed with RAG hardening.
+Dense retrieval is a documented future option only. It is deferred until the TF-IDF baseline has stronger evaluation coverage and documented failure modes. OCR stays in Phase 2 because image intake and privacy handling should not be mixed with knowledge base and evaluation expansion.
 
 ## Backend Modules
 

@@ -39,3 +39,9 @@ This profile is intended to support retrieval tests and draft counseling workflo
 - What other medicines, supplements, or non-prescription products are you taking?
 - Are the directions, duration, and formulation instructions clear after pharmacist review?
 - Do you have any patient-specific factors the pharmacist should review before counseling?
+
+## Knowledge Base Limitations
+
+- This local profile is a limited educational reference for retrieval testing.
+- It does not assess infection type, patient suitability, or therapy selection.
+- It does not provide patient-specific dosing, clinical assessment, or final treatment decisions.

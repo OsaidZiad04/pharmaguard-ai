@@ -24,6 +24,14 @@
 - Add unsupported-claim and fabricated-citation regression tests. Complete.
 - Keep dense retrieval deferred until the TF-IDF baseline has stronger evidence. Complete.
 
+## Phase 1.6: Knowledge Base & Evaluation Expansion - Complete
+
+- Add local Markdown profiles for cetirizine, loratadine, omeprazole, and salbutamol. Complete.
+- Add conservative mock aliases for supported medications. Complete.
+- Expand synthetic RAG evaluation coverage to 20 cases. Complete.
+- Add condition-only, final-advice, and exact-dose prompt coverage. Complete.
+- Keep OCR deferred to Phase 2 and dense retrieval deferred until the TF-IDF baseline is stronger. Complete.
+
 ## Phase 2: OCR Integration
 
 - Add prescription image upload workflow.

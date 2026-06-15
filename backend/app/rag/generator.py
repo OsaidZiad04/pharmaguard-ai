@@ -21,7 +21,7 @@ def generate_grounded_answer(query: str, contexts: list[RetrievedContext]) -> st
         )
 
     lines = [
-        "Draft support only for pharmacist review. This is not final medical advice.",
+        "Draft support only for pharmacist review. This is not a final clinical decision.",
         "",
     ]
 
@@ -74,7 +74,7 @@ def generate_counseling_draft(
 
     lines = [
         "Draft-only patient counseling support for pharmacist review.",
-        "This is not final medical advice and must be verified by the pharmacist.",
+        "This is not a final clinical decision and must be verified by the pharmacist.",
         f"Medication confirmed by pharmacist: {medication_name} ({strength_text}).",
         f"Confirmed prescription directions: {directions_text}.",
         "",

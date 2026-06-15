@@ -6,17 +6,23 @@ def test_rag_evaluation_dataset_has_required_scenarios() -> None:
     case_ids = {case["case_id"] for case in cases}
 
     assert "RAG-SUP-001" in case_ids
+    assert "RAG-SUP-004" in case_ids
+    assert "RAG-SUP-007" in case_ids
     assert "RAG-ALIAS-001" in case_ids
+    assert "RAG-ALIAS-004" in case_ids
     assert "RAG-UNK-001" in case_ids
     assert "RAG-WEAK-001" in case_ids
+    assert "RAG-CONDITION-001" in case_ids
     assert "RAG-UNSUPPORTED-001" in case_ids
+    assert "RAG-UNSUPPORTED-003" in case_ids
     assert "RAG-MIXED-001" in case_ids
+    assert len(cases) >= 18
 
 
 def test_rag_evaluation_runner_passes_current_baseline() -> None:
     report = run_rag_evaluation()
 
-    assert report["total_cases"] >= 8
+    assert report["total_cases"] >= 18
     assert report["failed_cases"] == 0
     assert report["passed_cases"] == report["total_cases"]
     assert report["retrieval_summary"]["top_k_hit_passed"] == report["total_cases"]

@@ -39,3 +39,9 @@ This profile is intended to support retrieval tests and draft counseling workflo
 - Are you pregnant, trying to become pregnant, or breastfeeding?
 - Do you have stomach bleeding concerns, kidney-related history, or other medical factors the pharmacist should review?
 - What prescription and non-prescription medicines are you currently taking?
+
+## Knowledge Base Limitations
+
+- This local profile is a limited educational reference for retrieval testing.
+- It does not compare ibuprofen with all other pain, inflammation, or fever support options.
+- It does not provide patient-specific dosing, clinical assessment, or final treatment decisions.

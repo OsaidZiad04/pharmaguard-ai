@@ -7,6 +7,14 @@ MEDICATION_ALIASES = {
     "acetaminophen": "paracetamol",
     "ibuprofen": "ibuprofen",
     "amoxicillin": "amoxicillin",
+    "cetirizine": "cetirizine",
+    "zyrtec": "cetirizine",
+    "loratadine": "loratadine",
+    "claritin": "loratadine",
+    "omeprazole": "omeprazole",
+    "prilosec": "omeprazole",
+    "salbutamol": "salbutamol",
+    "ventolin": "salbutamol",
 }
 
 STRENGTH_PATTERN = re.compile(

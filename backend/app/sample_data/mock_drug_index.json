@@ -63,5 +63,85 @@
     "safety_considerations": [
       "Unknown allergy status, unclear indication, or incomplete directions should trigger pharmacist review."
     ]
+  },
+  "cetirizine": {
+    "name": "Cetirizine",
+    "generic_name": "cetirizine",
+    "aliases": ["zyrtec"],
+    "category": "Antihistamine placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with allergy symptom support discussions; verify patient context and product details."
+    ],
+    "pharmacist_notes": [
+      "Review age, allergy history, current medications, pregnancy or breastfeeding status when relevant, and kidney-related context when relevant.",
+      "Confirm pharmacist-approved directions and formulation before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist before combining with other allergy, cold, sleep, or sedating products."
+    ],
+    "safety_considerations": [
+      "Missing patient context, unclear product details, or alertness concerns should trigger pharmacist review."
+    ]
+  },
+  "loratadine": {
+    "name": "Loratadine",
+    "generic_name": "loratadine",
+    "aliases": ["claritin"],
+    "category": "Antihistamine placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with allergy symptom support discussions; verify patient context and product details."
+    ],
+    "pharmacist_notes": [
+      "Review age, allergy history, current medications, pregnancy or breastfeeding status when relevant, and liver-related or kidney-related context when relevant.",
+      "Confirm pharmacist-approved directions and formulation before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist before combining with other allergy, cold, or multi-symptom products."
+    ],
+    "safety_considerations": [
+      "Missing patient context, unclear product details, or multiple product use should trigger pharmacist review."
+    ]
+  },
+  "omeprazole": {
+    "name": "Omeprazole",
+    "generic_name": "omeprazole",
+    "aliases": ["prilosec"],
+    "category": "Acid-related symptom support placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with acid-related symptom support discussions; verify patient context and product details."
+    ],
+    "pharmacist_notes": [
+      "Review symptom duration, current medications, age, pregnancy or breastfeeding status when relevant, and warning symptoms.",
+      "Confirm pharmacist-approved directions, duration, and formulation before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist about timing, duration, and formulation-specific instructions for the confirmed product."
+    ],
+    "safety_considerations": [
+      "Warning symptoms, recurring symptoms, missing duration, or missing medication context should trigger pharmacist review."
+    ]
+  },
+  "salbutamol": {
+    "name": "Salbutamol",
+    "generic_name": "salbutamol",
+    "aliases": ["ventolin"],
+    "category": "Reliever inhaler placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with reliever inhaler counseling workflows; verify device and patient context."
+    ],
+    "pharmacist_notes": [
+      "Review symptom pattern, current respiratory medicines, device type, allergies, pregnancy status when relevant, and technique.",
+      "Confirm pharmacist-approved directions and device-specific instructions before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist to review inhaler technique and device-specific questions when appropriate."
+    ],
+    "safety_considerations": [
+      "Worsening symptoms, frequent symptoms, unclear reliever use, or missing device context should trigger pharmacist review."
+    ]
   }
 }

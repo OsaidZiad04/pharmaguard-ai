@@ -56,6 +56,30 @@ def test_generated_answers_do_not_use_final_advice_language() -> None:
     assert "pharmacist review" in lowered_answer
 
 
+def test_final_advice_forbidden_terms_cover_phase_1_6_phrases() -> None:
+    expected_terms = {
+        "you should take",
+        "take exactly",
+        "this is safe for everyone",
+        "no pharmacist review needed",
+        "guaranteed",
+        "final medical advice",
+        "diagnosis",
+        "prescribe",
+        "cure",
+        "this will treat",
+        "this will cure",
+        "use this medication to treat",
+        "استخدم الجرعة التالية",
+        "آمن للجميع",
+        "لا تحتاج مراجعة الصيدلي",
+        "قرار نهائي",
+        "تشخيص",
+    }
+
+    assert expected_terms.issubset(set(FINAL_ADVICE_FORBIDDEN_TERMS))
+
+
 def test_pharmacist_review_required_remains_true() -> None:
     supported = query_local_knowledge_base("ibuprofen safety counseling", top_k=5)
     unknown = query_local_knowledge_base("unknownmed counseling", top_k=5)

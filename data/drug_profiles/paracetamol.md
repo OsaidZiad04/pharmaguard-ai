@@ -39,3 +39,9 @@ This profile is intended to support retrieval tests and draft counseling workflo
 - Do you have any allergies or previous reactions to this medicine or similar products?
 - Do you have liver-related medical history or other factors the pharmacist should review?
 - Are the label directions, strength, and formulation clear to you after the pharmacist reviews them?
+
+## Knowledge Base Limitations
+
+- This local profile is a limited educational reference for retrieval testing.
+- It does not compare paracetamol with all other pain or fever support options.
+- It does not provide patient-specific dosing, clinical assessment, or final treatment decisions.
