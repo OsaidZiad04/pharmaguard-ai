@@ -1,3 +1,4 @@
+<img width="2172" height="724" alt="ChatGPT Image Jun 15, 2026, 10_24_42 PM" src="https://github.com/user-attachments/assets/350fd7d5-9502-48ca-8c68-e5312629789a" />
 # PharmaGuard AI
 
 PharmaGuard AI is a pharmacist-centered AI copilot foundation for prescription text review, trusted medication information retrieval, patient counseling note drafting, and safety-first workflow enforcement.
