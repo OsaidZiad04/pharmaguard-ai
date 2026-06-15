@@ -2,6 +2,9 @@ import type {
   CounselingRequest,
   CounselingResponse,
   DrugLookupResponse,
+  OcrCorrectionRequest,
+  OcrCorrectionResponse,
+  OcrImageUploadResponse,
   PatientContext,
   PrescriptionAnalysisResponse,
   RagQueryResponse
@@ -59,5 +62,31 @@ export function queryKnowledgeBase(query: string, topK = 5): Promise<RagQueryRes
       query,
       top_k: topK
     })
+  });
+}
+
+export async function uploadPrescriptionImage(file: File): Promise<OcrImageUploadResponse> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const response = await fetch(`${API_BASE_URL}/ocr/extract-image`, {
+    method: "POST",
+    body: formData
+  });
+
+  if (!response.ok) {
+    const detail = await response.text();
+    throw new Error(detail || `Request failed with status ${response.status}`);
+  }
+
+  return (await response.json()) as OcrImageUploadResponse;
+}
+
+export function confirmOcrText(
+  payload: OcrCorrectionRequest
+): Promise<OcrCorrectionResponse> {
+  return request<OcrCorrectionResponse>("/ocr/confirm-text", {
+    method: "POST",
+    body: JSON.stringify(payload)
   });
 }

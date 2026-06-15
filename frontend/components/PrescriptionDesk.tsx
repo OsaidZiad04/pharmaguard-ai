@@ -16,6 +16,7 @@ import { DrugInfoCard } from "@/components/DrugInfoCard";
 import { KnowledgeBaseContextPanel } from "@/components/KnowledgeBaseContextPanel";
 import { PatientCounselingSheet } from "@/components/PatientCounselingSheet";
 import { PharmacistReviewPanel } from "@/components/PharmacistReviewPanel";
+import { PrescriptionImageUploadCard } from "@/components/PrescriptionImageUploadCard";
 import { PrescriptionIntakeCard } from "@/components/PrescriptionIntakeCard";
 import { SafetyAlertPanel } from "@/components/SafetyAlertPanel";
 import { WorkflowStepper } from "@/components/WorkflowStepper";
@@ -74,6 +75,14 @@ export function PrescriptionDesk() {
     }
   }
 
+  function handleUseCorrectedOcrText(correctedText: string) {
+    setPrescriptionText(correctedText);
+    setAnalysis(null);
+    setDrugLookup(null);
+    setCounseling(null);
+    setError(null);
+  }
+
   async function handleGenerateCounseling() {
     const medication = analysis?.extracted_medications[0];
     if (!medication) {
@@ -124,6 +133,7 @@ export function PrescriptionDesk() {
 
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
           <div className="space-y-5">
+            <PrescriptionImageUploadCard onUseCorrectedText={handleUseCorrectedOcrText} />
             <PrescriptionIntakeCard
               value={prescriptionText}
               isLoading={isAnalyzing}

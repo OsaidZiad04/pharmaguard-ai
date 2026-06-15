@@ -1,23 +1,24 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, and Phase 1.8 scalable knowledge base architecture.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, and Phase 2A privacy-safe OCR intake foundation.
 
 ## Pipeline
 
-`Prescription Input -> OCR later -> Text Extraction -> Drug Entity Extraction -> Safety Layer -> RAG Retrieval -> Pharmacist Review -> Patient Counseling`
+`Prescription Image Upload -> Mock OCR Intake -> Pharmacist OCR Correction -> Prescription Text Analysis -> Drug Entity Extraction -> Safety Layer -> RAG Retrieval -> Pharmacist Review -> Patient Counseling`
 
 ## Stages
 
 1. Prescription Input
-   - Current: pharmacist pastes synthetic prescription text.
-   - Later: image/PDF intake with strict privacy controls.
+   - Current: pharmacist can paste synthetic prescription text or upload a synthetic image for OCR intake.
+   - Later: richer image/PDF intake with stricter operational controls.
 
-2. OCR Later
-   - Current: `ocr_service.py` contains a placeholder.
-   - Later: OCR extracts text from uploaded prescription images.
+2. OCR Intake
+   - Current: `ocr_service.py` exposes a provider boundary and a deterministic mock OCR provider. `/ocr/extract-image` accepts supported image formats, reads uploads in memory, does not persist images by default, returns unverified text, and flags possible identifier patterns.
+   - Current: `/ocr/confirm-text` accepts pharmacist-corrected text. Only corrected text can be manually moved into prescription analysis.
+   - Later: validated OCR providers can be swapped behind the same interface after privacy and safety review.
 
 3. Text Extraction
-   - Current: simple rule-based cleanup and medication candidate detection.
+   - Current: simple rule-based cleanup and medication candidate detection from pasted or pharmacist-corrected text.
    - Later: structured extraction with confidence scoring and evaluation.
 
 4. Drug Entity Extraction
@@ -26,6 +27,7 @@ PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current im
 
 5. Safety Layer
    - Current: warns on low confidence, missing patient context, and unknown medication names.
+   - Current: OCR output remains unverified and requires pharmacist correction before downstream analysis.
    - Always: final decisions remain with the pharmacist.
 
 6. RAG Retrieval
@@ -54,6 +56,21 @@ The local RAG MVP avoids external APIs and model downloads. It uses:
 - `generator.py` for deterministic pharmacist-support drafts based only on retrieved chunks.
 
 If no local chunk passes the threshold, the backend returns `insufficient knowledge base context` rather than guessing.
+
+## Phase 2A OCR Intake Foundation
+
+Phase 2A adds OCR as an assistive input layer, not as a source of final truth.
+
+- `app/schemas/ocr.py` defines upload, extracted text, correction, and privacy warning contracts.
+- `app/services/ocr_service.py` defines a provider-style OCR boundary and `MockOcrProvider`.
+- `app/api/routes_ocr.py` exposes `/ocr/extract-image` and `/ocr/confirm-text`.
+- Supported upload types are PNG, JPG, JPEG, and WEBP.
+- Uploads are size-limited and read in memory; no image storage is created by default.
+- Possible identifier patterns are reported as privacy warnings, not validated facts.
+- OCR output is labeled unverified and cannot automatically trigger prescription analysis, RAG, counseling, or drug lookup.
+- The frontend shows editable OCR text and requires a pharmacist action before corrected text is placed into the prescription text workflow.
+
+This boundary is designed so a future OCR implementation can be swapped without weakening the downstream pharmacist confirmation gates.
 
 ## Phase 1.7 Controlled Knowledge Base Expansion
 
@@ -116,7 +133,7 @@ Current TF-IDF limitations:
 - It can miss semantically related wording if terms differ.
 - It has no clinical reasoning capability and should not be treated as validation.
 
-Dense retrieval is a documented future option only. It is deferred until the TF-IDF baseline and KB registry governance have stronger evaluation coverage and documented failure modes. OCR stays in Phase 2 because image intake and privacy handling should not be mixed with knowledge base architecture work.
+Dense retrieval is a documented future option only. It is deferred until the TF-IDF baseline and KB registry governance have stronger evaluation coverage and documented failure modes. Phase 2A adds only the privacy-safe OCR intake boundary and mock provider; production OCR remains future work.
 
 ## Backend Modules
 

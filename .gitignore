@@ -32,8 +32,14 @@ uploaded_prescriptions/
 data/uploaded_prescriptions/
 backend/uploads/
 frontend/uploads/
+ocr_tmp/
+tmp_ocr/
+backend/ocr_uploads/
+frontend/ocr_uploads/
 *prescription_upload*
 *uploaded_prescription*
+*.ocr-cache
+*.ocr.tmp
 
 # Model and vector cache files
 .model_cache/

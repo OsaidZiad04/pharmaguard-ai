@@ -2,7 +2,7 @@
 
 PharmaGuard AI is a pharmacist-centered AI copilot foundation for prescription text review, trusted medication information retrieval, patient counseling note drafting, and safety-first workflow enforcement.
 
-This repository is intentionally scoped as a scaffolding/MVP foundation. It uses synthetic data and local placeholder knowledge only. It is not a medical device, does not diagnose, and must never make final medical decisions.
+This repository is being developed incrementally toward a pharmacy-ready architecture, but the current implementation uses synthetic data and local placeholder knowledge only. It is not a medical device, does not diagnose, and must never make final medical decisions.
 
 ## Problem Statement
 
@@ -13,6 +13,8 @@ Pharmacists often need to interpret incomplete prescription text, verify medicat
 PharmaGuard AI is designed as a review-first copilot:
 
 - Extract possible medication entities from prescription text.
+- Accept prescription image uploads through a privacy-safe OCR intake boundary.
+- Require pharmacist correction before OCR text can become prescription text.
 - Retrieve local trusted medication profile placeholders through a Phase 1 TF-IDF RAG workflow.
 - Surface missing patient context and confidence warnings.
 - Require pharmacist confirmation before generating counseling notes.
@@ -27,9 +29,9 @@ Current scaffold:
 - `data/`: synthetic prescriptions, draft drug profiles, the drug registry, and evaluation templates.
 - `docs/`: architecture, safety, privacy, roadmap, and challenge planning documents.
 
-Planned pipeline:
+Current pipeline:
 
-`Prescription Input -> OCR later -> Text Extraction -> Drug Entity Extraction -> Safety Layer -> RAG Retrieval -> Pharmacist Review -> Patient Counseling`
+`Prescription Image Upload -> Mock OCR Intake -> Pharmacist OCR Correction -> Prescription Text Analysis -> Drug Entity Extraction -> Safety Layer -> RAG Retrieval -> Pharmacist Review -> Patient Counseling`
 
 ## Safety-First Principles
 
@@ -37,6 +39,8 @@ Planned pipeline:
 - AI output is draft support only.
 - Low confidence always requires review.
 - Unknown medication names are not guessed.
+- OCR output is unverified and cannot move downstream until pharmacist correction.
+- Uploaded prescription images are not stored by default.
 - Missing age, pregnancy status, allergies, or current medication context triggers a warning.
 - No real patient data belongs in this repository.
 
@@ -52,13 +56,16 @@ Implemented now:
 - Phase 1.6 knowledge base and evaluation expansion: seven local drug profiles and 20 synthetic RAG evaluation cases.
 - Phase 1.7 controlled knowledge base expansion: 15 local drug profiles and 46 synthetic RAG evaluation cases.
 - Phase 1.8 scalable knowledge base architecture: structured drug registry, KB validation, coverage reporting, and safe future ingestion stubs.
+- Phase 2A privacy-safe OCR intake foundation: image upload route, mock OCR provider, possible identifier warnings, and pharmacist correction workflow.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
-- Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, and safety regressions.
+- Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, OCR intake, and safety regressions.
 
 Not implemented yet:
 
-- OCR.
+- Production OCR.
+- External OCR providers.
+- Prescription image storage.
 - External medical APIs.
 - Dense embeddings or persistent vector database.
 - Production clinical validation.
@@ -121,6 +128,14 @@ npm run dev
 Open `http://localhost:3000`.
 
 Set `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000` if the backend runs on a different host or port.
+
+## Phase 2A OCR Intake
+
+`POST /ocr/extract-image` accepts PNG, JPG, JPEG, and WEBP uploads, rejects unsupported file types, limits upload size, and returns unverified mock OCR text. Images are read in memory and are not persisted by default.
+
+`POST /ocr/confirm-text` accepts pharmacist-corrected OCR text and returns `can_send_to_analysis: true`. The backend does not automatically send OCR output to prescription analysis, RAG, counseling, or drug lookup. The frontend follows the same rule: only the corrected text button can populate the prescription text panel.
+
+The Phase 2A mock OCR provider is deterministic and local. Future OCR providers can be swapped behind the same service interface after privacy review, validation, and pharmacist workflow review.
 
 ## Testing
 

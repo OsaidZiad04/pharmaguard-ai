@@ -5,6 +5,7 @@ from app.api import (
     routes_counseling,
     routes_drugs,
     routes_health,
+    routes_ocr,
     routes_prescriptions,
     routes_rag,
 )
@@ -36,6 +37,7 @@ def create_app() -> FastAPI:
     app.include_router(routes_drugs.router)
     app.include_router(routes_counseling.router)
     app.include_router(routes_rag.router)
+    app.include_router(routes_ocr.router)
 
     return app
 

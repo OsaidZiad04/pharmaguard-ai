@@ -51,7 +51,23 @@
 - Add future ingestion stubs that create draft records and require pharmacist review without calling external APIs. Complete.
 - Keep OCR deferred to Phase 2 and dense retrieval deferred. Complete.
 
-## Phase 2: OCR Integration
+## Phase 2A: Privacy-Safe OCR Intake Foundation - Complete
+
+- Add OCR schemas for unverified extraction, pharmacist correction, and privacy warnings. Complete.
+- Add local mock OCR provider behind a provider-style service boundary. Complete.
+- Add `/ocr/extract-image` with supported image validation, size guard, no default storage, and possible identifier warnings. Complete.
+- Add `/ocr/confirm-text` so corrected text can be explicitly moved into prescription analysis. Complete.
+- Add frontend image upload and pharmacist correction workflow. Complete.
+- Keep OCR output separate from RAG, counseling, and prescription analysis until pharmacist confirmation. Complete.
+
+## Phase 2B: OCR Provider Evaluation
+
+- Evaluate local OCR engines or approved provider integrations behind the existing service boundary.
+- Add OCR quality evaluation against synthetic image fixtures.
+- Add pharmacist correction audit metadata.
+- Keep image storage disabled by default until privacy controls are reviewed.
+
+## Phase 2C: Production-Ready OCR Integration
 
 - Add prescription image upload workflow.
 - Integrate OCR behind a privacy-safe interface.

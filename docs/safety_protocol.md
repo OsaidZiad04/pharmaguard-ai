@@ -5,6 +5,7 @@ PharmaGuard AI supports pharmacists only. It does not replace professional judgm
 ## Non-Negotiable Guardrails
 
 - Never present AI output as a final medical decision.
+- Treat OCR text as unverified until pharmacist correction.
 - Require pharmacist confirmation before generating patient-facing counseling drafts.
 - Treat low confidence extraction as review-required.
 - Do not guess unknown medication names.
@@ -17,6 +18,8 @@ PharmaGuard AI supports pharmacists only. It does not replace professional judgm
 ## Current Scaffold Behavior
 
 The backend safety service always sets pharmacist review as required. The UI displays draft-only wording and separates extraction, drug information, safety alerts, and counseling note output.
+
+Phase 2A adds OCR intake as an assistive input layer. `/ocr/extract-image` returns unverified mock OCR text and possible privacy warnings. `/ocr/confirm-text` records pharmacist-corrected text as eligible for prescription analysis, but it does not automatically invoke analysis, RAG, counseling, or drug lookup.
 
 ## Unsafe Output Avoidance
 
@@ -34,6 +37,7 @@ The system should avoid:
 The pharmacist must verify:
 
 - prescription text accuracy
+- OCR correction accuracy before analysis
 - medication identity
 - dose, route, frequency, and duration
 - patient-specific risk factors
@@ -46,3 +50,4 @@ The pharmacist must verify:
 - Add structured pharmacist sign-off metadata.
 - Add evaluation checks for unsafe claims.
 - Add logging that excludes protected health information.
+- Add OCR quality evaluation with synthetic images before any production OCR provider is considered.

@@ -36,6 +36,19 @@ If real prescriptions are ever used for local experimentation:
 
 Future knowledge-base ingestion must preserve source provenance and reviewer metadata, but that provenance must describe reference sources, not patient-specific records.
 
+## Phase 2A OCR Intake
+
+The OCR intake foundation is privacy-safe by default:
+
+- Uploaded images are read in memory and are not stored by default.
+- Supported uploads are limited to PNG, JPG, JPEG, and WEBP.
+- The mock OCR provider does not call external services.
+- OCR output is unverified and must be corrected by a pharmacist before analysis.
+- Possible identifier patterns are flagged as warnings, not treated as confirmed patient facts.
+- Real prescription images must not be committed to the repository.
+
+If future OCR experiments require local files, they must stay inside `data/private/` or another ignored upload folder and must not be used in commits, tests, or demos.
+
 ## TODO
 
 - Define a formal anonymization checklist.

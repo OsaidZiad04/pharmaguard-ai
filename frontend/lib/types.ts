@@ -102,3 +102,37 @@ export interface RagQueryResponse {
   review_required: boolean;
   insufficient_context: boolean;
 }
+
+export interface PrivacyWarning {
+  code: string;
+  severity: "info" | "warning" | "critical";
+  message: string;
+}
+
+export interface OcrImageUploadResponse {
+  filename: string;
+  content_type: string;
+  extracted_text: string;
+  confidence_score: number;
+  provider_name: string;
+  unverified_ocr_output: boolean;
+  pharmacist_review_required: boolean;
+  privacy_warnings: PrivacyWarning[];
+  detected_possible_identifiers: string[];
+  correction_required: boolean;
+  can_send_to_analysis: boolean;
+}
+
+export interface OcrCorrectionRequest {
+  extracted_text: string;
+  corrected_text: string;
+}
+
+export interface OcrCorrectionResponse {
+  corrected_text: string;
+  pharmacist_review_required: boolean;
+  correction_required: boolean;
+  can_send_to_analysis: boolean;
+  privacy_warnings: PrivacyWarning[];
+  detected_possible_identifiers: string[];
+}

@@ -15,6 +15,8 @@ This directory contains synthetic examples, draft medication knowledge, registry
 - `evaluation/`: synthetic RAG evaluation cases and templates.
 - `private/`: local-only storage for files that must not be committed.
 
+Phase 2A OCR intake does not store uploaded images by default. Any future local OCR experiment files must remain in `data/private/` or another gitignored upload directory and must not contain real patient information.
+
 ## Current Local Drug Profiles
 
 - paracetamol
