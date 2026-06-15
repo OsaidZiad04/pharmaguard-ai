@@ -24,7 +24,7 @@ Current scaffold:
 
 - `backend/`: FastAPI API, services, schemas, tests, and local RAG modules.
 - `frontend/`: Next.js pharmacist dashboard with Tailwind CSS.
-- `data/`: synthetic prescriptions, mock drug profiles, and evaluation templates.
+- `data/`: synthetic prescriptions, draft drug profiles, the drug registry, and evaluation templates.
 - `docs/`: architecture, safety, privacy, roadmap, and challenge planning documents.
 
 Planned pipeline:
@@ -51,9 +51,10 @@ Implemented now:
 - Phase 1.5 RAG hardening: synthetic RAG evaluation cases, citation validation, unsupported-claim regression tests, and a CLI evaluation runner.
 - Phase 1.6 knowledge base and evaluation expansion: seven local drug profiles and 20 synthetic RAG evaluation cases.
 - Phase 1.7 controlled knowledge base expansion: 15 local drug profiles and 46 synthetic RAG evaluation cases.
+- Phase 1.8 scalable knowledge base architecture: structured drug registry, KB validation, coverage reporting, and safe future ingestion stubs.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
-- Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, and safety regressions.
+- Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, and safety regressions.
 
 Not implemented yet:
 
@@ -83,7 +84,9 @@ Current local Markdown profiles:
 - esomeprazole
 - aspirin
 
-Supported aliases are explicit and conservative, such as `acetaminophen -> paracetamol`, `ventolin -> salbutamol`, `glucophage -> metformin`, `norvasc -> amlodipine`, `synthroid -> levothyroxine`, `voltaren -> diclofenac`, and `nexium -> esomeprazole`. Condition-only queries do not map to a medication.
+`data/drug_profiles/drug_registry.json` is now the preferred source of truth for supported generic names, aliases, review status, source status, and whether a profile is enabled for local RAG. All 15 current profiles are marked `review_status: draft` and `source_status: placeholder_educational`; this makes clear that the current content is educational placeholder material, not clinical validation.
+
+Supported aliases are explicit and conservative, such as `acetaminophen -> paracetamol`, `ventolin -> salbutamol`, `glucophage -> metformin`, `norvasc -> amlodipine`, `synthroid -> levothyroxine`, `voltaren -> diclofenac`, and `nexium -> esomeprazole`. Condition-only queries and broad classes such as `antibiotic`, `painkiller`, or `antihistamine` do not map to a medication.
 
 ## Setup
 
@@ -133,9 +136,16 @@ cd backend
 python scripts/evaluate_rag.py
 ```
 
+Run the local knowledge-base coverage report:
+
+```bash
+cd backend
+python scripts/kb_report.py
+```
+
 The evaluation currently contains 46 synthetic cases. It reports retrieval checks (`top_k_hit`, `source_file_hit`, `section_hit`, `insufficient_context_correct`) and generation safety checks for required terms, forbidden terms, draft/pharmacist-review framing, unavailable information, and fabricated citations.
 
-Dense retrieval remains deferred until the TF-IDF baseline has stronger coverage and known failure modes. OCR remains Phase 2 and is intentionally not implemented in the controlled knowledge base expansion phase.
+The KB report summarizes profile counts, aliases, review/source status, missing sections, alias conflicts, disabled profiles, and unreviewed draft profiles. Dense retrieval remains deferred until the TF-IDF baseline and KB governance are stronger. OCR remains Phase 2 and is intentionally not implemented in Phase 1.8.
 
 ## Future Roadmap
 

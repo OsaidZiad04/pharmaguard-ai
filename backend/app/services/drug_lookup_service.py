@@ -2,6 +2,7 @@ import json
 from functools import lru_cache
 from pathlib import Path
 
+from app.kb.registry import get_drug_registry, normalize_drug_term
 from app.schemas.drug import DrugCard, DrugLookupResponse
 from app.schemas.rag import RagDrugCard
 from app.services.safety_service import (
@@ -23,7 +24,10 @@ def load_mock_drug_index() -> dict[str, dict]:
 def lookup_drug_card(drug_name: str) -> DrugLookupResponse:
     index = load_mock_drug_index()
     normalized_name = _normalize(drug_name)
-    key = _resolve_drug_key(normalized_name, index)
+    key = _resolve_registry_drug_key(normalized_name) or _resolve_drug_key(
+        normalized_name,
+        index,
+    )
     rag_name = key or normalized_name
     rag_card = build_rag_drug_card(rag_name)
 
@@ -82,8 +86,18 @@ def _resolve_drug_key(normalized_name: str, index: dict[str, dict]) -> str | Non
     return None
 
 
+def _resolve_registry_drug_key(normalized_name: str) -> str | None:
+    try:
+        registry = get_drug_registry()
+    except (FileNotFoundError, ValueError):
+        return None
+
+    resolved = registry.resolve_drug_name(normalized_name)
+    return normalize_drug_term(resolved) if resolved else None
+
+
 def _normalize(value: str) -> str:
-    return value.strip().lower().replace("-", " ")
+    return normalize_drug_term(value)
 
 
 def _drug_card_from_rag(

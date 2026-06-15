@@ -2,7 +2,9 @@ from dataclasses import dataclass
 from functools import lru_cache
 import json
 from pathlib import Path
+import re
 
+from app.kb.registry import get_drug_registry, normalize_drug_term
 from app.rag.chunker import DocumentChunk, load_drug_profile_chunks
 from app.rag.embedder import TfidfEmbedder
 from app.rag.vector_store import InMemoryVectorStore
@@ -80,22 +82,22 @@ class LocalRagIndex:
 
     def _resolve_drug_name(self, query: str, medication_name: str | None) -> str | None:
         if medication_name:
-            normalized = medication_name.strip().lower()
+            normalized = normalize_drug_term(medication_name)
             if normalized in self.known_drug_names:
                 return normalized
             if normalized in self.alias_map:
                 return self.alias_map[normalized]
             return None
 
-        normalized_query = query.lower()
+        normalized_query = normalize_drug_term(query)
         for alias, canonical_name in self.alias_map.items():
-            if alias in normalized_query:
+            if _contains_term(normalized_query, alias):
                 return canonical_name
 
         matches = [
             drug_name
             for drug_name in self.known_drug_names
-            if drug_name in normalized_query
+            if _contains_term(normalized_query, drug_name)
         ]
         if not matches:
             return None
@@ -128,6 +130,10 @@ def _chunk_search_text(chunk: DocumentChunk) -> str:
 
 
 def _load_alias_map(known_drug_names: set[str]) -> dict[str, str]:
+    registry_aliases = _load_registry_alias_map(known_drug_names)
+    if registry_aliases:
+        return registry_aliases
+
     if not MOCK_INDEX_PATH.exists():
         return {}
 
@@ -136,9 +142,32 @@ def _load_alias_map(known_drug_names: set[str]) -> dict[str, str]:
 
     aliases: dict[str, str] = {}
     for canonical_name, profile in index.items():
-        normalized_canonical = canonical_name.lower()
+        normalized_canonical = normalize_drug_term(canonical_name)
         if normalized_canonical not in known_drug_names:
             continue
         for alias in profile.get("aliases", []):
-            aliases[alias.strip().lower()] = normalized_canonical
+            aliases[normalize_drug_term(alias)] = normalized_canonical
     return aliases
+
+
+def _load_registry_alias_map(known_drug_names: set[str]) -> dict[str, str]:
+    try:
+        registry = get_drug_registry()
+    except (FileNotFoundError, ValueError):
+        return {}
+
+    aliases: dict[str, str] = {}
+    for entry in registry.list_enabled_drugs():
+        canonical_name = normalize_drug_term(entry.generic_name)
+        if canonical_name not in known_drug_names:
+            continue
+        for alias in entry.aliases:
+            normalized_alias = normalize_drug_term(alias)
+            if normalized_alias and normalized_alias not in registry.duplicate_aliases:
+                aliases[normalized_alias] = canonical_name
+    return aliases
+
+
+def _contains_term(normalized_text: str, normalized_term: str) -> bool:
+    pattern = rf"(?<!\w){re.escape(normalized_term)}(?!\w)"
+    return re.search(pattern, normalized_text) is not None

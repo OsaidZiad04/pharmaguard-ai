@@ -20,6 +20,8 @@ Do not commit:
 
 Use synthetic examples that are clearly fictional. The examples in `data/sample_prescriptions/synthetic_cases.json` are fabricated for software testing.
 
+The local drug profiles and `data/drug_profiles/drug_registry.json` contain educational placeholder knowledge-base metadata only. They must not contain patient identifiers, clinic identifiers, real prescription details, or claims of clinical validation.
+
 ## Real Prescription Handling
 
 If real prescriptions are ever used for local experimentation:
@@ -31,6 +33,8 @@ If real prescriptions are ever used for local experimentation:
 5. Store files only inside `data/private/`.
 6. Confirm `data/private/` contents are ignored by git.
 7. Do not upload real data to external AI APIs without formal approval and privacy review.
+
+Future knowledge-base ingestion must preserve source provenance and reviewer metadata, but that provenance must describe reference sources, not patient-specific records.
 
 ## TODO
 

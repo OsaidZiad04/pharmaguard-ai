@@ -1,8 +1,9 @@
 import re
 
+from app.kb.registry import get_drug_registry, normalize_drug_term
 from app.utils.text_cleaning import normalize_whitespace
 
-MEDICATION_ALIASES = {
+FALLBACK_MEDICATION_ALIASES = {
     "paracetamol": "paracetamol",
     "acetaminophen": "paracetamol",
     "ibuprofen": "ibuprofen",
@@ -32,6 +33,7 @@ MEDICATION_ALIASES = {
     "aspirin": "aspirin",
     "acetylsalicylic acid": "aspirin",
 }
+MEDICATION_ALIASES = {}
 
 STRENGTH_PATTERN = re.compile(
     r"\b\d+(?:\.\d+)?\s?(?:mg|mcg|g|ml|mL|%)"
@@ -58,7 +60,7 @@ def extract_medication_candidates(raw_text: str) -> list[dict]:
     candidates: list[dict] = []
     seen: set[str] = set()
 
-    for alias, canonical_name in MEDICATION_ALIASES.items():
+    for alias, canonical_name in _medication_aliases().items():
         match = re.search(rf"\b{re.escape(alias)}\b", lower_text)
         if not match or canonical_name in seen:
             continue
@@ -109,3 +111,27 @@ def _estimate_confidence(strength: str | None, directions: str | None) -> float:
     if not directions:
         confidence -= 0.12
     return round(max(confidence, 0.0), 2)
+
+
+def _medication_aliases() -> dict[str, str]:
+    global MEDICATION_ALIASES
+    if MEDICATION_ALIASES:
+        return MEDICATION_ALIASES
+
+    try:
+        registry = get_drug_registry()
+    except (FileNotFoundError, ValueError):
+        MEDICATION_ALIASES = FALLBACK_MEDICATION_ALIASES.copy()
+        return MEDICATION_ALIASES
+
+    aliases: dict[str, str] = {}
+    for entry in registry.list_enabled_drugs():
+        generic_name = normalize_drug_term(entry.generic_name)
+        aliases[generic_name] = generic_name
+        for alias in entry.aliases:
+            normalized_alias = normalize_drug_term(alias)
+            if normalized_alias and normalized_alias not in registry.duplicate_aliases:
+                aliases[normalized_alias] = generic_name
+
+    MEDICATION_ALIASES = aliases or FALLBACK_MEDICATION_ALIASES.copy()
+    return MEDICATION_ALIASES

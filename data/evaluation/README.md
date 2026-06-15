@@ -9,7 +9,7 @@ Do not use real patient data. Evaluation cases must be fabricated, versioned, an
 `rag_eval_cases.json` currently contains 46 synthetic cases covering:
 
 - supported local drug profiles
-- alias handling where the mock index supports it
+- alias handling from the drug registry, with the mock index retained as compatibility fallback
 - unknown medication names
 - weak queries with no clear medication
 - condition-only queries that must not map to arbitrary drugs
@@ -33,4 +33,10 @@ Metrics:
 
 All evaluation content is synthetic and non-clinical.
 
-Dense retrieval is deferred until this TF-IDF baseline has stronger coverage and known failure modes. Phase 1.8 should focus on scalable knowledge-base architecture. OCR is still Phase 2 and is intentionally not part of controlled knowledge base expansion.
+Phase 1.8 adds KB registry and validation checks around the same evaluation baseline. Run the KB coverage report from `backend/`:
+
+```bash
+python scripts/kb_report.py
+```
+
+Dense retrieval is deferred until this TF-IDF baseline and registry governance have stronger coverage and known failure modes. OCR is still Phase 2 and is intentionally not part of scalable knowledge base architecture work.

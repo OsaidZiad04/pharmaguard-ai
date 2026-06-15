@@ -41,12 +41,15 @@
 - Keep condition-only queries from mapping to arbitrary medications. Complete.
 - Keep OCR deferred to Phase 2 and dense retrieval deferred. Complete.
 
-## Phase 1.8: Scalable Knowledge Base Architecture - Next
+## Phase 1.8: Scalable Knowledge Base Architecture - Complete
 
-- Define structured metadata for drug profiles, aliases, sections, and source provenance.
-- Add validation tooling for profile completeness and unsafe phrases.
-- Explore separating knowledge content from retrieval index construction.
-- Prepare for future approved reference ingestion without adding external APIs yet.
+- Add `drug_registry.json` with one structured metadata entry for each of the 15 current profiles. Complete.
+- Mark current profiles as draft educational placeholders, not clinically validated content. Complete.
+- Add registry loading, generic lookup, alias lookup, enabled-profile listing, missing-profile tracking, and duplicate-alias detection. Complete.
+- Add profile validation for required metadata, required Markdown sections, source status, review status, alias conflicts, disabled profiles, and unreviewed draft profiles. Complete.
+- Add `python scripts/kb_report.py` for coverage and validation reporting. Complete.
+- Add future ingestion stubs that create draft records and require pharmacist review without calling external APIs. Complete.
+- Keep OCR deferred to Phase 2 and dense retrieval deferred. Complete.
 
 ## Phase 2: OCR Integration
 

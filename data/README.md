@@ -1,6 +1,6 @@
 # Data
 
-This directory contains synthetic examples and placeholder medication knowledge for development.
+This directory contains synthetic examples, draft medication knowledge, registry metadata, and evaluation data for development.
 
 ## Critical Warning
 
@@ -10,7 +10,7 @@ This directory contains synthetic examples and placeholder medication knowledge 
 
 ## Contents
 
-- `drug_profiles/`: neutral placeholder Markdown profiles.
+- `drug_profiles/`: neutral placeholder Markdown profiles and `drug_registry.json`.
 - `sample_prescriptions/`: synthetic prescription text cases only.
 - `evaluation/`: synthetic RAG evaluation cases and templates.
 - `private/`: local-only storage for files that must not be committed.
@@ -35,7 +35,11 @@ This directory contains synthetic examples and placeholder medication knowledge 
 
 The profiles are local educational placeholders for pharmacist-support retrieval tests. They are not complete real pharmacy coverage, clinical validation, final medication references, or patient-specific instructions.
 
+`drug_profiles/drug_registry.json` is the governed MVP registry for this folder. It tracks supported generic names, conservative aliases, profile files, draft review status, placeholder source status, safety notes, and whether a profile is enabled for local RAG. All current entries are draft and unreviewed.
+
+Adding hundreds of manual Markdown files is not the intended long-term strategy. Future scale should use structured ingestion with provenance, source versioning, validation, and pharmacist approval before a profile is enabled.
+
 ## TODO
 
 - Add automated checks that reject likely patient identifiers.
-- Add source metadata when real approved reference documents are introduced.
+- Add reviewed source metadata when approved reference documents are introduced.
