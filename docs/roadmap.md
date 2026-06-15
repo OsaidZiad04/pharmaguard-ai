@@ -109,13 +109,21 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Keep mock and synthetic fixture providers as the only active OCR providers. Complete.
 - Do not integrate cloud OCR without formal review. Complete.
 
-## Phase 2G: Local OCR Adapter Benchmarking
+## Phase 2G: End-to-End OCR-to-RAG Workflow Evaluation - Complete
+
+- Add synthetic end-to-end workflow cases. Complete.
+- Evaluate OCR output through pharmacist correction, prescription analysis, extraction, RAG retrieval, and counseling drafts. Complete.
+- Prove unverified OCR does not go downstream automatically. Complete.
+- Check unknown medications, possible identifier warnings, exact-dose prompts, and final-advice prompts. Complete.
+- Keep real OCR, Tesseract activation, external APIs, and real prescription data deferred. Complete.
+
+## Phase 2H: Local OCR Adapter Benchmarking
 
 - If dependencies are installed outside the project, benchmark the disabled Tesseract adapter against synthetic fixtures without making it default.
 - Compare OCR text against pharmacist corrections.
 - Keep provider activation gated by privacy, dependency, and quality checks.
 
-## Phase 2H: Production-Ready OCR Integration
+## Phase 2I: Production-Ready OCR Integration
 
 - Add production-ready OCR workflow only after provider validation.
 - Define confidence scoring and audit retention policy for OCR output.

@@ -25,6 +25,8 @@ Phase 2B adds synthetic OCR evaluation metrics and returned correction audit met
 
 Phase 2C adds explicit OCR provider safety metadata. Current providers are local, non-external, non-networked, and non-storing. Explicit external provider names are rejected in prototype mode. Provider metadata must not be used to bypass pharmacist correction or downstream safety checks.
 
+Phase 2G adds end-to-end synthetic workflow evaluation. It verifies that unverified OCR output is not sent downstream, corrected text is the boundary for prescription analysis, supported medications retrieve source-grounded RAG context, and counseling drafts remain pharmacist-support only. This evaluation is an engineering check, not clinical validation.
+
 ## Unsafe Output Avoidance
 
 The system should avoid:

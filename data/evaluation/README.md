@@ -60,3 +60,15 @@ Metrics:
 - `privacy_warning_match`: expected possible identifier categories match detected categories.
 
 These metrics are synthetic engineering checks for OCR workflow readiness. They are not clinical validation and do not certify production OCR quality.
+
+## End-to-End Workflow Evaluation
+
+`e2e_workflow_cases.json` contains 10 synthetic OCR-to-RAG workflow cases covering clean supported medication text, noisy OCR correction, multiple supported medications, supported plus unsupported medication-like text, unknown medication, possible identifier warnings, no medication detected, exact-dose prompts, final-advice prompts, and fixture-backed OCR.
+
+Run from `backend/`:
+
+```bash
+python scripts/evaluate_e2e_workflow.py
+```
+
+The evaluator verifies that unverified OCR does not go downstream automatically, pharmacist-corrected text can move into prescription analysis, supported medications retrieve source-backed RAG context, unknown medications remain insufficient context, and counseling drafts remain pharmacist-support only. It is synthetic workflow evaluation, not clinical validation.

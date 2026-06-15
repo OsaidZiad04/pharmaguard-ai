@@ -2,6 +2,7 @@
 
 Phase 2B adds a local evaluation and audit layer around the Phase 2A OCR intake boundary.
 Phase 2C extends this with fixture-backed cases through the local `SyntheticFixtureOcrProvider`. Phase 2D adds provider-specific quality gates and expanded synthetic fixture coverage. Phase 2F adds a disabled local Tesseract adapter skeleton, but it is not included in OCR evaluation until a future benchmark phase explicitly enables it.
+Phase 2G adds a separate end-to-end OCR-to-RAG workflow evaluation after pharmacist correction.
 
 ## Scope
 
@@ -115,3 +116,22 @@ Any future OCR provider must pass this boundary before being considered for work
 - possible identifiers remain warnings, not confirmed PII
 - no automatic handoff to RAG, counseling, lookup, or prescription analysis
 - no image storage without explicit privacy controls
+
+## End-to-End Workflow Evaluation
+
+Phase 2G adds `data/evaluation/e2e_workflow_cases.json` and `backend/scripts/evaluate_e2e_workflow.py`.
+
+This evaluation checks that:
+
+- unverified OCR text is not sent downstream
+- pharmacist-corrected text can be analyzed
+- supported medications retrieve source-backed RAG context
+- unsupported medications return insufficient knowledge-base context
+- counseling drafts remain pharmacist-support only
+- possible identifiers remain warnings only
+
+Run from `backend/`:
+
+```bash
+python scripts/evaluate_e2e_workflow.py
+```

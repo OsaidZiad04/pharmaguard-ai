@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, and Phase 2F disabled local OCR adapter scaffolding.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, and Phase 2G end-to-end OCR-to-RAG workflow evaluation.
 
 ## Pipeline
 
@@ -131,6 +131,16 @@ Phase 2F adds a disabled-by-default Tesseract adapter boundary without installin
 - Provider and candidate reports show Tesseract as adapter-defined but inactive, with dependency status and required next steps.
 
 Mock and synthetic fixture providers remain the only active OCR providers. OCR output remains unverified, and pharmacist correction remains mandatory.
+
+## Phase 2G End-to-End OCR-to-RAG Workflow Evaluation
+
+Phase 2G evaluates the integrated safe workflow without adding automation from unverified OCR.
+
+- `data/evaluation/e2e_workflow_cases.json` contains synthetic OCR-to-RAG workflow cases.
+- `backend/app/workflows/e2e_evaluation.py` simulates OCR output, pharmacist correction, prescription analysis, medication extraction, RAG retrieval, and counseling draft generation.
+- `backend/scripts/evaluate_e2e_workflow.py` prints privacy, extraction, RAG grounding, counseling, safety, and pharmacist-review summaries.
+
+The evaluator uses corrected pharmacist text as the downstream boundary. It does not make `/ocr/extract-image` automatically call prescription analysis, RAG, lookup, or counseling.
 
 ## Phase 1.7 Controlled Knowledge Base Expansion
 

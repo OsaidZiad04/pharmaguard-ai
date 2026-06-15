@@ -64,6 +64,7 @@ Implemented now:
 - Phase 2D OCR quality benchmarking and provider swap readiness: expanded synthetic fixtures, provider-level benchmark summaries, and prototype quality gates.
 - Phase 2E OCR provider candidate comparison: metadata-only candidate registry, readiness matrix, and candidate report for future provider decisions.
 - Phase 2F optional local OCR provider adapter spike: disabled-by-default Tesseract adapter skeleton and local dependency checks.
+- Phase 2G end-to-end OCR-to-RAG workflow evaluation: synthetic workflow cases proving corrected text is the downstream boundary.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
 - Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, OCR intake, and safety regressions.
@@ -155,6 +156,8 @@ Phase 2E adds a metadata-only OCR provider candidate matrix. Tesseract and EasyO
 
 Phase 2F adds a `tesseract_local_candidate` adapter skeleton and dependency checks without installing or activating Tesseract. The adapter is disabled by default, not prototype-allowed, and returns a controlled unavailable status if requested.
 
+Phase 2G adds synthetic end-to-end OCR-to-RAG workflow evaluation. It verifies that unverified OCR is not sent downstream, pharmacist-corrected text can be analyzed, supported medications retrieve source-backed RAG context, unknown medications remain insufficient context, and counseling drafts stay pharmacist-support only.
+
 ## Testing
 
 ```bash
@@ -197,9 +200,16 @@ cd backend
 python scripts/ocr_candidate_report.py
 ```
 
+Run the end-to-end OCR-to-RAG workflow evaluation:
+
+```bash
+cd backend
+python scripts/evaluate_e2e_workflow.py
+```
+
 The evaluation currently contains 46 synthetic cases. It reports retrieval checks (`top_k_hit`, `source_file_hit`, `section_hit`, `insufficient_context_correct`) and generation safety checks for required terms, forbidden terms, draft/pharmacist-review framing, unavailable information, and fabricated citations.
 
-The OCR evaluation currently contains 18 synthetic cases, including 10 fixture-backed cases, and reports character error rate, word error rate, medication term detection, privacy-warning matching, provider-level summaries, and quality gate status. These are engineering checks for the OCR workflow, not clinical validation.
+The OCR evaluation currently contains 18 synthetic cases, including 10 fixture-backed cases, and reports character error rate, word error rate, medication term detection, privacy-warning matching, provider-level summaries, and quality gate status. The E2E workflow evaluation currently contains 10 synthetic cases covering corrected-text handoff into prescription analysis, RAG, and counseling. These are engineering checks for the OCR workflow, not clinical validation.
 
 The KB report summarizes profile counts, aliases, review/source status, missing sections, alias conflicts, disabled profiles, and unreviewed draft profiles. Dense retrieval remains deferred until the TF-IDF baseline and KB governance are stronger. Production OCR and external OCR providers remain deferred.
 
@@ -207,7 +217,7 @@ The KB report summarizes profile counts, aliases, review/source status, missing 
 
 See [docs/roadmap.md](docs/roadmap.md).
 
-For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md).
+For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md).
 
 ## Data Warning
 
