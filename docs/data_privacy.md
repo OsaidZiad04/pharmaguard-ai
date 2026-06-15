@@ -49,8 +49,17 @@ The OCR intake foundation is privacy-safe by default:
 
 If future OCR experiments require local files, they must stay inside `data/private/` or another ignored upload folder and must not be used in commits, tests, or demos.
 
+## Phase 2B OCR Evaluation And Audit
+
+`data/evaluation/ocr_eval_cases.json` contains synthetic OCR text cases only. It must not be replaced with real prescription text or image-derived patient data.
+
+Correction audit metadata is returned directly from `/ocr/confirm-text` and is not persisted in a database in Phase 2B. The audit can include the original OCR text and pharmacist-corrected text, so it must be treated as sensitive workflow data if real records are ever introduced under a future approved process.
+
+Possible identifier findings remain category-level warnings, such as `patient_name_label` or `phone_number_like`. They are not confirmed PII determinations.
+
 ## TODO
 
 - Define a formal anonymization checklist.
 - Add automated PHI scanning before commits.
 - Add a secure local-only upload folder for future OCR experiments.
+- Define retention and access rules before any OCR audit persistence is added.

@@ -7,8 +7,8 @@ from app.schemas.ocr import (
     OcrCorrectionResponse,
     OcrImageUploadResponse,
 )
+from app.services.ocr_audit_service import build_ocr_correction_audit
 from app.services.ocr_service import (
-    confirm_corrected_ocr_text,
     extract_text_from_image,
 )
 
@@ -62,15 +62,19 @@ async def extract_image(file: UploadFile = File(...)) -> OcrImageUploadResponse:
 @router.post("/confirm-text", response_model=OcrCorrectionResponse)
 def confirm_text(payload: OcrCorrectionRequest) -> OcrCorrectionResponse:
     corrected_text = payload.corrected_text.strip()
-    detected_identifiers, privacy_warnings = confirm_corrected_ocr_text(corrected_text)
+    audit = build_ocr_correction_audit(
+        original_ocr_text=payload.extracted_text,
+        corrected_text=corrected_text,
+    )
 
     return OcrCorrectionResponse(
         corrected_text=corrected_text,
         pharmacist_review_required=True,
         correction_required=False,
         can_send_to_analysis=True,
-        privacy_warnings=privacy_warnings,
-        detected_possible_identifiers=detected_identifiers,
+        privacy_warnings=audit.privacy_warnings,
+        detected_possible_identifiers=audit.detected_possible_identifiers,
+        correction_audit=audit,
     )
 
 

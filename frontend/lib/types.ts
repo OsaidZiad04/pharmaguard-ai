@@ -128,6 +128,29 @@ export interface OcrCorrectionRequest {
   corrected_text: string;
 }
 
+export interface OcrCorrectionDiff {
+  changed: boolean;
+  character_error_rate: number;
+  word_error_rate: number;
+  token_overlap_score: number;
+}
+
+export interface OcrCorrectionAudit {
+  original_ocr_text: string;
+  corrected_text: string;
+  changed: boolean;
+  change_summary: string;
+  diff: OcrCorrectionDiff;
+  character_error_rate: number;
+  word_error_rate: number;
+  detected_medication_terms: string[];
+  privacy_warnings: PrivacyWarning[];
+  detected_possible_identifiers: string[];
+  pharmacist_review_required: boolean;
+  can_send_to_analysis: boolean;
+  generated_at: string;
+}
+
 export interface OcrCorrectionResponse {
   corrected_text: string;
   pharmacist_review_required: boolean;
@@ -135,4 +158,5 @@ export interface OcrCorrectionResponse {
   can_send_to_analysis: boolean;
   privacy_warnings: PrivacyWarning[];
   detected_possible_identifiers: string[];
+  correction_audit?: OcrCorrectionAudit | null;
 }

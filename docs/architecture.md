@@ -1,10 +1,10 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, and Phase 2A privacy-safe OCR intake foundation.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, and Phase 2B OCR evaluation/correction audit.
 
 ## Pipeline
 
-`Prescription Image Upload -> Mock OCR Intake -> Pharmacist OCR Correction -> Prescription Text Analysis -> Drug Entity Extraction -> Safety Layer -> RAG Retrieval -> Pharmacist Review -> Patient Counseling`
+`Prescription Image Upload -> Mock OCR Intake -> Pharmacist OCR Correction + Audit -> Prescription Text Analysis -> Drug Entity Extraction -> Safety Layer -> RAG Retrieval -> Pharmacist Review -> Patient Counseling`
 
 ## Stages
 
@@ -14,7 +14,7 @@ PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current im
 
 2. OCR Intake
    - Current: `ocr_service.py` exposes a provider boundary and a deterministic mock OCR provider. `/ocr/extract-image` accepts supported image formats, reads uploads in memory, does not persist images by default, returns unverified text, and flags possible identifier patterns.
-   - Current: `/ocr/confirm-text` accepts pharmacist-corrected text. Only corrected text can be manually moved into prescription analysis.
+   - Current: `/ocr/confirm-text` accepts pharmacist-corrected text and returns correction audit metadata. Only corrected text can be manually moved into prescription analysis.
    - Later: validated OCR providers can be swapped behind the same interface after privacy and safety review.
 
 3. Text Extraction
@@ -71,6 +71,18 @@ Phase 2A adds OCR as an assistive input layer, not as a source of final truth.
 - The frontend shows editable OCR text and requires a pharmacist action before corrected text is placed into the prescription text workflow.
 
 This boundary is designed so a future OCR implementation can be swapped without weakening the downstream pharmacist confirmation gates.
+
+## Phase 2B OCR Evaluation And Correction Audit
+
+Phase 2B adds evaluation and auditability around the mock OCR intake boundary.
+
+- `data/evaluation/ocr_eval_cases.json` contains 10 synthetic text-only OCR cases.
+- `app/ocr/evaluation.py` provides deterministic character error rate, word error rate, token overlap, medication term hit, and privacy warning match metrics.
+- `app/services/ocr_audit_service.py` builds returned correction audit metadata without database persistence.
+- `backend/scripts/evaluate_ocr.py` runs the synthetic OCR evaluation and prints pass/fail status, average error rates, medication detection summary, and privacy warning summary.
+- `/ocr/confirm-text` returns `correction_audit` with changed status, difference metrics, detected supported medication terms, privacy warning categories, and generated timestamp.
+
+The metrics are synthetic engineering checks. They do not validate clinical correctness, OCR production quality, patient identity, or medication appropriateness. OCR output remains unverified until pharmacist correction and still does not automatically invoke prescription analysis, RAG, counseling, or lookup.
 
 ## Phase 1.7 Controlled Knowledge Base Expansion
 
@@ -140,6 +152,7 @@ Dense retrieval is a documented future option only. It is deferred until the TF-
 - `app/api`: FastAPI routes.
 - `app/schemas`: Pydantic request/response contracts.
 - `app/services`: prescription, safety, lookup, counseling, and RAG orchestration logic.
+- `app/ocr`: local OCR evaluation metrics and synthetic evaluation runner logic.
 - `app/rag`: local TF-IDF RAG components, evaluation, and citation validation.
 - `app/kb`: registry loading, validation, coverage reporting models, and future ingestion scaffolding.
 - `app/sample_data`: local mock drug index.

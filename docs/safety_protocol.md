@@ -21,6 +21,8 @@ The backend safety service always sets pharmacist review as required. The UI dis
 
 Phase 2A adds OCR intake as an assistive input layer. `/ocr/extract-image` returns unverified mock OCR text and possible privacy warnings. `/ocr/confirm-text` records pharmacist-corrected text as eligible for prescription analysis, but it does not automatically invoke analysis, RAG, counseling, or drug lookup.
 
+Phase 2B adds synthetic OCR evaluation metrics and returned correction audit metadata. Character error rate, word error rate, token overlap, medication term hits, and privacy-warning matches are engineering checks only. They do not validate clinical correctness, patient identity, diagnosis, treatment, or production OCR quality.
+
 ## Unsafe Output Avoidance
 
 The system should avoid:
@@ -50,4 +52,5 @@ The pharmacist must verify:
 - Add structured pharmacist sign-off metadata.
 - Add evaluation checks for unsafe claims.
 - Add logging that excludes protected health information.
-- Add OCR quality evaluation with synthetic images before any production OCR provider is considered.
+- Add synthetic image fixtures before any production OCR provider is considered.
+- Add pharmacist sign-off and audit-retention policy before correction audits are stored.

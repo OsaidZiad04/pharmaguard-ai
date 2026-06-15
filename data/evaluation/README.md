@@ -1,6 +1,6 @@
 # Evaluation
 
-This directory contains synthetic evaluation templates and RAG evaluation cases.
+This directory contains synthetic evaluation templates, RAG evaluation cases, and OCR evaluation cases.
 
 Do not use real patient data. Evaluation cases must be fabricated, versioned, and reviewed for safety.
 
@@ -40,3 +40,23 @@ python scripts/kb_report.py
 ```
 
 Dense retrieval is deferred until this TF-IDF baseline and registry governance have stronger coverage and known failure modes. OCR is still Phase 2 and is intentionally not part of scalable knowledge base architecture work.
+
+## OCR Evaluation
+
+`ocr_eval_cases.json` contains 10 synthetic text-only OCR cases covering clean OCR, noisy medication text, possible identifier labels, phone-like numbers, clinic labels, supported and unsupported medication names, multiple medication terms, ambiguous handwriting-like errors represented as text, and no-medication cases.
+
+Run from `backend/`:
+
+```bash
+python scripts/evaluate_ocr.py
+```
+
+Metrics:
+
+- `character_error_rate`: edit distance between expected corrected text and mock OCR text, normalized by reference characters.
+- `word_error_rate`: token edit distance between expected corrected text and mock OCR text.
+- `token_overlap_score`: deterministic token overlap between expected corrected text and mock OCR text.
+- `medication_detection_hit`: expected medication terms appear in corrected synthetic text, or no supported medication is inferred when none is expected.
+- `privacy_warning_match`: expected possible identifier categories match detected categories.
+
+These metrics are synthetic engineering checks for OCR workflow readiness. They are not clinical validation and do not certify production OCR quality.

@@ -60,14 +60,24 @@
 - Add frontend image upload and pharmacist correction workflow. Complete.
 - Keep OCR output separate from RAG, counseling, and prescription analysis until pharmacist confirmation. Complete.
 
-## Phase 2B: OCR Provider Evaluation
+## Phase 2B: OCR Evaluation & Pharmacist Correction Audit - Complete
+
+- Add 10 synthetic OCR evaluation cases. Complete.
+- Add deterministic text-quality metrics: character error rate, word error rate, and token overlap. Complete.
+- Add medication term hit and privacy warning match checks for synthetic OCR cases. Complete.
+- Return pharmacist correction audit metadata from `/ocr/confirm-text`. Complete.
+- Add OCR evaluation runner at `python scripts/evaluate_ocr.py`. Complete.
+- Keep OCR output separate from RAG, counseling, lookup, and prescription analysis until pharmacist confirmation. Complete.
+- Avoid persistent audit storage, real prescription data, and external OCR APIs. Complete.
+
+## Phase 2C: OCR Provider Evaluation
 
 - Evaluate local OCR engines or approved provider integrations behind the existing service boundary.
 - Add OCR quality evaluation against synthetic image fixtures.
-- Add pharmacist correction audit metadata.
+- Add pharmacist correction audit metadata persistence only after privacy controls are reviewed.
 - Keep image storage disabled by default until privacy controls are reviewed.
 
-## Phase 2C: Production-Ready OCR Integration
+## Phase 2D: Production-Ready OCR Integration
 
 - Add prescription image upload workflow.
 - Integrate OCR behind a privacy-safe interface.

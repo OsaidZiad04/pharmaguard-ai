@@ -4,7 +4,11 @@ import { useRef, useState } from "react";
 import { CheckCircle2, FileWarning, ImageUp, ShieldAlert, Upload } from "lucide-react";
 
 import { confirmOcrText, uploadPrescriptionImage } from "@/lib/api";
-import type { OcrImageUploadResponse, PrivacyWarning } from "@/lib/types";
+import type {
+  OcrCorrectionResponse,
+  OcrImageUploadResponse,
+  PrivacyWarning
+} from "@/lib/types";
 
 interface PrescriptionImageUploadCardProps {
   onUseCorrectedText: (correctedText: string) => void;
@@ -16,6 +20,7 @@ export function PrescriptionImageUploadCard({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [ocrResult, setOcrResult] = useState<OcrImageUploadResponse | null>(null);
+  const [confirmation, setConfirmation] = useState<OcrCorrectionResponse | null>(null);
   const [correctedText, setCorrectedText] = useState("");
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +39,7 @@ export function PrescriptionImageUploadCard({
     try {
       const result = await uploadPrescriptionImage(selectedFile);
       setOcrResult(result);
+      setConfirmation(null);
       setCorrectedText(result.extracted_text);
       setSelectedFile(null);
       if (inputRef.current) {
@@ -61,6 +67,7 @@ export function PrescriptionImageUploadCard({
         corrected_text: correctedText
       });
       if (response.can_send_to_analysis) {
+        setConfirmation(response);
         onUseCorrectedText(response.corrected_text);
         setStatusMessage("Corrected text is ready in the prescription text panel.");
       }
@@ -136,6 +143,9 @@ export function PrescriptionImageUploadCard({
           </div>
 
           <PrivacyWarnings warnings={ocrResult.privacy_warnings} />
+          {confirmation?.privacy_warnings.length ? (
+            <PrivacyWarnings warnings={confirmation.privacy_warnings} title="Correction audit privacy warnings" />
+          ) : null}
 
           <div>
             <div className="mb-2 flex items-center justify-between gap-3">
@@ -178,6 +188,10 @@ export function PrescriptionImageUploadCard({
               {isConfirming ? "Confirming" : "Use corrected text for prescription analysis"}
             </button>
           </div>
+
+          {confirmation?.correction_audit && (
+            <CorrectionAuditSummary confirmation={confirmation} />
+          )}
         </div>
       )}
     </section>
@@ -193,7 +207,13 @@ function StatusItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-function PrivacyWarnings({ warnings }: { warnings: PrivacyWarning[] }) {
+function PrivacyWarnings({
+  warnings,
+  title = "Privacy warnings"
+}: {
+  warnings: PrivacyWarning[];
+  title?: string;
+}) {
   if (warnings.length === 0) {
     return null;
   }
@@ -202,7 +222,7 @@ function PrivacyWarnings({ warnings }: { warnings: PrivacyWarning[] }) {
     <div className="rounded-md border border-amber-200 bg-amber-50 p-3">
       <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-amber-900">
         <ShieldAlert aria-hidden="true" size={16} />
-        Privacy warnings
+        {title}
       </div>
       <ul className="space-y-1 text-sm leading-6 text-amber-900">
         {warnings.map((warning, index) => (
@@ -211,4 +231,44 @@ function PrivacyWarnings({ warnings }: { warnings: PrivacyWarning[] }) {
       </ul>
     </div>
   );
+}
+
+function CorrectionAuditSummary({
+  confirmation
+}: {
+  confirmation: OcrCorrectionResponse;
+}) {
+  const audit = confirmation.correction_audit;
+  if (!audit) {
+    return null;
+  }
+
+  return (
+    <div className="rounded-md border border-pharma-line bg-slate-50 p-4">
+      <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+        <h3 className="text-sm font-semibold text-pharma-ink">Correction audit</h3>
+        <span className="text-xs font-medium text-pharma-muted">
+          {confirmation.can_send_to_analysis ? "Ready for analysis" : "Not ready"}
+        </span>
+      </div>
+      <p className="text-sm leading-6 text-pharma-muted">{audit.change_summary}</p>
+      <div className="mt-3 grid gap-3 text-sm sm:grid-cols-3">
+        <StatusItem label="Text changed" value={audit.changed ? "Yes" : "No"} />
+        <StatusItem label="Character difference" value={formatRate(audit.character_error_rate)} />
+        <StatusItem label="Word difference" value={formatRate(audit.word_error_rate)} />
+      </div>
+      {audit.detected_medication_terms.length > 0 && (
+        <div className="mt-3 text-sm text-pharma-muted">
+          Detected terms:{" "}
+          <span className="font-medium text-pharma-ink">
+            {audit.detected_medication_terms.join(", ")}
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function formatRate(value: number) {
+  return `${Math.round(value * 100)}%`;
 }

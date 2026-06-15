@@ -69,6 +69,9 @@ def test_confirm_text_endpoint_returns_corrected_text_for_analysis() -> None:
     assert payload["pharmacist_review_required"] is True
     assert payload["correction_required"] is False
     assert payload["can_send_to_analysis"] is True
+    assert payload["correction_audit"]["changed"] is True
+    assert payload["correction_audit"]["pharmacist_review_required"] is True
+    assert "paracetamol" in payload["correction_audit"]["detected_medication_terms"]
 
 
 def test_ocr_confirm_text_does_not_trigger_prescription_analysis() -> None:
@@ -84,3 +87,21 @@ def test_ocr_confirm_text_does_not_trigger_prescription_analysis() -> None:
     payload = response.json()
     assert "extracted_medications" not in payload
     assert "grounded_answer" not in payload
+    assert "correction_audit" in payload
+    assert "retrieved_chunks" not in payload
+
+
+def test_confirm_text_endpoint_keeps_possible_identifier_warnings() -> None:
+    response = client.post(
+        "/ocr/confirm-text",
+        json={
+            "extracted_text": "Patient: Synthetic Example. Rx: Paracetamol tablets.",
+            "corrected_text": "Rx: Paracetamol tablets.",
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert "patient_name_label" in payload["detected_possible_identifiers"]
+    assert payload["privacy_warnings"]
+    assert payload["correction_audit"]["privacy_warnings"]

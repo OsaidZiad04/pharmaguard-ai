@@ -1,0 +1,112 @@
+[
+  {
+    "case_id": "OCR-EASY-001",
+    "synthetic_filename": "printed_paracetamol.png",
+    "mock_ocr_text": "Rx: Paracetamol 500 mg tablets. Pharmacist must verify directions.",
+    "expected_corrected_text": "Rx: Paracetamol 500 mg tablets. Pharmacist must verify directions.",
+    "expected_medications": ["paracetamol"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "easy",
+    "notes": "Clean printed-like synthetic prescription text with one supported medication."
+  },
+  {
+    "case_id": "OCR-MED-002",
+    "synthetic_filename": "noisy_paracetamol.png",
+    "mock_ocr_text": "Rx: Paracetmol 500 mg tabiets. Pharmaclst must verlfy directions.",
+    "expected_corrected_text": "Rx: Paracetamol 500 mg tablets. Pharmacist must verify directions.",
+    "expected_medications": ["paracetamol"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "medium",
+    "notes": "Noisy OCR text with misspelled medication and common character substitutions."
+  },
+  {
+    "case_id": "OCR-MED-003",
+    "synthetic_filename": "patient_label_ibuprofen.png",
+    "mock_ocr_text": "Patient: Synthetic Example. Rx: Ibuprofen tablets. Pharmacist review required.",
+    "expected_corrected_text": "Rx: Ibuprofen tablets. Pharmacist review required.",
+    "expected_medications": ["ibuprofen"],
+    "expected_possible_identifiers": ["patient_name_label"],
+    "expected_privacy_warning_count": 1,
+    "difficulty_level": "medium",
+    "notes": "Synthetic patient label should be flagged as a possible identifier pattern."
+  },
+  {
+    "case_id": "OCR-MED-004",
+    "synthetic_filename": "phone_like_amoxicillin.png",
+    "mock_ocr_text": "Phone: 555-010-2222. Rx: Amoxicillin capsules. Confirm allergy status.",
+    "expected_corrected_text": "Rx: Amoxicillin capsules. Confirm allergy status.",
+    "expected_medications": ["amoxicillin"],
+    "expected_possible_identifiers": ["phone_number_like"],
+    "expected_privacy_warning_count": 1,
+    "difficulty_level": "medium",
+    "notes": "Phone-like number should be flagged without treating it as confirmed PII."
+  },
+  {
+    "case_id": "OCR-MED-005",
+    "synthetic_filename": "clinic_label_salbutamol.webp",
+    "mock_ocr_text": "Clinic: Demo Clinic. Rx: Salbutamol inhaler. Check device technique.",
+    "expected_corrected_text": "Rx: Salbutamol inhaler. Check device technique.",
+    "expected_medications": ["salbutamol"],
+    "expected_possible_identifiers": ["clinic_label"],
+    "expected_privacy_warning_count": 1,
+    "difficulty_level": "medium",
+    "notes": "Clinic label should be flagged as a possible identifier."
+  },
+  {
+    "case_id": "OCR-EASY-006",
+    "synthetic_filename": "metformin_single.jpg",
+    "mock_ocr_text": "Rx: Metformin tablets. Pharmacist must confirm formulation and directions.",
+    "expected_corrected_text": "Rx: Metformin tablets. Pharmacist must confirm formulation and directions.",
+    "expected_medications": ["metformin"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "easy",
+    "notes": "One supported medication with no identifier-like labels."
+  },
+  {
+    "case_id": "OCR-HARD-007",
+    "synthetic_filename": "unsupported_xyzmed.png",
+    "mock_ocr_text": "Rx: Xyzmed tablets. Pharmacist must verify medication identity.",
+    "expected_corrected_text": "Rx: Xyzmed tablets. Pharmacist must verify medication identity.",
+    "expected_medications": ["xyzmed"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "hard",
+    "notes": "Unsupported medication name should remain an OCR text-quality case, not a RAG support claim."
+  },
+  {
+    "case_id": "OCR-MED-008",
+    "synthetic_filename": "multiple_supported.png",
+    "mock_ocr_text": "Rx: Paracetamol tablets and Ibuprofen tablets. Pharmacist must review duplicate pain medicine context.",
+    "expected_corrected_text": "Rx: Paracetamol tablets and Ibuprofen tablets. Pharmacist must review duplicate pain medicine context.",
+    "expected_medications": ["paracetamol", "ibuprofen"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "medium",
+    "notes": "Multiple supported medication terms in one synthetic OCR case."
+  },
+  {
+    "case_id": "OCR-HARD-009",
+    "synthetic_filename": "ambiguous_amlodipine.png",
+    "mock_ocr_text": "Rx: Amlodipne tabiets. Handwriting unclear; pharmcist check required.",
+    "expected_corrected_text": "Rx: Amlodipine tablets. Handwriting unclear; pharmacist check required.",
+    "expected_medications": ["amlodipine"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "hard",
+    "notes": "Ambiguous handwriting-like errors represented as synthetic OCR text."
+  },
+  {
+    "case_id": "OCR-EASY-010",
+    "synthetic_filename": "no_medication_detected.png",
+    "mock_ocr_text": "Image text unreadable. Ask pharmacist to review source image and re-enter prescription text.",
+    "expected_corrected_text": "Image text unreadable. Ask pharmacist to review source image and re-enter prescription text.",
+    "expected_medications": [],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "easy",
+    "notes": "No medication detected; OCR should not infer one."
+  }
+]

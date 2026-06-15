@@ -48,7 +48,7 @@ class MockOcrProvider(BaseOcrProvider):
             provider_name=self.provider_name,
             unverified_ocr_output=True,
             pharmacist_review_required=True,
-            privacy_warnings=_privacy_warnings(detected_identifiers),
+            privacy_warnings=build_privacy_warnings(detected_identifiers),
             detected_possible_identifiers=detected_identifiers,
             correction_required=True,
             can_send_to_analysis=False,
@@ -69,7 +69,7 @@ def extract_text_from_image(
 def confirm_corrected_ocr_text(corrected_text: str) -> tuple[list[str], list[PrivacyWarning]]:
     """Validate pharmacist-corrected text for privacy warnings before analysis."""
     detected_identifiers = detect_possible_identifiers(corrected_text)
-    return detected_identifiers, _privacy_warnings(detected_identifiers)
+    return detected_identifiers, build_privacy_warnings(detected_identifiers)
 
 
 def detect_possible_identifiers(text: str) -> list[str]:
@@ -118,7 +118,7 @@ def _mock_confidence(file_bytes: bytes, content_type: str) -> float:
     return 0.76
 
 
-def _privacy_warnings(possible_identifiers: list[str]) -> list[PrivacyWarning]:
+def build_privacy_warnings(possible_identifiers: list[str]) -> list[PrivacyWarning]:
     return [
         PrivacyWarning(
             code="POSSIBLE_IDENTIFIER_DETECTED",
