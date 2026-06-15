@@ -2,13 +2,18 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 
+from app.ocr.provider_dependencies import (
+    TESSERACT_PROVIDER_ID,
+    get_provider_dependency_status,
+)
 from app.ocr.provider_candidates import (
     OcrProviderCandidate,
     candidate_allowed_in_prototype,
 )
 
 
-IMPLEMENTED_PROVIDER_IDS = {"mock_ocr_phase_2a", "synthetic_fixture_phase_2c"}
+ACTIVE_PROVIDER_IDS = {"mock_ocr_phase_2a", "synthetic_fixture_phase_2c"}
+ADAPTER_DEFINED_PROVIDER_IDS = ACTIVE_PROVIDER_IDS | {TESSERACT_PROVIDER_ID}
 
 
 @dataclass(frozen=True)
@@ -31,9 +36,14 @@ def assess_provider_swap_readiness(
     warnings: list[str] = []
     required_next_steps: list[str] = []
 
-    if candidate.provider_id not in IMPLEMENTED_PROVIDER_IDS:
+    dependency_status = get_provider_dependency_status(candidate.provider_id)
+
+    if candidate.provider_id not in ADAPTER_DEFINED_PROVIDER_IDS:
         blocking_reasons.append("Provider does not expose an active BaseOcrProvider adapter.")
         required_next_steps.append("Implement a provider adapter behind BaseOcrProvider.")
+    elif candidate.provider_id not in ACTIVE_PROVIDER_IDS:
+        blocking_reasons.append("Provider adapter exists but is disabled by default.")
+        required_next_steps.append("Keep provider disabled until dependency and safety gates pass.")
     if candidate.current_status != "implemented":
         blocking_reasons.append("Provider is not implemented in the current codebase.")
     if candidate.requires_network:
@@ -45,6 +55,9 @@ def assess_provider_swap_readiness(
     if candidate.requires_system_dependency:
         warnings.append("Provider requires system dependency review.")
         required_next_steps.append("Document install, patching, and deployment constraints.")
+        if not dependency_status.available:
+            blocking_reasons.append("Provider dependency checks are not satisfied.")
+            required_next_steps.append("Install and verify optional local dependencies outside prototype mode.")
     if candidate.requires_model_download:
         warnings.append("Provider requires model download/cache review.")
         required_next_steps.append("Define model cache location and offline install policy.")

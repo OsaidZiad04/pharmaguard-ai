@@ -12,6 +12,7 @@ from app.ocr.provider_candidates import (  # noqa: E402
     list_provider_candidates,
     summarize_candidate_readiness,
 )
+from app.ocr.provider_dependencies import get_provider_dependency_status  # noqa: E402
 from app.ocr.provider_swap_readiness import assess_provider_swap_readiness  # noqa: E402
 
 
@@ -30,7 +31,7 @@ def build_candidate_report_lines() -> list[str]:
     lines = [
         "PharmaGuard AI OCR Candidate Report",
         "Candidate comparison is metadata-only and is not clinical validation.",
-        "No planned provider is installed, instantiated, or called by this report.",
+        "No planned OCR engine is installed or called by this report.",
         f"total candidates: {len(candidates)}",
         f"implemented candidates: {status_counts.get('implemented', 0)}",
         f"planned candidates: {status_counts.get('planned', 0)}",
@@ -45,6 +46,7 @@ def build_candidate_report_lines() -> list[str]:
     for candidate in candidates:
         summary = summarize_candidate_readiness(candidate)
         readiness = assess_provider_swap_readiness(candidate)
+        dependency_status = get_provider_dependency_status(candidate.provider_id)
         lines.extend(
             [
                 f"- provider_id: {candidate.provider_id}",
@@ -54,6 +56,8 @@ def build_candidate_report_lines() -> list[str]:
                 f"  prototype_allowed: {summary['prototype_allowed']}",
                 f"  production_possible_after_review: {candidate.production_possible_after_review}",
                 f"  expected_privacy_risk: {candidate.expected_privacy_risk}",
+                f"  dependency_available: {dependency_status.available}",
+                f"  dependency_details: {dependency_status.details}",
                 f"  readiness_summary: {summary['readiness_summary']}",
                 f"  ready_for_prototype: {readiness.ready_for_prototype}",
                 f"  ready_for_future_evaluation: {readiness.ready_for_future_evaluation}",

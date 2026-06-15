@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, and Phase 2E OCR provider candidate comparison.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, and Phase 2F disabled local OCR adapter scaffolding.
 
 ## Pipeline
 
@@ -14,6 +14,7 @@ PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current im
 
 2. OCR Intake
    - Current: `backend/app/ocr/providers.py` exposes a provider boundary with deterministic local `MockOcrProvider` and `SyntheticFixtureOcrProvider` implementations. `/ocr/extract-image` accepts supported image formats, reads uploads in memory, does not persist images by default, returns unverified text, and flags possible identifier patterns.
+   - Current: `TesseractLocalOcrProvider` exists only as a disabled adapter skeleton. It is not active, not prototype-allowed, and does not run OCR.
    - Current: `/ocr/confirm-text` accepts pharmacist-corrected text and returns correction audit metadata. Only corrected text can be manually moved into prescription analysis.
    - Later: validated OCR providers can be swapped behind the same interface after privacy and safety review.
 
@@ -118,7 +119,18 @@ Phase 2E adds a metadata-only decision layer for future OCR providers.
 - `backend/app/ocr/provider_swap_readiness.py` checks prototype blockers, future-evaluation readiness, warnings, and next steps.
 - `backend/scripts/ocr_candidate_report.py` prints the provider candidate matrix.
 
-No candidate provider is installed or executed by this layer. Tesseract and EasyOCR remain planned local candidates only. Cloud OCR is disallowed for prototype mode because it requires network access and privacy review.
+No candidate provider runs OCR through this layer. Tesseract has an inactive adapter skeleton as of Phase 2F, while EasyOCR remains metadata-only. Cloud OCR is disallowed for prototype mode because it requires network access and privacy review.
+
+## Phase 2F Optional Local OCR Adapter Spike
+
+Phase 2F adds a disabled-by-default Tesseract adapter boundary without installing or activating Tesseract.
+
+- `backend/app/ocr/local_tesseract_provider.py` defines `TesseractLocalOcrProvider`.
+- `backend/app/ocr/provider_dependencies.py` checks optional local dependencies without installing packages or calling the network.
+- `backend/app/services/ocr_service.py` rejects explicit Tesseract requests with a controlled prototype-mode error.
+- Provider and candidate reports show Tesseract as adapter-defined but inactive, with dependency status and required next steps.
+
+Mock and synthetic fixture providers remain the only active OCR providers. OCR output remains unverified, and pharmacist correction remains mandatory.
 
 ## Phase 1.7 Controlled Knowledge Base Expansion
 

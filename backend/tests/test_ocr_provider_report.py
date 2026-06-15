@@ -28,12 +28,14 @@ def test_ocr_provider_report_script_runs_successfully() -> None:
     assert result.returncode == 0
     assert "mock_ocr_phase_2a" in result.stdout
     assert "synthetic_fixture_phase_2c" in result.stdout
+    assert "tesseract_local_candidate" in result.stdout
     assert "quality_gate_eligible: True" in result.stdout
     assert "can_be_used_without_network: True" in result.stdout
     assert "allowed_in_current_prototype_mode: True" in result.stdout
+    assert "active_in_prototype: False" in result.stdout
 
 
-def test_existing_provider_report_remains_independent_from_candidate_registry() -> None:
+def test_provider_report_surfaces_inactive_tesseract_adapter_without_cloud_candidate() -> None:
     backend_root = Path(__file__).resolve().parents[1]
     result = subprocess.run(
         [sys.executable, "scripts/ocr_provider_report.py"],
@@ -44,5 +46,7 @@ def test_existing_provider_report_remains_independent_from_candidate_registry() 
     )
 
     assert result.returncode == 0
-    assert "tesseract_local_candidate" not in result.stdout
+    assert "tesseract_local_candidate" in result.stdout
+    assert "dependency_available:" in result.stdout
+    assert "allowed_in_current_prototype_mode: False" in result.stdout
     assert "cloud_ocr_candidate_placeholder" not in result.stdout

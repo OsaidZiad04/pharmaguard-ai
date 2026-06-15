@@ -7,6 +7,11 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.ocr.provider_dependencies import (
+    TESSERACT_PROVIDER_ID,
+    get_provider_dependency_status,
+)
+
 
 ProviderType = Literal["mock", "fixture", "local_engine", "cloud_api", "planned"]
 ProviderStatus = Literal["implemented", "planned", "disallowed_for_prototype"]
@@ -60,12 +65,14 @@ def get_provider_candidate(provider_id: str) -> OcrProviderCandidate | None:
 
 
 def candidate_allowed_in_prototype(candidate: OcrProviderCandidate) -> bool:
+    dependency_status = get_provider_dependency_status(candidate.provider_id)
     return (
         candidate.prototype_allowed
         and candidate.current_status == "implemented"
         and not candidate.requires_network
         and not candidate.stores_images
         and not candidate.requires_model_download
+        and (not candidate.requires_system_dependency or dependency_status.available)
     )
 
 
@@ -81,6 +88,9 @@ def summarize_candidate_readiness(candidate: OcrProviderCandidate) -> dict:
         blockers.append("Model downloads are disallowed in this phase.")
     if candidate.requires_system_dependency:
         blockers.append("System dependency review is required.")
+        dependency_status = get_provider_dependency_status(candidate.provider_id)
+        if not dependency_status.available:
+            blockers.append("Provider dependency checks are not satisfied.")
 
     return {
         "provider_id": candidate.provider_id,
@@ -93,6 +103,9 @@ def summarize_candidate_readiness(candidate: OcrProviderCandidate) -> dict:
         "stores_images": candidate.stores_images,
         "requires_system_dependency": candidate.requires_system_dependency,
         "requires_model_download": candidate.requires_model_download,
+        "dependency_status": get_provider_dependency_status(
+            candidate.provider_id
+        ).model_dump(),
         "readiness_summary": _readiness_summary(candidate),
         "required_quality_gates": candidate.required_quality_gates,
         "required_privacy_controls": candidate.required_privacy_controls,
@@ -103,6 +116,8 @@ def summarize_candidate_readiness(candidate: OcrProviderCandidate) -> dict:
 def _readiness_summary(candidate: OcrProviderCandidate) -> str:
     if candidate_allowed_in_prototype(candidate):
         return "Allowed for current prototype mode."
+    if candidate.provider_id == TESSERACT_PROVIDER_ID:
+        return "Adapter-defined but inactive; dependency and explicit enablement checks required."
     if candidate.current_status == "planned":
         return "Planned candidate only; not active or instantiated."
     return "Disallowed for current prototype mode."

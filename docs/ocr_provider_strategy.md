@@ -20,6 +20,12 @@ Both current providers are:
 - non-storing
 - pharmacist-review required
 
+Phase 2F also defines an inactive adapter skeleton:
+
+- `tesseract_local_candidate`
+
+The Tesseract adapter is disabled by default, not prototype-allowed, and not part of the active OCR flow.
+
 ## Provider Metadata
 
 Every provider exposes:
@@ -30,6 +36,9 @@ Every provider exposes:
 - `is_external_provider`
 - `stores_images`
 - `requires_network`
+- `requires_system_dependency`
+- `enabled_by_default`
+- `prototype_allowed`
 - `supported_content_types`
 
 The OCR API response includes provider metadata so the frontend and future audit layers can show whether an OCR result came from a local mock, a synthetic fixture provider, or a future approved provider.
@@ -73,6 +82,8 @@ Phase 2D adds quality gate eligibility to the provider report. Current provider 
 
 These gates are provider swap-readiness checks, not clinical validation.
 
+Phase 2F extends the provider report with inactive adapter status and dependency availability. Tesseract appears as adapter-defined but inactive; it is blocked unless dependency checks, explicit enablement, and quality gates pass in a future phase.
+
 ## Candidate Comparison
 
 Phase 2E adds a candidate registry at `data/evaluation/ocr_provider_candidates.json`.
@@ -91,7 +102,7 @@ Run from `backend/`:
 python scripts/ocr_candidate_report.py
 ```
 
-The candidate report is metadata-only. It does not install dependencies, instantiate planned providers, call external APIs, or process real images.
+The candidate report is metadata-only. It does not install dependencies, call external APIs, or process real images. Phase 2F adds an inactive Tesseract adapter skeleton, but it remains disabled and is not used for extraction.
 
 ## Future Provider Requirements
 

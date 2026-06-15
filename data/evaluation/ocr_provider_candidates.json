@@ -71,7 +71,7 @@
     "expected_privacy_risk": "low",
     "prototype_allowed": false,
     "production_possible_after_review": true,
-    "notes": "Planned local OCR engine candidate. Not installed, instantiated, or activated in this phase.",
+    "notes": "Planned local OCR engine candidate. Phase 2F adds an adapter skeleton, but it remains disabled by default and is not active OCR.",
     "required_quality_gates": [
       "base_provider_interface",
       "provider_metadata",
@@ -88,8 +88,8 @@
       "dependency_review"
     ],
     "integration_blockers": [
-      "System dependency not installed.",
-      "No provider adapter implemented.",
+      "System dependency status must be verified before activation.",
+      "Adapter skeleton is disabled by default.",
       "Synthetic benchmark has not been run against this provider."
     ]
   },

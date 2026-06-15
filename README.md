@@ -63,6 +63,7 @@ Implemented now:
 - Phase 2C OCR provider interface and synthetic image fixtures: local provider metadata, synthetic fixture provider, fixture-backed OCR evaluation, and provider readiness report.
 - Phase 2D OCR quality benchmarking and provider swap readiness: expanded synthetic fixtures, provider-level benchmark summaries, and prototype quality gates.
 - Phase 2E OCR provider candidate comparison: metadata-only candidate registry, readiness matrix, and candidate report for future provider decisions.
+- Phase 2F optional local OCR provider adapter spike: disabled-by-default Tesseract adapter skeleton and local dependency checks.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
 - Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, OCR intake, and safety regressions.
@@ -71,6 +72,7 @@ Not implemented yet:
 
 - Production OCR.
 - External OCR providers.
+- Active Tesseract or EasyOCR OCR.
 - Prescription image storage.
 - External medical APIs.
 - Dense embeddings or persistent vector database.
@@ -149,7 +151,9 @@ Phase 2C adds a local OCR provider interface with safe provider metadata. Curren
 
 Phase 2D expands OCR benchmarking to 18 synthetic cases, including 10 fixture-backed cases. Provider quality gates check benchmark error rates, token overlap, medication term detection, privacy-warning matching, non-networked/non-storing provider metadata, and unverified output status. These gates are swap-readiness checks only, not clinical validation.
 
-Phase 2E adds a metadata-only OCR provider candidate matrix. Tesseract and EasyOCR are documented as planned local candidates only; no packages are installed or activated. Cloud OCR remains disallowed for prototype mode pending formal privacy review.
+Phase 2E adds a metadata-only OCR provider candidate matrix. Tesseract and EasyOCR are documented as planned local candidates; no OCR engine packages are installed or activated. Cloud OCR remains disallowed for prototype mode pending formal privacy review.
+
+Phase 2F adds a `tesseract_local_candidate` adapter skeleton and dependency checks without installing or activating Tesseract. The adapter is disabled by default, not prototype-allowed, and returns a controlled unavailable status if requested.
 
 ## Testing
 
@@ -203,7 +207,7 @@ The KB report summarizes profile counts, aliases, review/source status, missing 
 
 See [docs/roadmap.md](docs/roadmap.md).
 
-For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md).
+For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md).
 
 ## Data Warning
 

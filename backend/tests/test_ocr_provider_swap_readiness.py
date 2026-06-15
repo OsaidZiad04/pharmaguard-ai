@@ -44,7 +44,8 @@ def test_readiness_marks_planned_local_candidate_for_future_evaluation_only() ->
     assert readiness.ready_for_prototype is False
     assert readiness.ready_for_future_evaluation is True
     assert "Provider is not implemented in the current codebase." in readiness.blocking_reasons
-    assert "Provider does not expose an active BaseOcrProvider adapter." in readiness.blocking_reasons
+    assert "Provider adapter exists but is disabled by default." in readiness.blocking_reasons
+    assert "Keep provider disabled until dependency and safety gates pass." in readiness.required_next_steps
 
 
 def test_readiness_keeps_model_download_candidate_out_of_prototype() -> None:

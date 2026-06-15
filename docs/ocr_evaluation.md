@@ -1,7 +1,7 @@
 # OCR Evaluation And Correction Audit
 
 Phase 2B adds a local evaluation and audit layer around the Phase 2A OCR intake boundary.
-Phase 2C extends this with fixture-backed cases through the local `SyntheticFixtureOcrProvider`. Phase 2D adds provider-specific quality gates and expanded synthetic fixture coverage.
+Phase 2C extends this with fixture-backed cases through the local `SyntheticFixtureOcrProvider`. Phase 2D adds provider-specific quality gates and expanded synthetic fixture coverage. Phase 2F adds a disabled local Tesseract adapter skeleton, but it is not included in OCR evaluation until a future benchmark phase explicitly enables it.
 
 ## Scope
 
@@ -94,7 +94,7 @@ Run from `backend/`:
 python scripts/ocr_provider_report.py
 ```
 
-The report lists available local OCR providers, whether they are external, whether they store images, whether they require network access, supported content types, and whether each provider is allowed in current prototype mode.
+The report lists active local OCR providers and inactive adapter skeletons, whether they are external, whether they store images, whether they require network access, optional dependency status, supported content types, and whether each provider is allowed in current prototype mode.
 
 ## Candidate Matrix
 

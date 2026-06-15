@@ -49,6 +49,7 @@ def test_planned_local_candidates_are_not_activated_accidentally() -> None:
     assert easyocr.current_status == "planned"
     assert candidate_allowed_in_prototype(tesseract) is False
     assert candidate_allowed_in_prototype(easyocr) is False
+    assert "adapter skeleton" in tesseract.notes.lower()
 
 
 def test_candidate_readiness_summary_includes_blockers() -> None:
@@ -60,3 +61,14 @@ def test_candidate_readiness_summary_includes_blockers() -> None:
     assert summary["prototype_allowed"] is False
     assert "Provider is metadata-only and is not active." in summary["integration_blockers"]
     assert "Model downloads are disallowed in this phase." in summary["integration_blockers"]
+
+
+def test_tesseract_candidate_summary_includes_dependency_status() -> None:
+    candidate = get_provider_candidate("tesseract_local_candidate")
+
+    assert candidate is not None
+    summary = summarize_candidate_readiness(candidate)
+
+    assert summary["prototype_allowed"] is False
+    assert summary["dependency_status"]["provider_id"] == "tesseract_local_candidate"
+    assert "Adapter-defined but inactive" in summary["readiness_summary"]

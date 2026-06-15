@@ -126,6 +126,16 @@ def test_external_provider_name_is_rejected_without_network_call() -> None:
     assert "External OCR providers are not enabled" in response.text
 
 
+def test_tesseract_provider_request_is_rejected_without_activation() -> None:
+    response = client.post(
+        "/ocr/extract-image?provider_name=tesseract_local_candidate",
+        files={"file": ("synthetic.png", b"fake-image", "image/png")},
+    )
+
+    assert response.status_code == 400
+    assert "adapter-defined but inactive" in response.text
+
+
 def test_confirm_text_endpoint_keeps_possible_identifier_warnings() -> None:
     response = client.post(
         "/ocr/confirm-text",

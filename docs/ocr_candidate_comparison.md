@@ -18,7 +18,7 @@ Current candidates:
 
 The implemented providers are allowed in prototype mode because they are local, non-networked, non-storing, and already pass the current synthetic OCR quality gates.
 
-The Tesseract and EasyOCR entries are planned local candidates only. They are not installed or active. The cloud OCR placeholder is disallowed for prototype mode because it requires network access and may involve image storage or external processing.
+The Tesseract and EasyOCR entries are planned local candidates. Phase 2F adds a disabled Tesseract adapter skeleton, but it is not installed as a working OCR engine and is not active. EasyOCR remains metadata-only. The cloud OCR placeholder is disallowed for prototype mode because it requires network access and may involve image storage or external processing.
 
 ## Candidate Fields
 
@@ -47,6 +47,7 @@ Each candidate records:
 - passes OCR quality gates before use
 - declares privacy properties
 - is blocked in prototype mode if networked or image-storing
+- is blocked if optional local dependencies are missing or the adapter is disabled by default
 
 ## Candidate Report
 
@@ -56,7 +57,7 @@ Run from `backend/`:
 python scripts/ocr_candidate_report.py
 ```
 
-The report prints candidate counts, prototype eligibility, network/storage/dependency requirements, and per-candidate readiness.
+The report prints candidate counts, prototype eligibility, network/storage/dependency requirements, dependency status, and per-candidate readiness.
 
 ## Policy
 

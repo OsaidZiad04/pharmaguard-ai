@@ -100,17 +100,25 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Document local planned candidates without activating them. Complete.
 - Keep cloud OCR blocked for prototype mode pending privacy review. Complete.
 
-## Phase 2F: OCR Provider Adapter Spike
+## Phase 2F: Optional Local OCR Provider Adapter Spike - Complete
 
-- Prototype one local OCR adapter behind `BaseOcrProvider` only if dependencies and fixture benchmarks are acceptable.
-- Keep adapter disabled by default until privacy and quality checks pass.
-- Do not integrate cloud OCR without formal review.
+- Add `TesseractLocalOcrProvider` behind `BaseOcrProvider`. Complete.
+- Keep Tesseract disabled by default and not prototype-allowed. Complete.
+- Add local dependency checks for `pytesseract` and the Tesseract binary without installing anything. Complete.
+- Update provider and candidate reports with dependency status and inactive-adapter readiness. Complete.
+- Keep mock and synthetic fixture providers as the only active OCR providers. Complete.
+- Do not integrate cloud OCR without formal review. Complete.
 
-## Phase 2G: Production-Ready OCR Integration
+## Phase 2G: Local OCR Adapter Benchmarking
+
+- If dependencies are installed outside the project, benchmark the disabled Tesseract adapter against synthetic fixtures without making it default.
+- Compare OCR text against pharmacist corrections.
+- Keep provider activation gated by privacy, dependency, and quality checks.
+
+## Phase 2H: Production-Ready OCR Integration
 
 - Add production-ready OCR workflow only after provider validation.
-- Compare OCR text against pharmacist corrections.
-- Add confidence scoring and audit retention policy for OCR output.
+- Define confidence scoring and audit retention policy for OCR output.
 
 ## Phase 3: Evaluation
 
