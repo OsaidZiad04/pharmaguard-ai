@@ -180,6 +180,8 @@ The KB report summarizes profile counts, aliases, review/source status, missing 
 
 See [docs/roadmap.md](docs/roadmap.md).
 
+For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md).
+
 ## Data Warning
 
 Only synthetic prescriptions are allowed in this repository. Do not commit patient names, phone numbers, IDs, addresses, clinic identifiers, prescription images, or any other real patient information.

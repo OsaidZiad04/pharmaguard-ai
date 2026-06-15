@@ -1,5 +1,7 @@
 # Roadmap
 
+For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future phases must follow [AI_DEVELOPMENT_PROTOCOL.md](AI_DEVELOPMENT_PROTOCOL.md) and update `docs/PROJECT_STATE.md` before handoff.
+
 ## Phase 0: Scaffolding - Complete
 
 - Create repository structure.
