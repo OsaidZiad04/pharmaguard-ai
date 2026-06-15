@@ -23,6 +23,8 @@ Phase 2A adds OCR intake as an assistive input layer. `/ocr/extract-image` retur
 
 Phase 2B adds synthetic OCR evaluation metrics and returned correction audit metadata. Character error rate, word error rate, token overlap, medication term hits, and privacy-warning matches are engineering checks only. They do not validate clinical correctness, patient identity, diagnosis, treatment, or production OCR quality.
 
+Phase 2C adds explicit OCR provider safety metadata. Current providers are local, non-external, non-networked, and non-storing. Explicit external provider names are rejected in prototype mode. Provider metadata must not be used to bypass pharmacist correction or downstream safety checks.
+
 ## Unsafe Output Avoidance
 
 The system should avoid:
@@ -53,4 +55,5 @@ The pharmacist must verify:
 - Add evaluation checks for unsafe claims.
 - Add logging that excludes protected health information.
 - Add synthetic image fixtures before any production OCR provider is considered.
+- Expand synthetic fixture coverage before any production OCR provider is considered.
 - Add pharmacist sign-off and audit-retention policy before correction audits are stored.

@@ -2,6 +2,7 @@
   {
     "case_id": "OCR-EASY-001",
     "synthetic_filename": "printed_paracetamol.png",
+    "fixture_filename": "synthetic_paracetamol_clean.png",
     "mock_ocr_text": "Rx: Paracetamol 500 mg tablets. Pharmacist must verify directions.",
     "expected_corrected_text": "Rx: Paracetamol 500 mg tablets. Pharmacist must verify directions.",
     "expected_medications": ["paracetamol"],
@@ -24,7 +25,8 @@
   {
     "case_id": "OCR-MED-003",
     "synthetic_filename": "patient_label_ibuprofen.png",
-    "mock_ocr_text": "Patient: Synthetic Example. Rx: Ibuprofen tablets. Pharmacist review required.",
+    "fixture_filename": "synthetic_ibuprofen_noisy.png",
+    "mock_ocr_text": "Patient: Synthetic Example. Rx: Ibuprofen tabiets. Pharmacist revlew required.",
     "expected_corrected_text": "Rx: Ibuprofen tablets. Pharmacist review required.",
     "expected_medications": ["ibuprofen"],
     "expected_possible_identifiers": ["patient_name_label"],
@@ -35,6 +37,7 @@
   {
     "case_id": "OCR-MED-004",
     "synthetic_filename": "phone_like_amoxicillin.png",
+    "fixture_filename": "synthetic_amoxicillin_possible_identifier.png",
     "mock_ocr_text": "Phone: 555-010-2222. Rx: Amoxicillin capsules. Confirm allergy status.",
     "expected_corrected_text": "Rx: Amoxicillin capsules. Confirm allergy status.",
     "expected_medications": ["amoxicillin"],
@@ -101,6 +104,7 @@
   {
     "case_id": "OCR-EASY-010",
     "synthetic_filename": "no_medication_detected.png",
+    "fixture_filename": "synthetic_no_medication.png",
     "mock_ocr_text": "Image text unreadable. Ask pharmacist to review source image and re-enter prescription text.",
     "expected_corrected_text": "Image text unreadable. Ask pharmacist to review source image and re-enter prescription text.",
     "expected_medications": [],

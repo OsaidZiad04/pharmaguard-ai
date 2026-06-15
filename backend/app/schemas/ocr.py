@@ -11,6 +11,10 @@ class OcrExtractedText(BaseModel):
     extracted_text: str
     confidence_score: float = Field(ge=0.0, le=1.0)
     provider_name: str
+    is_external_provider: bool = False
+    stores_images: bool = False
+    requires_network: bool = False
+    supported_content_types: list[str] = Field(default_factory=list)
     unverified_ocr_output: bool = True
     pharmacist_review_required: bool = True
     privacy_warnings: list[PrivacyWarning] = Field(default_factory=list)

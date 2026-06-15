@@ -14,6 +14,9 @@ def main() -> int:
 
     print("PharmaGuard AI OCR Evaluation")
     print(f"total cases: {report['total_cases']}")
+    print(f"text-only cases: {report['text_only_cases']}")
+    print(f"fixture-backed cases: {report['fixture_backed_cases']}")
+    print(f"provider used: {report['provider_used']}")
     print(f"passed cases: {report['passed_cases']}")
     print(f"failed cases: {report['failed_cases']}")
     print(f"average character error rate: {report['average_character_error_rate']}")

@@ -23,11 +23,14 @@ The current system includes:
 - Next.js + TypeScript + Tailwind pharmacist dashboard.
 - Local RAG over Markdown drug profiles.
 - Structured drug registry and knowledge-base validation.
-- Privacy-safe OCR intake foundation using a deterministic local mock OCR provider.
+- Privacy-safe OCR intake foundation using deterministic local OCR providers.
+- OCR provider interface with safe provider metadata.
+- Synthetic OCR fixture provider and fixture-backed OCR evaluation.
 - Pharmacist OCR correction workflow.
 - OCR correction audit metadata returned by `/ocr/confirm-text`.
 - RAG evaluation with synthetic cases.
 - OCR evaluation with synthetic cases.
+- OCR provider readiness report.
 - Knowledge-base coverage report.
 - Safety guardrails for low confidence, missing patient context, unknown medications, and insufficient local context.
 
@@ -58,7 +61,14 @@ The knowledge base is governed by `data/drug_profiles/drug_registry.json`. The r
 
 ### OCR Pipeline
 
-The OCR intake pipeline accepts supported synthetic image uploads, reads them in memory, runs a deterministic local `MockOcrProvider`, returns unverified OCR text, flags possible identifier patterns, and requires pharmacist correction. `/ocr/confirm-text` returns corrected text and correction audit metadata. OCR output does not automatically trigger prescription analysis, RAG, lookup, or counseling.
+The OCR intake pipeline accepts supported synthetic image uploads, reads them in memory, runs a deterministic local OCR provider, returns unverified OCR text, flags possible identifier patterns, and requires pharmacist correction. `/ocr/confirm-text` returns corrected text and correction audit metadata. OCR output does not automatically trigger prescription analysis, RAG, lookup, or counseling.
+
+Current OCR providers:
+
+- `mock_ocr_phase_2a`
+- `synthetic_fixture_phase_2c`
+
+Both current providers are local, non-external, non-networked, and non-storing.
 
 ### Frontend Workflow
 
@@ -122,6 +132,13 @@ The frontend is a pharmacist dashboard, not a chatbot. It includes prescription 
 - Key behavior added: Character error rate, word error rate, token overlap, medication term hit checks, privacy warning matching, correction audit metadata from `/ocr/confirm-text`, frontend audit summary.
 - Verification summary: OCR evaluation passes 10/10 synthetic cases; backend tests pass 54 tests.
 
+### Phase 2C: OCR Provider Interface & Synthetic Image Fixtures
+
+- Objective: Prepare the OCR layer for future provider integration while keeping current OCR local, deterministic, privacy-safe, and pharmacist-in-the-loop.
+- Main files/modules added: `backend/app/ocr/providers.py`, `backend/scripts/ocr_provider_report.py`, `data/evaluation/ocr_fixtures/`, `docs/ocr_provider_strategy.md`.
+- Key behavior added: Provider interface, safe provider selection, explicit external-provider rejection, provider safety metadata in OCR responses, `SyntheticFixtureOcrProvider`, fixture-backed OCR evaluation, and OCR provider readiness reporting.
+- Verification summary: Backend tests pass 65 tests; OCR evaluation passes 10/10 cases with 4 fixture-backed cases; OCR provider report lists 2 allowed local providers.
+
 ## 5. Supported Knowledge Base
 
 Current total drug profiles: 15.
@@ -158,10 +175,11 @@ Current registry status:
 
 Current verification status:
 
-- Backend tests: 54 passed.
+- Backend tests: 65 passed.
 - RAG evaluation: 46/46 passed.
-- OCR evaluation: 10/10 passed.
+- OCR evaluation: 10/10 passed, including 4 fixture-backed cases.
 - KB report: PASS, 0 blocking issues.
+- OCR provider report: PASS, 2 local providers allowed in prototype mode.
 - Frontend typecheck: passed.
 - Frontend build: passed.
 
@@ -172,6 +190,7 @@ cd backend && python -m pytest
 cd backend && python scripts/evaluate_rag.py
 cd backend && python scripts/kb_report.py
 cd backend && python scripts/evaluate_ocr.py
+cd backend && python scripts/ocr_provider_report.py
 cd frontend && npm run typecheck
 cd frontend && npm run build
 ```
@@ -189,6 +208,8 @@ Current non-negotiable boundaries:
 - Uploaded images are not stored by default.
 - OCR output is unverified.
 - OCR text must be corrected or confirmed by a pharmacist before analysis.
+- Current OCR providers are local, non-networked, and non-storing.
+- Explicit external OCR provider names are rejected in prototype mode.
 - Possible identifiers are flagged as possible identifiers, not confirmed PII.
 - No external APIs are used.
 - No clinical validation is claimed.
@@ -200,18 +221,18 @@ Current non-negotiable boundaries:
 - `backend/app/services/`: Application services for extraction, safety, lookup, counseling, RAG orchestration, OCR, and OCR audit.
 - `backend/app/rag/`: Local TF-IDF RAG components, generation, citation validation, and RAG evaluation.
 - `backend/app/kb/`: Drug registry loading, KB validation, coverage schema, and future ingestion scaffolding.
-- `backend/app/ocr/`: OCR evaluation metrics and synthetic OCR evaluation runner logic.
-- `backend/scripts/`: CLI scripts for RAG evaluation, KB reporting, and OCR evaluation.
+- `backend/app/ocr/`: OCR provider interface, local provider implementations, evaluation metrics, and synthetic OCR evaluation runner logic.
+- `backend/scripts/`: CLI scripts for RAG evaluation, KB reporting, OCR evaluation, and OCR provider reporting.
 - `backend/tests/`: Backend pytest regression tests.
 - `frontend/components/`: Pharmacist dashboard UI components.
 - `frontend/lib/`: Frontend API client and shared TypeScript types.
 - `data/drug_profiles/`: Draft educational Markdown profiles and drug registry.
-- `data/evaluation/`: Synthetic RAG and OCR evaluation datasets.
+- `data/evaluation/`: Synthetic RAG and OCR evaluation datasets plus synthetic OCR fixtures.
 - `docs/`: Architecture, safety, privacy, roadmap, OCR evaluation, KB scaling, and living project documentation.
 
 ## 9. Current Limitations
 
-- OCR is mock-only.
+- OCR is mock/synthetic-fixture only.
 - No real OCR provider is integrated.
 - No real prescription images are used.
 - No persistent audit database exists.
@@ -227,7 +248,6 @@ Current non-negotiable boundaries:
 
 Proposed roadmap:
 
-- Phase 2C: OCR Provider Interface & Synthetic Image Fixtures.
 - Phase 2D: OCR Quality Benchmarking and Provider Swap Readiness.
 - Phase 3: End-to-End Prescription Workflow Evaluation.
 - Phase 4: Drug Knowledge Graph.

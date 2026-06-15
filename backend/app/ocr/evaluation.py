@@ -6,6 +6,7 @@ from pathlib import Path
 from statistics import mean
 from typing import Any
 
+from app.ocr.providers import SyntheticFixtureOcrProvider
 from app.schemas.ocr import OcrEvaluationResult
 from app.services.extraction_service import extract_medication_candidates
 from app.services.ocr_service import detect_possible_identifiers
@@ -14,6 +15,7 @@ from app.services.ocr_service import detect_possible_identifiers
 OCR_EVAL_CASES_PATH = (
     Path(__file__).resolve().parents[3] / "data" / "evaluation" / "ocr_eval_cases.json"
 )
+OCR_FIXTURES_DIR = Path(__file__).resolve().parents[3] / "data" / "evaluation" / "ocr_fixtures"
 
 
 def character_error_rate(reference: str, prediction: str) -> float:
@@ -66,7 +68,7 @@ def run_ocr_evaluation(path: Path = OCR_EVAL_CASES_PATH) -> dict[str, Any]:
     results: list[OcrEvaluationResult] = []
 
     for case in cases:
-        mock_text = case["mock_ocr_text"]
+        mock_text = _ocr_text_for_case(case)
         corrected_text = case["expected_corrected_text"]
         detected_identifiers = detect_possible_identifiers(mock_text)
         expected_identifiers = case["expected_possible_identifiers"]
@@ -111,9 +113,14 @@ def run_ocr_evaluation(path: Path = OCR_EVAL_CASES_PATH) -> dict[str, Any]:
     total_cases = len(results)
     passed_cases = sum(1 for result in results if result.passed)
     failed_cases = total_cases - passed_cases
+    fixture_backed_cases = sum(1 for case in cases if case.get("fixture_filename"))
+    text_only_cases = total_cases - fixture_backed_cases
 
     return {
         "total_cases": total_cases,
+        "text_only_cases": text_only_cases,
+        "fixture_backed_cases": fixture_backed_cases,
+        "provider_used": "case_text + synthetic_fixture_phase_2c",
         "passed_cases": passed_cases,
         "failed_cases": failed_cases,
         "average_character_error_rate": _mean(
@@ -130,6 +137,22 @@ def run_ocr_evaluation(path: Path = OCR_EVAL_CASES_PATH) -> dict[str, Any]:
         },
         "case_results": [result.model_dump() for result in results],
     }
+
+
+def _ocr_text_for_case(case: dict[str, Any]) -> str:
+    fixture_filename = case.get("fixture_filename")
+    if not fixture_filename:
+        return case["mock_ocr_text"]
+
+    fixture_path = OCR_FIXTURES_DIR / fixture_filename
+    provider = SyntheticFixtureOcrProvider()
+    file_bytes = fixture_path.read_bytes() if fixture_path.exists() else b""
+    result = provider.extract_text(
+        file_bytes=file_bytes,
+        filename=fixture_filename,
+        content_type=_content_type_for_fixture(fixture_filename),
+    )
+    return result.extracted_text
 
 
 def _normalized_edit_distance(reference_tokens: list[str], prediction_tokens: list[str]) -> float:
@@ -176,3 +199,12 @@ def _supported_detected_medication_terms(text: str) -> list[str]:
 
 def _mean(values: list[float]) -> float:
     return round(mean(values), 4) if values else 0.0
+
+
+def _content_type_for_fixture(filename: str) -> str:
+    suffix = Path(filename).suffix.lower()
+    if suffix in {".jpg", ".jpeg"}:
+        return "image/jpeg"
+    if suffix == ".webp":
+        return "image/webp"
+    return "image/png"

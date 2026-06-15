@@ -115,6 +115,10 @@ export interface OcrImageUploadResponse {
   extracted_text: string;
   confidence_score: number;
   provider_name: string;
+  is_external_provider: boolean;
+  stores_images: boolean;
+  requires_network: boolean;
+  supported_content_types: string[];
   unverified_ocr_output: boolean;
   pharmacist_review_required: boolean;
   privacy_warnings: PrivacyWarning[];

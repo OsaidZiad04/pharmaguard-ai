@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, and Phase 2B OCR evaluation/correction audit.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, and Phase 2C OCR provider interface with synthetic fixtures.
 
 ## Pipeline
 
@@ -13,7 +13,7 @@ PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current im
    - Later: richer image/PDF intake with stricter operational controls.
 
 2. OCR Intake
-   - Current: `ocr_service.py` exposes a provider boundary and a deterministic mock OCR provider. `/ocr/extract-image` accepts supported image formats, reads uploads in memory, does not persist images by default, returns unverified text, and flags possible identifier patterns.
+   - Current: `backend/app/ocr/providers.py` exposes a provider boundary with deterministic local `MockOcrProvider` and `SyntheticFixtureOcrProvider` implementations. `/ocr/extract-image` accepts supported image formats, reads uploads in memory, does not persist images by default, returns unverified text, and flags possible identifier patterns.
    - Current: `/ocr/confirm-text` accepts pharmacist-corrected text and returns correction audit metadata. Only corrected text can be manually moved into prescription analysis.
    - Later: validated OCR providers can be swapped behind the same interface after privacy and safety review.
 
@@ -84,6 +84,19 @@ Phase 2B adds evaluation and auditability around the mock OCR intake boundary.
 
 The metrics are synthetic engineering checks. They do not validate clinical correctness, OCR production quality, patient identity, or medication appropriateness. OCR output remains unverified until pharmacist correction and still does not automatically invoke prescription analysis, RAG, counseling, or lookup.
 
+## Phase 2C OCR Provider Interface And Synthetic Fixtures
+
+Phase 2C separates OCR provider behavior from OCR service orchestration.
+
+- `backend/app/ocr/providers.py` defines `BaseOcrProvider`, `MockOcrProvider`, and `SyntheticFixtureOcrProvider`.
+- Providers expose `provider_name`, `supports_content_type`, `is_external_provider`, `stores_images`, `requires_network`, and supported content types.
+- `backend/app/services/ocr_service.py` performs safe provider selection and rejects explicit external provider names.
+- Current provider metadata is returned from `/ocr/extract-image`.
+- `data/evaluation/ocr_fixtures/` contains approved synthetic PNG fixtures for evaluation plumbing.
+- `backend/scripts/ocr_provider_report.py` reports provider readiness and prototype-mode safety status.
+
+No external OCR provider is enabled. The fixture provider is filename-driven and exists to test provider plumbing and fixture-backed evaluation only.
+
 ## Phase 1.7 Controlled Knowledge Base Expansion
 
 The local knowledge base now includes 15 Markdown profiles:
@@ -152,7 +165,7 @@ Dense retrieval is a documented future option only. It is deferred until the TF-
 - `app/api`: FastAPI routes.
 - `app/schemas`: Pydantic request/response contracts.
 - `app/services`: prescription, safety, lookup, counseling, and RAG orchestration logic.
-- `app/ocr`: local OCR evaluation metrics and synthetic evaluation runner logic.
+- `app/ocr`: local OCR provider interface, provider implementations, evaluation metrics, and synthetic evaluation runner logic.
 - `app/rag`: local TF-IDF RAG components, evaluation, and citation validation.
 - `app/kb`: registry loading, validation, coverage reporting models, and future ingestion scaffolding.
 - `app/sample_data`: local mock drug index.

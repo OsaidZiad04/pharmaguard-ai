@@ -15,6 +15,10 @@ def test_supported_image_upload_returns_unverified_ocr_output() -> None:
     assert response.status_code == 200
     payload = response.json()
     assert payload["provider_name"] == "mock_ocr_phase_2a"
+    assert payload["is_external_provider"] is False
+    assert payload["stores_images"] is False
+    assert payload["requires_network"] is False
+    assert "image/png" in payload["supported_content_types"]
     assert payload["unverified_ocr_output"] is True
     assert payload["pharmacist_review_required"] is True
     assert payload["correction_required"] is True
@@ -54,6 +58,27 @@ def test_possible_identifiers_are_returned_as_privacy_warnings() -> None:
     assert payload["privacy_warnings"][0]["code"] == "POSSIBLE_IDENTIFIER_DETECTED"
 
 
+def test_synthetic_fixture_provider_route_returns_provider_metadata() -> None:
+    response = client.post(
+        "/ocr/extract-image?provider_name=synthetic_fixture",
+        files={
+            "file": (
+                "synthetic_amoxicillin_possible_identifier.png",
+                b"fake-image",
+                "image/png",
+            )
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["provider_name"] == "synthetic_fixture_phase_2c"
+    assert payload["is_external_provider"] is False
+    assert payload["stores_images"] is False
+    assert payload["requires_network"] is False
+    assert "Amoxicillin" in payload["extracted_text"]
+
+
 def test_confirm_text_endpoint_returns_corrected_text_for_analysis() -> None:
     response = client.post(
         "/ocr/confirm-text",
@@ -89,6 +114,16 @@ def test_ocr_confirm_text_does_not_trigger_prescription_analysis() -> None:
     assert "grounded_answer" not in payload
     assert "correction_audit" in payload
     assert "retrieved_chunks" not in payload
+
+
+def test_external_provider_name_is_rejected_without_network_call() -> None:
+    response = client.post(
+        "/ocr/extract-image?provider_name=external_api",
+        files={"file": ("synthetic.png", b"fake-image", "image/png")},
+    )
+
+    assert response.status_code == 400
+    assert "External OCR providers are not enabled" in response.text
 
 
 def test_confirm_text_endpoint_keeps_possible_identifier_warnings() -> None:

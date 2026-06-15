@@ -1,6 +1,7 @@
 # OCR Evaluation And Correction Audit
 
 Phase 2B adds a local evaluation and audit layer around the Phase 2A OCR intake boundary.
+Phase 2C extends this with fixture-backed cases through the local `SyntheticFixtureOcrProvider`.
 
 ## Scope
 
@@ -26,6 +27,8 @@ OCR remains an assistive input layer. OCR output is unverified until a pharmacis
 - notes
 
 The dataset intentionally includes supported medications, unsupported medication names, noisy text, possible identifier labels, and no-medication cases.
+
+Phase 2C cases can also include `fixture_filename`, which points to an approved synthetic PNG in `data/evaluation/ocr_fixtures/`. Fixture-backed cases use `SyntheticFixtureOcrProvider` to produce deterministic OCR text from the filename.
 
 ## Metrics
 
@@ -63,6 +66,18 @@ python scripts/evaluate_ocr.py
 ```
 
 The script prints total cases, passed cases, failed cases, average character error rate, average word error rate, medication detection summary, privacy warning summary, and per-case status.
+
+The script also reports text-only cases, fixture-backed cases, and provider used.
+
+## Provider Report
+
+Run from `backend/`:
+
+```bash
+python scripts/ocr_provider_report.py
+```
+
+The report lists available local OCR providers, whether they are external, whether they store images, whether they require network access, supported content types, and whether each provider is allowed in current prototype mode.
 
 ## Future Boundary
 

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from fastapi import APIRouter, File, HTTPException, UploadFile, status
+from fastapi import APIRouter, File, HTTPException, Query, UploadFile, status
 
 from app.schemas.ocr import (
     OcrCorrectionRequest,
@@ -26,7 +26,10 @@ SUPPORTED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 
 
 @router.post("/extract-image", response_model=OcrImageUploadResponse)
-async def extract_image(file: UploadFile = File(...)) -> OcrImageUploadResponse:
+async def extract_image(
+    file: UploadFile = File(...),
+    provider_name: str = Query(default="mock"),
+) -> OcrImageUploadResponse:
     filename = file.filename or "uploaded_image"
     content_type = (file.content_type or "").lower()
     _validate_upload_type(filename, content_type)
@@ -38,11 +41,18 @@ async def extract_image(file: UploadFile = File(...)) -> OcrImageUploadResponse:
             detail="Uploaded image is too large for Phase 2A OCR intake.",
         )
 
-    extracted = extract_text_from_image(
-        file_bytes=file_bytes,
-        filename=filename,
-        content_type=content_type,
-    )
+    try:
+        extracted = extract_text_from_image(
+            file_bytes=file_bytes,
+            filename=filename,
+            content_type=content_type,
+            provider_name=provider_name,
+        )
+    except ValueError as error:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(error),
+        ) from error
 
     return OcrImageUploadResponse(
         filename=filename,
@@ -50,6 +60,10 @@ async def extract_image(file: UploadFile = File(...)) -> OcrImageUploadResponse:
         extracted_text=extracted.extracted_text,
         confidence_score=extracted.confidence_score,
         provider_name=extracted.provider_name,
+        is_external_provider=extracted.is_external_provider,
+        stores_images=extracted.stores_images,
+        requires_network=extracted.requires_network,
+        supported_content_types=extracted.supported_content_types,
         unverified_ocr_output=True,
         pharmacist_review_required=True,
         privacy_warnings=extracted.privacy_warnings,

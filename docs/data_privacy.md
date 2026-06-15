@@ -57,6 +57,12 @@ Correction audit metadata is returned directly from `/ocr/confirm-text` and is n
 
 Possible identifier findings remain category-level warnings, such as `patient_name_label` or `phone_number_like`. They are not confirmed PII determinations.
 
+## Phase 2C Synthetic OCR Fixtures
+
+`data/evaluation/ocr_fixtures/` contains synthetic PNG files for OCR provider-interface testing. These files must remain synthetic and must not be replaced with real prescription images.
+
+The current OCR providers expose safety metadata for whether a provider is external, stores images, or requires network access. Current providers are local, non-networked, and non-storing. Future providers that use networks or storage require explicit privacy review before being enabled.
+
 ## TODO
 
 - Define a formal anonymization checklist.

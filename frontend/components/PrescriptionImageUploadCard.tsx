@@ -135,6 +135,7 @@ export function PrescriptionImageUploadCard({
         <div className="mt-5 space-y-4">
           <div className="grid gap-3 text-sm sm:grid-cols-3">
             <StatusItem label="Provider" value={ocrResult.provider_name} />
+            <StatusItem label="Provider mode" value={providerModeLabel(ocrResult)} />
             <StatusItem
               label="Confidence"
               value={`${Math.round(ocrResult.confidence_score * 100)}% unverified`}
@@ -271,4 +272,14 @@ function CorrectionAuditSummary({
 
 function formatRate(value: number) {
   return `${Math.round(value * 100)}%`;
+}
+
+function providerModeLabel(result: OcrImageUploadResponse) {
+  if (result.is_external_provider || result.requires_network || result.stores_images) {
+    return "Blocked";
+  }
+  if (result.provider_name.includes("synthetic_fixture")) {
+    return "Synthetic fixture";
+  }
+  return "Local mock";
 }

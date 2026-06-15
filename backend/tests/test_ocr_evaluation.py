@@ -45,6 +45,9 @@ def test_ocr_evaluation_dataset_and_runner_pass() -> None:
 
     assert len(cases) >= 10
     assert report["total_cases"] == len(cases)
+    assert report["fixture_backed_cases"] >= 4
+    assert report["text_only_cases"] + report["fixture_backed_cases"] == len(cases)
+    assert "synthetic_fixture_phase_2c" in report["provider_used"]
     assert report["failed_cases"] == 0
     assert report["medication_detection_summary"]["failed"] == 0
     assert report["privacy_warning_summary"]["failed"] == 0

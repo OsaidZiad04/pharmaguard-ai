@@ -60,6 +60,7 @@ Implemented now:
 - Phase 1.8 scalable knowledge base architecture: structured drug registry, KB validation, coverage reporting, and safe future ingestion stubs.
 - Phase 2A privacy-safe OCR intake foundation: image upload route, mock OCR provider, possible identifier warnings, and pharmacist correction workflow.
 - Phase 2B OCR evaluation and correction audit: synthetic OCR cases, deterministic text-quality metrics, and returned pharmacist correction audit metadata.
+- Phase 2C OCR provider interface and synthetic image fixtures: local provider metadata, synthetic fixture provider, fixture-backed OCR evaluation, and provider readiness report.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
 - Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, OCR intake, and safety regressions.
@@ -142,6 +143,8 @@ The Phase 2A mock OCR provider is deterministic and local. Future OCR providers 
 
 Phase 2B adds OCR evaluation and correction audit metadata. `POST /ocr/confirm-text` now returns a `correction_audit` object with changed/unchanged status, character error rate, word error rate, detected supported medication terms, privacy warning categories, and a generated timestamp. This audit is returned directly and is not persisted to a database.
 
+Phase 2C adds a local OCR provider interface with safe provider metadata. Current providers are `mock_ocr_phase_2a` and `synthetic_fixture_phase_2c`; both are local, non-networked, and non-storing. Synthetic fixture-backed OCR evaluation uses approved files under `data/evaluation/ocr_fixtures/`.
+
 ## Testing
 
 ```bash
@@ -170,9 +173,16 @@ cd backend
 python scripts/evaluate_ocr.py
 ```
 
+Run the OCR provider readiness report:
+
+```bash
+cd backend
+python scripts/ocr_provider_report.py
+```
+
 The evaluation currently contains 46 synthetic cases. It reports retrieval checks (`top_k_hit`, `source_file_hit`, `section_hit`, `insufficient_context_correct`) and generation safety checks for required terms, forbidden terms, draft/pharmacist-review framing, unavailable information, and fabricated citations.
 
-The OCR evaluation currently contains 10 synthetic cases and reports character error rate, word error rate, medication term detection, and privacy-warning matching. These are engineering checks for the OCR workflow, not clinical validation.
+The OCR evaluation currently contains 10 synthetic cases, including 4 fixture-backed cases, and reports character error rate, word error rate, medication term detection, and privacy-warning matching. These are engineering checks for the OCR workflow, not clinical validation.
 
 The KB report summarizes profile counts, aliases, review/source status, missing sections, alias conflicts, disabled profiles, and unreviewed draft profiles. Dense retrieval remains deferred until the TF-IDF baseline and KB governance are stronger. Production OCR and external OCR providers remain deferred.
 
@@ -180,7 +190,7 @@ The KB report summarizes profile counts, aliases, review/source status, missing 
 
 See [docs/roadmap.md](docs/roadmap.md).
 
-For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md).
+For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md).
 
 ## Data Warning
 

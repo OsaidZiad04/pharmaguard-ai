@@ -72,14 +72,24 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Keep OCR output separate from RAG, counseling, lookup, and prescription analysis until pharmacist confirmation. Complete.
 - Avoid persistent audit storage, real prescription data, and external OCR APIs. Complete.
 
-## Phase 2C: OCR Provider Evaluation
+## Phase 2C: OCR Provider Interface & Synthetic Image Fixtures - Complete
 
-- Evaluate local OCR engines or approved provider integrations behind the existing service boundary.
-- Add OCR quality evaluation against synthetic image fixtures.
-- Add pharmacist correction audit metadata persistence only after privacy controls are reviewed.
-- Keep image storage disabled by default until privacy controls are reviewed.
+- Add `BaseOcrProvider`, `MockOcrProvider`, and `SyntheticFixtureOcrProvider`. Complete.
+- Add safe OCR provider selection and explicit external-provider rejection. Complete.
+- Return provider safety metadata from OCR extraction responses. Complete.
+- Add synthetic OCR fixture files under `data/evaluation/ocr_fixtures/`. Complete.
+- Connect OCR evaluation to text-only and fixture-backed cases. Complete.
+- Add OCR provider readiness report at `python scripts/ocr_provider_report.py`. Complete.
+- Keep external OCR APIs, production OCR, and image storage deferred. Complete.
 
-## Phase 2D: Production-Ready OCR Integration
+## Phase 2D: OCR Quality Benchmarking and Provider Swap Readiness
+
+- Add richer synthetic image fixtures.
+- Compare local/provider OCR candidates behind the same interface.
+- Add provider-specific quality gates and privacy checks.
+- Add pharmacist correction review metrics.
+
+## Phase 2E: Production-Ready OCR Integration
 
 - Add prescription image upload workflow.
 - Integrate OCR behind a privacy-safe interface.
