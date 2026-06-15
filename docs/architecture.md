@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, plus Phase 1.5 hardening for evaluation and citation validation.
 
 ## Pipeline
 
@@ -30,7 +30,8 @@ PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current im
 
 6. RAG Retrieval
    - Current: loads local Markdown files from `data/drug_profiles/`, chunks them by headings and paragraphs, embeds chunks with local TF-IDF, stores vectors in memory, and retrieves top-k medication-specific context.
-   - Later: replace or supplement TF-IDF with dense vector retrieval after evaluation.
+   - Phase 1.5: validates retrieved source metadata, checks generated citations, and runs synthetic RAG evaluation cases before OCR work begins.
+   - Later: replace or supplement TF-IDF with dense vector retrieval after baseline evaluation.
 
 7. Pharmacist Review
    - Current: UI requires a pharmacist confirmation action before counseling generation.
@@ -53,12 +54,37 @@ The local RAG MVP avoids external APIs and model downloads. It uses:
 
 If no local chunk passes the threshold, the backend returns `insufficient knowledge base context` rather than guessing.
 
+## Phase 1.5 RAG Hardening
+
+Phase 1.5 keeps the same local architecture and adds safeguards around it:
+
+- `data/evaluation/rag_eval_cases.json` defines synthetic supported, alias, unknown, weak-query, unsupported-information, and mixed prescription-like cases.
+- `app/rag/evaluation.py` runs cases through the existing retriever/generator pipeline.
+- `app/rag/citation_validator.py` verifies chunk metadata and generated source references.
+- `backend/scripts/evaluate_rag.py` prints pass/fail status and summaries.
+
+Evaluation metrics:
+
+- `top_k_hit`: the expected medication appears in the retrieved top-k context, or no context is returned when no medication is expected.
+- `source_file_hit`: expected Markdown source files are present.
+- `section_hit`: expected Markdown sections are present.
+- `insufficient_context_correct`: unknown or weak-context cases are correctly marked insufficient.
+- Generation safety checks confirm required terms, forbidden term absence, draft/pharmacist-review framing, no unsupported unavailable information, no final-advice wording, and valid citations.
+
+Current TF-IDF limitations:
+
+- Retrieval depends on lexical overlap and aliases from local metadata.
+- It can miss semantically related wording if terms differ.
+- It has no clinical reasoning capability and should not be treated as validation.
+
+Dense retrieval is a documented future option only. It is deferred until the TF-IDF baseline has enough evaluation coverage. OCR stays in Phase 2 because image intake and privacy handling should not be mixed with RAG hardening.
+
 ## Backend Modules
 
 - `app/api`: FastAPI routes.
 - `app/schemas`: Pydantic request/response contracts.
 - `app/services`: prescription, safety, lookup, counseling, and RAG orchestration logic.
-- `app/rag`: local TF-IDF RAG components.
+- `app/rag`: local TF-IDF RAG components, evaluation, and citation validation.
 - `app/sample_data`: local mock drug index.
 
 ## Frontend Modules

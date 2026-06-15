@@ -1,0 +1,90 @@
+[
+  {
+    "case_id": "RAG-SUP-001",
+    "query": "paracetamol 500mg counseling",
+    "expected_drug_name": "paracetamol",
+    "expected_source_files": ["paracetamol.md"],
+    "expected_section_titles": ["General Counseling Points"],
+    "must_include_terms": ["Draft support only", "pharmacist review", "final pharmacist-approved label directions"],
+    "must_not_include_terms": ["recommended dose", "safe for every patient", "no pharmacist review needed"],
+    "expected_insufficient_context": false,
+    "notes": "Supported synthetic query for paracetamol counseling context."
+  },
+  {
+    "case_id": "RAG-SUP-002",
+    "query": "ibuprofen safety counseling",
+    "expected_drug_name": "ibuprofen",
+    "expected_source_files": ["ibuprofen.md"],
+    "expected_section_titles": ["Safety Notes"],
+    "must_include_terms": ["Draft support only", "pharmacist review", "allergy history"],
+    "must_not_include_terms": ["recommended dose", "safe for every patient", "no pharmacist review needed"],
+    "expected_insufficient_context": false,
+    "notes": "Supported synthetic query for ibuprofen safety context."
+  },
+  {
+    "case_id": "RAG-SUP-003",
+    "query": "amoxicillin counseling allergy",
+    "expected_drug_name": "amoxicillin",
+    "expected_source_files": ["amoxicillin.md"],
+    "expected_section_titles": ["Safety Notes"],
+    "must_include_terms": ["Draft support only", "pharmacist review", "allergy history"],
+    "must_not_include_terms": ["recommended dose", "safe for every patient", "no pharmacist review needed"],
+    "expected_insufficient_context": false,
+    "notes": "Supported synthetic query for amoxicillin counseling and allergy review context."
+  },
+  {
+    "case_id": "RAG-ALIAS-001",
+    "query": "acetaminophen counseling points",
+    "expected_drug_name": "paracetamol",
+    "expected_source_files": ["paracetamol.md"],
+    "expected_section_titles": ["General Counseling Points"],
+    "must_include_terms": ["Draft support only", "pharmacist review", "same ingredient"],
+    "must_not_include_terms": ["recommended dose", "safe for every patient", "no pharmacist review needed"],
+    "expected_insufficient_context": false,
+    "notes": "Synthetic alias query. The mock index maps acetaminophen to paracetamol."
+  },
+  {
+    "case_id": "RAG-UNK-001",
+    "query": "xyzmed 10mg counseling",
+    "expected_drug_name": null,
+    "expected_source_files": [],
+    "expected_section_titles": [],
+    "must_include_terms": ["insufficient knowledge base context", "Pharmacist review required"],
+    "must_not_include_terms": ["recommended dose", "safe for every patient", "Retrieved Sources"],
+    "expected_insufficient_context": true,
+    "notes": "Unknown synthetic medication must not retrieve random context or guess."
+  },
+  {
+    "case_id": "RAG-WEAK-001",
+    "query": "general counseling points and safety notes",
+    "expected_drug_name": null,
+    "expected_source_files": [],
+    "expected_section_titles": [],
+    "must_include_terms": ["insufficient knowledge base context", "Pharmacist review required"],
+    "must_not_include_terms": ["paracetamol.md", "ibuprofen.md", "amoxicillin.md", "Retrieved Sources"],
+    "expected_insufficient_context": true,
+    "notes": "Weak generic query has no clear medication and should not retrieve unrelated chunks."
+  },
+  {
+    "case_id": "RAG-UNSUPPORTED-001",
+    "query": "paracetamol driving advice",
+    "expected_drug_name": "paracetamol",
+    "expected_source_files": ["paracetamol.md"],
+    "expected_section_titles": [],
+    "must_include_terms": ["Draft support only", "pharmacist review"],
+    "must_not_include_terms": ["safe to drive", "driving", "operate machinery", "vehicle"],
+    "expected_insufficient_context": false,
+    "notes": "Unsupported information request should not invent driving-related counseling."
+  },
+  {
+    "case_id": "RAG-MIXED-001",
+    "query": "Synthetic Rx text: Paracetamol 500 mg. Patient age, allergies, pregnancy status, and current medications are missing. Counseling review.",
+    "expected_drug_name": "paracetamol",
+    "expected_source_files": ["paracetamol.md"],
+    "expected_section_titles": ["Safety Notes", "Patient Questions to Ask"],
+    "must_include_terms": ["Draft support only", "pharmacist review", "allergies"],
+    "must_not_include_terms": ["recommended dose", "safe for every patient", "no pharmacist review needed"],
+    "expected_insufficient_context": false,
+    "notes": "Synthetic prescription-like text with one supported medication and missing-context language."
+  }
+]

@@ -48,9 +48,10 @@ Implemented now:
 - Mock extraction and safety services.
 - Local Markdown drug knowledge base.
 - Phase 1 local TF-IDF RAG: Markdown loading, chunking, in-memory indexing, retrieval, and grounded draft generation.
+- Phase 1.5 RAG hardening: synthetic RAG evaluation cases, citation validation, unsupported-claim regression tests, and a CLI evaluation runner.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
-- Pytest coverage for core placeholder behavior.
+- Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, and safety regressions.
 
 Not implemented yet:
 
@@ -98,8 +99,19 @@ Set `NEXT_PUBLIC_API_BASE_URL=http://localhost:8000` if the backend runs on a di
 
 ```bash
 cd backend
-pytest
+python -m pytest
 ```
+
+Run the local RAG evaluation:
+
+```bash
+cd backend
+python scripts/evaluate_rag.py
+```
+
+The evaluation reports retrieval checks (`top_k_hit`, `source_file_hit`, `section_hit`, `insufficient_context_correct`) and generation safety checks for required terms, forbidden terms, draft/pharmacist-review framing, unavailable information, and fabricated citations.
+
+Dense retrieval is deferred until the TF-IDF baseline has enough evaluation coverage. OCR remains Phase 2 and is intentionally not implemented in the RAG hardening phase.
 
 ## Future Roadmap
 

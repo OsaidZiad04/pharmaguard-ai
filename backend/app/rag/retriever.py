@@ -1,11 +1,14 @@
 from dataclasses import dataclass
 from functools import lru_cache
+import json
+from pathlib import Path
 
 from app.rag.chunker import DocumentChunk, load_drug_profile_chunks
 from app.rag.embedder import TfidfEmbedder
 from app.rag.vector_store import InMemoryVectorStore
 
 DEFAULT_MIN_RELEVANCE = 0.08
+MOCK_INDEX_PATH = Path(__file__).resolve().parents[1] / "sample_data" / "mock_drug_index.json"
 
 
 @dataclass(frozen=True)
@@ -27,6 +30,7 @@ class LocalRagIndex:
         self.known_drug_names = {
             chunk.metadata["drug_name"].lower() for chunk in self.chunks
         }
+        self.alias_map = _load_alias_map(self.known_drug_names)
 
         if self.chunks:
             vectors = self.embedder.fit_transform(
@@ -79,9 +83,15 @@ class LocalRagIndex:
             normalized = medication_name.strip().lower()
             if normalized in self.known_drug_names:
                 return normalized
+            if normalized in self.alias_map:
+                return self.alias_map[normalized]
             return None
 
         normalized_query = query.lower()
+        for alias, canonical_name in self.alias_map.items():
+            if alias in normalized_query:
+                return canonical_name
+
         matches = [
             drug_name
             for drug_name in self.known_drug_names
@@ -115,3 +125,20 @@ def _chunk_search_text(chunk: DocumentChunk) -> str:
         f"{metadata['drug_name']} {metadata['section_title']} "
         f"{chunk.text}"
     )
+
+
+def _load_alias_map(known_drug_names: set[str]) -> dict[str, str]:
+    if not MOCK_INDEX_PATH.exists():
+        return {}
+
+    with MOCK_INDEX_PATH.open("r", encoding="utf-8") as file:
+        index = json.load(file)
+
+    aliases: dict[str, str] = {}
+    for canonical_name, profile in index.items():
+        normalized_canonical = canonical_name.lower()
+        if normalized_canonical not in known_drug_names:
+            continue
+        for alias in profile.get("aliases", []):
+            aliases[alias.strip().lower()] = normalized_canonical
+    return aliases

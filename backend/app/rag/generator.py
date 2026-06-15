@@ -16,13 +16,12 @@ def generate_grounded_answer(query: str, contexts: list[RetrievedContext]) -> st
     """Generate a pharmacist-facing draft using only retrieved local context."""
     if not contexts:
         return (
-            f"{INSUFFICIENT_CONTEXT_MESSAGE}. Pharmacist review required. "
+            f"{INSUFFICIENT_CONTEXT_MESSAGE}. Draft support only. Pharmacist review required. "
             "No medication-specific local Markdown context met the retrieval threshold."
         )
 
     lines = [
         "Draft support only for pharmacist review. This is not final medical advice.",
-        f"Query: {query}",
         "",
     ]
 

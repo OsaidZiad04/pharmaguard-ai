@@ -8,16 +8,21 @@
 - Add synthetic data and safety documentation.
 - Add initial pytest coverage.
 
-## Phase 1: RAG MVP - In Progress
+## Phase 1: RAG MVP - Complete
 
 - Load local Markdown drug profiles. Complete.
 - Chunk documents by headings and paragraphs with source metadata. Complete.
 - Generate local TF-IDF embeddings. Complete.
 - Retrieve top-k context snippets with a relevance threshold. Complete.
 - Produce grounded pharmacist-support draft responses with local citations. Complete.
-- Add more evaluation cases for retrieval quality. Next.
-- Add stronger citation validation and unsupported-claim tests. Next.
-- Decide whether to add dense retrieval after TF-IDF baseline evaluation. Next.
+
+## Phase 1.5: RAG Hardening & Evaluation - Complete
+
+- Add synthetic RAG evaluation cases for supported, alias, unknown, weak-query, unsupported-information, and mixed prescription-like scenarios. Complete.
+- Add a CLI RAG evaluation runner. Complete.
+- Add citation validation for retrieved chunk metadata and generated source references. Complete.
+- Add unsupported-claim and fabricated-citation regression tests. Complete.
+- Keep dense retrieval deferred until the TF-IDF baseline has stronger evidence. Complete.
 
 ## Phase 2: OCR Integration
 
