@@ -73,6 +73,26 @@ Phase 2D adds quality gate eligibility to the provider report. Current provider 
 
 These gates are provider swap-readiness checks, not clinical validation.
 
+## Candidate Comparison
+
+Phase 2E adds a candidate registry at `data/evaluation/ocr_provider_candidates.json`.
+
+The current matrix includes:
+
+- implemented mock provider
+- implemented synthetic fixture provider
+- planned Tesseract local candidate
+- planned EasyOCR local candidate
+- cloud OCR placeholder disallowed for prototype mode
+
+Run from `backend/`:
+
+```bash
+python scripts/ocr_candidate_report.py
+```
+
+The candidate report is metadata-only. It does not install dependencies, instantiate planned providers, call external APIs, or process real images.
+
 ## Future Provider Requirements
 
 A future real OCR provider must pass the same boundary:

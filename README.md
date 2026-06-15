@@ -62,6 +62,7 @@ Implemented now:
 - Phase 2B OCR evaluation and correction audit: synthetic OCR cases, deterministic text-quality metrics, and returned pharmacist correction audit metadata.
 - Phase 2C OCR provider interface and synthetic image fixtures: local provider metadata, synthetic fixture provider, fixture-backed OCR evaluation, and provider readiness report.
 - Phase 2D OCR quality benchmarking and provider swap readiness: expanded synthetic fixtures, provider-level benchmark summaries, and prototype quality gates.
+- Phase 2E OCR provider candidate comparison: metadata-only candidate registry, readiness matrix, and candidate report for future provider decisions.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
 - Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, OCR intake, and safety regressions.
@@ -148,6 +149,8 @@ Phase 2C adds a local OCR provider interface with safe provider metadata. Curren
 
 Phase 2D expands OCR benchmarking to 18 synthetic cases, including 10 fixture-backed cases. Provider quality gates check benchmark error rates, token overlap, medication term detection, privacy-warning matching, non-networked/non-storing provider metadata, and unverified output status. These gates are swap-readiness checks only, not clinical validation.
 
+Phase 2E adds a metadata-only OCR provider candidate matrix. Tesseract and EasyOCR are documented as planned local candidates only; no packages are installed or activated. Cloud OCR remains disallowed for prototype mode pending formal privacy review.
+
 ## Testing
 
 ```bash
@@ -183,6 +186,13 @@ cd backend
 python scripts/ocr_provider_report.py
 ```
 
+Run the OCR candidate comparison report:
+
+```bash
+cd backend
+python scripts/ocr_candidate_report.py
+```
+
 The evaluation currently contains 46 synthetic cases. It reports retrieval checks (`top_k_hit`, `source_file_hit`, `section_hit`, `insufficient_context_correct`) and generation safety checks for required terms, forbidden terms, draft/pharmacist-review framing, unavailable information, and fabricated citations.
 
 The OCR evaluation currently contains 18 synthetic cases, including 10 fixture-backed cases, and reports character error rate, word error rate, medication term detection, privacy-warning matching, provider-level summaries, and quality gate status. These are engineering checks for the OCR workflow, not clinical validation.
@@ -193,7 +203,7 @@ The KB report summarizes profile counts, aliases, review/source status, missing 
 
 See [docs/roadmap.md](docs/roadmap.md).
 
-For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md).
+For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md).
 
 ## Data Warning
 

@@ -31,3 +31,18 @@ def test_ocr_provider_report_script_runs_successfully() -> None:
     assert "quality_gate_eligible: True" in result.stdout
     assert "can_be_used_without_network: True" in result.stdout
     assert "allowed_in_current_prototype_mode: True" in result.stdout
+
+
+def test_existing_provider_report_remains_independent_from_candidate_registry() -> None:
+    backend_root = Path(__file__).resolve().parents[1]
+    result = subprocess.run(
+        [sys.executable, "scripts/ocr_provider_report.py"],
+        cwd=backend_root,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0
+    assert "tesseract_local_candidate" not in result.stdout
+    assert "cloud_ocr_candidate_placeholder" not in result.stdout

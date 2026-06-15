@@ -96,6 +96,16 @@ python scripts/ocr_provider_report.py
 
 The report lists available local OCR providers, whether they are external, whether they store images, whether they require network access, supported content types, and whether each provider is allowed in current prototype mode.
 
+## Candidate Matrix
+
+Phase 2E adds a separate candidate comparison report:
+
+```bash
+python scripts/ocr_candidate_report.py
+```
+
+Candidate readiness is based on provider metadata, privacy constraints, integration blockers, and whether a provider is currently implemented. Planned candidates do not run OCR and are not part of OCR evaluation until a future adapter phase.
+
 ## Future Boundary
 
 Any future OCR provider must pass this boundary before being considered for workflow use:

@@ -91,18 +91,26 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Keep OCR output unverified and pharmacist correction mandatory. Complete.
 - Keep production OCR, external APIs, and real prescription images deferred. Complete.
 
-## Phase 2E: OCR Provider Candidate Comparison
+## Phase 2E: OCR Provider Candidate Comparison & Swap Readiness Matrix - Complete
 
-- Evaluate candidate local or approved OCR providers behind the same provider interface.
-- Add provider-specific benchmark baselines using synthetic image fixtures.
-- Compare correction burden, privacy warning behavior, and supported medication detection.
+- Add OCR provider candidate registry. Complete.
+- Add candidate loader and readiness summaries. Complete.
+- Add provider swap-readiness checks for prototype blockers and future evaluation. Complete.
+- Add OCR candidate comparison report. Complete.
+- Document local planned candidates without activating them. Complete.
+- Keep cloud OCR blocked for prototype mode pending privacy review. Complete.
 
-## Phase 2F: Production-Ready OCR Integration
+## Phase 2F: OCR Provider Adapter Spike
 
-- Add prescription image upload workflow.
-- Integrate OCR behind a privacy-safe interface.
+- Prototype one local OCR adapter behind `BaseOcrProvider` only if dependencies and fixture benchmarks are acceptable.
+- Keep adapter disabled by default until privacy and quality checks pass.
+- Do not integrate cloud OCR without formal review.
+
+## Phase 2G: Production-Ready OCR Integration
+
+- Add production-ready OCR workflow only after provider validation.
 - Compare OCR text against pharmacist corrections.
-- Add confidence scoring for OCR output.
+- Add confidence scoring and audit retention policy for OCR output.
 
 ## Phase 3: Evaluation
 

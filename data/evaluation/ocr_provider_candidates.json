@@ -1,0 +1,168 @@
+[
+  {
+    "provider_id": "mock_ocr_phase_2a",
+    "display_name": "Phase 2A Mock OCR Provider",
+    "provider_type": "mock",
+    "current_status": "implemented",
+    "requires_network": false,
+    "stores_images": false,
+    "requires_system_dependency": false,
+    "requires_model_download": false,
+    "expected_privacy_risk": "low",
+    "prototype_allowed": true,
+    "production_possible_after_review": false,
+    "notes": "Deterministic local mock provider for development and safety workflow testing only.",
+    "required_quality_gates": [
+      "output_unverified",
+      "pharmacist_correction_required",
+      "provider_non_networked",
+      "provider_non_storing",
+      "synthetic_benchmark_pass"
+    ],
+    "required_privacy_controls": [
+      "no_image_storage",
+      "possible_identifier_warnings",
+      "synthetic_data_only"
+    ],
+    "integration_blockers": [
+      "Not a real OCR engine.",
+      "Not suitable for production OCR."
+    ]
+  },
+  {
+    "provider_id": "synthetic_fixture_phase_2c",
+    "display_name": "Synthetic Fixture OCR Provider",
+    "provider_type": "fixture",
+    "current_status": "implemented",
+    "requires_network": false,
+    "stores_images": false,
+    "requires_system_dependency": false,
+    "requires_model_download": false,
+    "expected_privacy_risk": "low",
+    "prototype_allowed": true,
+    "production_possible_after_review": false,
+    "notes": "Filename-driven synthetic fixture provider for deterministic benchmark plumbing only.",
+    "required_quality_gates": [
+      "output_unverified",
+      "pharmacist_correction_required",
+      "provider_non_networked",
+      "provider_non_storing",
+      "synthetic_benchmark_pass"
+    ],
+    "required_privacy_controls": [
+      "no_image_storage",
+      "possible_identifier_warnings",
+      "synthetic_fixture_only"
+    ],
+    "integration_blockers": [
+      "Not a real OCR engine.",
+      "Filename-driven behavior only."
+    ]
+  },
+  {
+    "provider_id": "tesseract_local_candidate",
+    "display_name": "Tesseract Local OCR Candidate",
+    "provider_type": "local_engine",
+    "current_status": "planned",
+    "requires_network": false,
+    "stores_images": false,
+    "requires_system_dependency": true,
+    "requires_model_download": false,
+    "expected_privacy_risk": "low",
+    "prototype_allowed": false,
+    "production_possible_after_review": true,
+    "notes": "Planned local OCR engine candidate. Not installed, instantiated, or activated in this phase.",
+    "required_quality_gates": [
+      "base_provider_interface",
+      "provider_metadata",
+      "output_unverified",
+      "pharmacist_correction_required",
+      "provider_non_networked",
+      "provider_non_storing",
+      "synthetic_benchmark_pass"
+    ],
+    "required_privacy_controls": [
+      "local_execution_only",
+      "no_image_storage",
+      "possible_identifier_warnings",
+      "dependency_review"
+    ],
+    "integration_blockers": [
+      "System dependency not installed.",
+      "No provider adapter implemented.",
+      "Synthetic benchmark has not been run against this provider."
+    ]
+  },
+  {
+    "provider_id": "easyocr_local_candidate",
+    "display_name": "EasyOCR Local Candidate",
+    "provider_type": "local_engine",
+    "current_status": "planned",
+    "requires_network": false,
+    "stores_images": false,
+    "requires_system_dependency": true,
+    "requires_model_download": true,
+    "expected_privacy_risk": "medium",
+    "prototype_allowed": false,
+    "production_possible_after_review": true,
+    "notes": "Planned local OCR model candidate. Model download and dependency footprint require explicit review.",
+    "required_quality_gates": [
+      "base_provider_interface",
+      "provider_metadata",
+      "output_unverified",
+      "pharmacist_correction_required",
+      "provider_non_networked",
+      "provider_non_storing",
+      "synthetic_benchmark_pass"
+    ],
+    "required_privacy_controls": [
+      "local_execution_only",
+      "no_image_storage",
+      "possible_identifier_warnings",
+      "model_cache_review",
+      "dependency_review"
+    ],
+    "integration_blockers": [
+      "Model download is not allowed in this phase.",
+      "No provider adapter implemented.",
+      "Synthetic benchmark has not been run against this provider."
+    ]
+  },
+  {
+    "provider_id": "cloud_ocr_candidate_placeholder",
+    "display_name": "Cloud OCR Candidate Placeholder",
+    "provider_type": "cloud_api",
+    "current_status": "disallowed_for_prototype",
+    "requires_network": true,
+    "stores_images": true,
+    "requires_system_dependency": false,
+    "requires_model_download": false,
+    "expected_privacy_risk": "high",
+    "prototype_allowed": false,
+    "production_possible_after_review": true,
+    "notes": "Placeholder for future cloud OCR evaluation only. Disallowed in prototype mode.",
+    "required_quality_gates": [
+      "base_provider_interface",
+      "provider_metadata",
+      "output_unverified",
+      "pharmacist_correction_required",
+      "synthetic_benchmark_pass",
+      "privacy_review_complete",
+      "data_processing_agreement_review"
+    ],
+    "required_privacy_controls": [
+      "formal_privacy_review",
+      "data_processing_agreement",
+      "no_default_image_storage",
+      "audit_logging_policy",
+      "access_control_policy",
+      "patient_data_transfer_approval"
+    ],
+    "integration_blockers": [
+      "Requires network access.",
+      "May store or process images outside the local environment.",
+      "Requires formal privacy/security review before any integration.",
+      "Disallowed for current prototype mode."
+    ]
+  }
+]

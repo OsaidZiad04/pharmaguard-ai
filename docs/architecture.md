@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, and Phase 2D OCR quality benchmarking/provider swap readiness.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, and Phase 2E OCR provider candidate comparison.
 
 ## Pipeline
 
@@ -108,6 +108,17 @@ Phase 2D adds provider-specific benchmark gates before any real OCR provider is 
 - Provider report output includes quality gate eligibility and prototype allowed status.
 
 These gates are engineering swap-readiness checks. They do not validate clinical correctness or production OCR quality.
+
+## Phase 2E OCR Provider Candidate Comparison
+
+Phase 2E adds a metadata-only decision layer for future OCR providers.
+
+- `data/evaluation/ocr_provider_candidates.json` records implemented, planned, and disallowed OCR candidates.
+- `backend/app/ocr/provider_candidates.py` loads candidate metadata and summarizes readiness.
+- `backend/app/ocr/provider_swap_readiness.py` checks prototype blockers, future-evaluation readiness, warnings, and next steps.
+- `backend/scripts/ocr_candidate_report.py` prints the provider candidate matrix.
+
+No candidate provider is installed or executed by this layer. Tesseract and EasyOCR remain planned local candidates only. Cloud OCR is disallowed for prototype mode because it requires network access and privacy review.
 
 ## Phase 1.7 Controlled Knowledge Base Expansion
 
