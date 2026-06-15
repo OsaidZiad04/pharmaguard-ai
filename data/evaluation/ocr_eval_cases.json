@@ -112,5 +112,104 @@
     "expected_privacy_warning_count": 0,
     "difficulty_level": "easy",
     "notes": "No medication detected; OCR should not infer one."
+  },
+  {
+    "case_id": "OCR-FIXTURE-011",
+    "synthetic_filename": "synthetic_metformin_clean.fixture.md",
+    "fixture_filename": "synthetic_metformin_clean.fixture.md",
+    "mock_ocr_text": "Rx: Metformin tablets. Pharmacist must confirm formulation and directions.",
+    "expected_corrected_text": "Rx: Metformin tablets. Pharmacist must confirm formulation and directions.",
+    "expected_medications": ["metformin"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "easy",
+    "notes": "Fixture descriptor clean supported medication case."
+  },
+  {
+    "case_id": "OCR-FIXTURE-012",
+    "synthetic_filename": "synthetic_amlodipine_low_contrast.fixture.md",
+    "fixture_filename": "synthetic_amlodipine_low_contrast.fixture.md",
+    "mock_ocr_text": "Rx: Amlodipine tablets. Low contrast text; pharmacist verification required.",
+    "expected_corrected_text": "Rx: Amlodipine tablets. Low contrast text; pharmacist verification required.",
+    "expected_medications": ["amlodipine"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "medium",
+    "notes": "Low-contrast synthetic fixture descriptor; no real image data."
+  },
+  {
+    "case_id": "OCR-FIXTURE-013",
+    "synthetic_filename": "synthetic_azithromycin_spaced_text.fixture.md",
+    "fixture_filename": "synthetic_azithromycin_spaced_text.fixture.md",
+    "mock_ocr_text": "Rx: Azithromycin capsules. Spaced text requires pharmacist verification.",
+    "expected_corrected_text": "Rx: Azithromycin capsules. Spaced text requires pharmacist verification.",
+    "expected_medications": ["azithromycin"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "medium",
+    "notes": "Synthetic spaced-text fixture descriptor."
+  },
+  {
+    "case_id": "OCR-FIXTURE-014",
+    "synthetic_filename": "synthetic_multiple_meds.fixture.md",
+    "fixture_filename": "synthetic_multiple_meds.fixture.md",
+    "mock_ocr_text": "Rx: Paracetamol tablets and Ibuprofen tablets. Pharmacist must review duplicate medicine context.",
+    "expected_corrected_text": "Rx: Paracetamol tablets and Ibuprofen tablets. Pharmacist must review duplicate medicine context.",
+    "expected_medications": ["paracetamol", "ibuprofen"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "medium",
+    "notes": "Multiple supported medications in a fixture descriptor."
+  },
+  {
+    "case_id": "OCR-FIXTURE-015",
+    "synthetic_filename": "synthetic_identifier_heavy_fake.fixture.md",
+    "fixture_filename": "synthetic_identifier_heavy_fake.fixture.md",
+    "mock_ocr_text": "Patient: Synthetic Example. DOB: 2000-01-01. Phone: 555-010-3333. Clinic: Demo Clinic. Rx: Levothyroxine tablets.",
+    "expected_corrected_text": "Rx: Levothyroxine tablets.",
+    "expected_medications": ["levothyroxine"],
+    "expected_possible_identifiers": [
+      "phone_number_like",
+      "patient_name_label",
+      "clinic_label",
+      "date_of_birth_label"
+    ],
+    "expected_privacy_warning_count": 4,
+    "difficulty_level": "hard",
+    "notes": "Synthetic identifier-heavy fixture descriptor; labels are fake and should be privacy warnings only."
+  },
+  {
+    "case_id": "OCR-FIXTURE-016",
+    "synthetic_filename": "synthetic_handwriting_like_noise.fixture.md",
+    "fixture_filename": "synthetic_handwriting_like_noise.fixture.md",
+    "mock_ocr_text": "Rx: Simvasttin tabiets. Handwriting-like OCR noise; pharmacist correction required.",
+    "expected_corrected_text": "Rx: Simvastatin tablets. Handwriting-like OCR noise; pharmacist correction required.",
+    "expected_medications": ["simvastatin"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "hard",
+    "notes": "Misspelled medication fixture descriptor requiring pharmacist correction."
+  },
+  {
+    "case_id": "OCR-TEXT-017",
+    "synthetic_filename": "low_confidence_unreadable.png",
+    "mock_ocr_text": "Unreadable marks only. No medication can be confirmed from OCR.",
+    "expected_corrected_text": "Unreadable marks only. No medication can be confirmed from OCR.",
+    "expected_medications": [],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "hard",
+    "notes": "Low-confidence text-only case with no medication detected."
+  },
+  {
+    "case_id": "OCR-TEXT-018",
+    "synthetic_filename": "unsupported_brand_alias.png",
+    "mock_ocr_text": "Rx: Unknownbrand tablets. Pharmacist must verify medication identity.",
+    "expected_corrected_text": "Rx: Unknownbrand tablets. Pharmacist must verify medication identity.",
+    "expected_medications": ["unknownbrand"],
+    "expected_possible_identifiers": [],
+    "expected_privacy_warning_count": 0,
+    "difficulty_level": "hard",
+    "notes": "Unsupported medication-like term remains an OCR benchmark case, not KB support."
   }
 ]

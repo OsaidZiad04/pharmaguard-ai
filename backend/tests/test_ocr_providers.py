@@ -43,6 +43,20 @@ def test_synthetic_fixture_provider_returns_deterministic_text_for_known_fixture
     assert first.requires_network is False
 
 
+def test_synthetic_fixture_provider_supports_phase_2d_descriptors() -> None:
+    provider = SyntheticFixtureOcrProvider()
+
+    result = provider.extract_text(
+        file_bytes=b"fixture descriptor",
+        filename="synthetic_identifier_heavy_fake.fixture.md",
+        content_type="image/png",
+    )
+
+    assert "Levothyroxine" in result.extracted_text
+    assert "patient_name_label" in result.detected_possible_identifiers
+    assert "phone_number_like" in result.detected_possible_identifiers
+
+
 def test_unknown_fixture_falls_back_safely_to_mock_style_text() -> None:
     provider = SyntheticFixtureOcrProvider()
 

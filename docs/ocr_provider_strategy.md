@@ -61,6 +61,18 @@ python scripts/ocr_provider_report.py
 
 The report lists provider names, safety metadata, supported content types, and whether each provider is allowed in current prototype mode.
 
+Phase 2D adds quality gate eligibility to the provider report. Current provider eligibility requires:
+
+- local/non-external provider
+- no network requirement
+- no image storage
+- synthetic benchmark metrics within thresholds
+- medication detection checks passing
+- privacy warning checks passing
+- unverified output status preserved
+
+These gates are provider swap-readiness checks, not clinical validation.
+
 ## Future Provider Requirements
 
 A future real OCR provider must pass the same boundary:

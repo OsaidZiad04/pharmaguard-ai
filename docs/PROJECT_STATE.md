@@ -26,6 +26,7 @@ The current system includes:
 - Privacy-safe OCR intake foundation using deterministic local OCR providers.
 - OCR provider interface with safe provider metadata.
 - Synthetic OCR fixture provider and fixture-backed OCR evaluation.
+- OCR provider quality gates and provider-level benchmark summaries.
 - Pharmacist OCR correction workflow.
 - OCR correction audit metadata returned by `/ocr/confirm-text`.
 - RAG evaluation with synthetic cases.
@@ -139,6 +140,13 @@ The frontend is a pharmacist dashboard, not a chatbot. It includes prescription 
 - Key behavior added: Provider interface, safe provider selection, explicit external-provider rejection, provider safety metadata in OCR responses, `SyntheticFixtureOcrProvider`, fixture-backed OCR evaluation, and OCR provider readiness reporting.
 - Verification summary: Backend tests pass 65 tests; OCR evaluation passes 10/10 cases with 4 fixture-backed cases; OCR provider report lists 2 allowed local providers.
 
+### Phase 2D: OCR Quality Benchmarking & Provider Swap Readiness
+
+- Objective: Strengthen OCR provider evaluation before any real provider integration.
+- Main files/modules added: `backend/app/ocr/quality_gates.py`, expanded `data/evaluation/ocr_fixtures/` descriptors, expanded OCR evaluation cases, provider gate tests.
+- Key behavior added: OCR evaluation expanded to 18 synthetic cases, 10 fixture-backed cases, provider-level benchmark summaries, quality gate summary, and provider report quality eligibility.
+- Verification summary: Backend tests pass 72 tests; OCR evaluation passes 18/18 cases; both current providers pass prototype quality gates.
+
 ## 5. Supported Knowledge Base
 
 Current total drug profiles: 15.
@@ -175,11 +183,11 @@ Current registry status:
 
 Current verification status:
 
-- Backend tests: 65 passed.
+- Backend tests: 72 passed.
 - RAG evaluation: 46/46 passed.
-- OCR evaluation: 10/10 passed, including 4 fixture-backed cases.
+- OCR evaluation: 18/18 passed, including 10 fixture-backed cases.
 - KB report: PASS, 0 blocking issues.
-- OCR provider report: PASS, 2 local providers allowed in prototype mode.
+- OCR provider report: PASS, 2 local providers allowed in prototype mode and quality-gate eligible.
 - Frontend typecheck: passed.
 - Frontend build: passed.
 
@@ -210,6 +218,7 @@ Current non-negotiable boundaries:
 - OCR text must be corrected or confirmed by a pharmacist before analysis.
 - Current OCR providers are local, non-networked, and non-storing.
 - Explicit external OCR provider names are rejected in prototype mode.
+- OCR quality gates are engineering checks only, not clinical validation.
 - Possible identifiers are flagged as possible identifiers, not confirmed PII.
 - No external APIs are used.
 - No clinical validation is claimed.
@@ -221,7 +230,7 @@ Current non-negotiable boundaries:
 - `backend/app/services/`: Application services for extraction, safety, lookup, counseling, RAG orchestration, OCR, and OCR audit.
 - `backend/app/rag/`: Local TF-IDF RAG components, generation, citation validation, and RAG evaluation.
 - `backend/app/kb/`: Drug registry loading, KB validation, coverage schema, and future ingestion scaffolding.
-- `backend/app/ocr/`: OCR provider interface, local provider implementations, evaluation metrics, and synthetic OCR evaluation runner logic.
+- `backend/app/ocr/`: OCR provider interface, local provider implementations, evaluation metrics, quality gates, and synthetic OCR evaluation runner logic.
 - `backend/scripts/`: CLI scripts for RAG evaluation, KB reporting, OCR evaluation, and OCR provider reporting.
 - `backend/tests/`: Backend pytest regression tests.
 - `frontend/components/`: Pharmacist dashboard UI components.
@@ -248,7 +257,7 @@ Current non-negotiable boundaries:
 
 Proposed roadmap:
 
-- Phase 2D: OCR Quality Benchmarking and Provider Swap Readiness.
+- Phase 2E: OCR Provider Candidate Comparison.
 - Phase 3: End-to-End Prescription Workflow Evaluation.
 - Phase 4: Drug Knowledge Graph.
 - Phase 5: Deployment & Portfolio Polish.

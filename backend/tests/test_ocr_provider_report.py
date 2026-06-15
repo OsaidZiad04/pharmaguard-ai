@@ -28,4 +28,6 @@ def test_ocr_provider_report_script_runs_successfully() -> None:
     assert result.returncode == 0
     assert "mock_ocr_phase_2a" in result.stdout
     assert "synthetic_fixture_phase_2c" in result.stdout
+    assert "quality_gate_eligible: True" in result.stdout
+    assert "can_be_used_without_network: True" in result.stdout
     assert "allowed_in_current_prototype_mode: True" in result.stdout

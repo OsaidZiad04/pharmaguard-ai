@@ -43,7 +43,7 @@ Dense retrieval is deferred until this TF-IDF baseline and registry governance h
 
 ## OCR Evaluation
 
-`ocr_eval_cases.json` contains 10 synthetic OCR cases covering clean OCR, noisy medication text, possible identifier labels, phone-like numbers, clinic labels, supported and unsupported medication names, multiple medication terms, ambiguous handwriting-like errors represented as text, and no-medication cases. Phase 2C adds fixture-backed cases through `fixture_filename` values that point to approved synthetic PNG files in `ocr_fixtures/`.
+`ocr_eval_cases.json` contains 18 synthetic OCR cases covering clean OCR, noisy medication text, low-confidence text, possible identifier labels, phone-like numbers, clinic labels, supported and unsupported medication names, multiple medication terms, ambiguous handwriting-like errors represented as text, and no-medication cases. Phase 2C and Phase 2D add fixture-backed cases through `fixture_filename` values that point to approved synthetic PNG files or descriptor fixtures in `ocr_fixtures/`.
 
 Run from `backend/`:
 

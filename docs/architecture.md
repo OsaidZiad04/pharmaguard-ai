@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, and Phase 2C OCR provider interface with synthetic fixtures.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, and Phase 2D OCR quality benchmarking/provider swap readiness.
 
 ## Pipeline
 
@@ -96,6 +96,18 @@ Phase 2C separates OCR provider behavior from OCR service orchestration.
 - `backend/scripts/ocr_provider_report.py` reports provider readiness and prototype-mode safety status.
 
 No external OCR provider is enabled. The fixture provider is filename-driven and exists to test provider plumbing and fixture-backed evaluation only.
+
+## Phase 2D OCR Quality Benchmarking And Provider Swap Readiness
+
+Phase 2D adds provider-specific benchmark gates before any real OCR provider is considered.
+
+- `backend/app/ocr/quality_gates.py` defines prototype OCR quality gate checks.
+- OCR evaluation now includes 18 synthetic cases, including 10 fixture-backed cases.
+- Provider summaries report cases, pass/fail counts, average CER/WER, and quality gate metrics.
+- Quality gates check maximum average character error rate, maximum average word error rate, minimum token overlap, medication detection, privacy-warning matching, unverified output status, and provider safety metadata.
+- Provider report output includes quality gate eligibility and prototype allowed status.
+
+These gates are engineering swap-readiness checks. They do not validate clinical correctness or production OCR quality.
 
 ## Phase 1.7 Controlled Knowledge Base Expansion
 

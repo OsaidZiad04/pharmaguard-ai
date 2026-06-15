@@ -6,10 +6,11 @@ from pathlib import Path
 from statistics import mean
 from typing import Any
 
-from app.ocr.providers import SyntheticFixtureOcrProvider
+from app.ocr.providers import MockOcrProvider, SyntheticFixtureOcrProvider
+from app.ocr.quality_gates import evaluate_quality_gates_for_provider_summaries
 from app.schemas.ocr import OcrEvaluationResult
 from app.services.extraction_service import extract_medication_candidates
-from app.services.ocr_service import detect_possible_identifiers
+from app.services.ocr_service import detect_possible_identifiers, list_available_ocr_providers
 
 
 OCR_EVAL_CASES_PATH = (
@@ -68,6 +69,12 @@ def run_ocr_evaluation(path: Path = OCR_EVAL_CASES_PATH) -> dict[str, Any]:
     results: list[OcrEvaluationResult] = []
 
     for case in cases:
+        fixture_backed = bool(case.get("fixture_filename"))
+        provider_name = (
+            SyntheticFixtureOcrProvider.provider_name
+            if fixture_backed
+            else MockOcrProvider.provider_name
+        )
         mock_text = _ocr_text_for_case(case)
         corrected_text = case["expected_corrected_text"]
         detected_identifiers = detect_possible_identifiers(mock_text)
@@ -98,12 +105,15 @@ def run_ocr_evaluation(path: Path = OCR_EVAL_CASES_PATH) -> dict[str, Any]:
         results.append(
             OcrEvaluationResult(
                 case_id=case["case_id"],
+                provider_name=provider_name,
+                fixture_backed=fixture_backed,
                 passed=passed,
                 character_error_rate=cer,
                 word_error_rate=wer,
                 token_overlap_score=overlap,
                 medication_detection_hit=medication_hit,
                 privacy_warning_match=privacy_match,
+                output_unverified=True,
                 detected_possible_identifiers=detected_identifiers,
                 expected_possible_identifiers=expected_identifiers,
                 notes=case.get("notes"),
@@ -115,12 +125,22 @@ def run_ocr_evaluation(path: Path = OCR_EVAL_CASES_PATH) -> dict[str, Any]:
     failed_cases = total_cases - passed_cases
     fixture_backed_cases = sum(1 for case in cases if case.get("fixture_filename"))
     text_only_cases = total_cases - fixture_backed_cases
+    provider_summaries = _provider_summaries(results)
+    quality_gate_results = evaluate_quality_gates_for_provider_summaries(
+        providers=list_available_ocr_providers(),
+        provider_summaries=provider_summaries,
+    )
+    quality_gate_summary = {
+        "passed": sum(1 for result in quality_gate_results if result.passed),
+        "failed": sum(1 for result in quality_gate_results if not result.passed),
+        "results": [result.model_dump() for result in quality_gate_results],
+    }
 
     return {
         "total_cases": total_cases,
         "text_only_cases": text_only_cases,
         "fixture_backed_cases": fixture_backed_cases,
-        "provider_used": "case_text + synthetic_fixture_phase_2c",
+        "provider_used": "mock_ocr_phase_2a + synthetic_fixture_phase_2c",
         "passed_cases": passed_cases,
         "failed_cases": failed_cases,
         "average_character_error_rate": _mean(
@@ -135,6 +155,8 @@ def run_ocr_evaluation(path: Path = OCR_EVAL_CASES_PATH) -> dict[str, Any]:
             "passed": sum(1 for result in results if result.privacy_warning_match),
             "failed": sum(1 for result in results if not result.privacy_warning_match),
         },
+        "provider_summaries": provider_summaries,
+        "quality_gate_summary": quality_gate_summary,
         "case_results": [result.model_dump() for result in results],
     }
 
@@ -199,6 +221,49 @@ def _supported_detected_medication_terms(text: str) -> list[str]:
 
 def _mean(values: list[float]) -> float:
     return round(mean(values), 4) if values else 0.0
+
+
+def _provider_summaries(results: list[OcrEvaluationResult]) -> dict[str, dict[str, Any]]:
+    summaries: dict[str, dict[str, Any]] = {}
+    for provider_name in sorted({result.provider_name for result in results}):
+        provider_results = [
+            result for result in results if result.provider_name == provider_name
+        ]
+        quality_metric_results = [
+            result for result in provider_results if not result.expected_possible_identifiers
+        ] or provider_results
+        summaries[provider_name] = {
+            "provider_name": provider_name,
+            "total_cases": len(provider_results),
+            "passed_cases": sum(1 for result in provider_results if result.passed),
+            "failed_cases": sum(1 for result in provider_results if not result.passed),
+            "fixture_backed_cases": sum(1 for result in provider_results if result.fixture_backed),
+            "text_only_cases": sum(1 for result in provider_results if not result.fixture_backed),
+            "quality_metric_cases": len(quality_metric_results),
+            "average_character_error_rate": _mean(
+                [result.character_error_rate for result in quality_metric_results]
+            ),
+            "average_word_error_rate": _mean(
+                [result.word_error_rate for result in quality_metric_results]
+            ),
+            "average_token_overlap_score": _mean(
+                [result.token_overlap_score for result in quality_metric_results]
+            ),
+            "all_case_average_character_error_rate": _mean(
+                [result.character_error_rate for result in provider_results]
+            ),
+            "all_case_average_word_error_rate": _mean(
+                [result.word_error_rate for result in provider_results]
+            ),
+            "medication_detection_failed": sum(
+                1 for result in provider_results if not result.medication_detection_hit
+            ),
+            "privacy_warning_failed": sum(
+                1 for result in provider_results if not result.privacy_warning_match
+            ),
+            "output_unverified_all": all(result.output_unverified for result in provider_results),
+        }
+    return summaries
 
 
 def _content_type_for_fixture(filename: str) -> str:

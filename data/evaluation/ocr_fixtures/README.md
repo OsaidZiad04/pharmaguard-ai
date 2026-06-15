@@ -10,11 +10,20 @@ Rules:
 - Identifier-like labels are allowed only when clearly fake and used to test privacy warnings.
 - These files are for engineering evaluation only and are not clinical validation.
 
-Current fixture files:
+Current PNG fixture files:
 
 - `synthetic_paracetamol_clean.png`
 - `synthetic_ibuprofen_noisy.png`
 - `synthetic_amoxicillin_possible_identifier.png`
 - `synthetic_no_medication.png`
 
-The Phase 2C `SyntheticFixtureOcrProvider` is filename-driven. The PNG files exist to exercise upload and fixture plumbing without introducing a production OCR engine.
+Current descriptor fixtures:
+
+- `synthetic_metformin_clean.fixture.md`
+- `synthetic_amlodipine_low_contrast.fixture.md`
+- `synthetic_azithromycin_spaced_text.fixture.md`
+- `synthetic_multiple_meds.fixture.md`
+- `synthetic_identifier_heavy_fake.fixture.md`
+- `synthetic_handwriting_like_noise.fixture.md`
+
+The `SyntheticFixtureOcrProvider` is filename-driven. PNG files and descriptor fixtures exist to exercise upload/evaluation plumbing without introducing a production OCR engine.

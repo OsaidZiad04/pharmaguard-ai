@@ -1,7 +1,7 @@
 # OCR Evaluation And Correction Audit
 
 Phase 2B adds a local evaluation and audit layer around the Phase 2A OCR intake boundary.
-Phase 2C extends this with fixture-backed cases through the local `SyntheticFixtureOcrProvider`.
+Phase 2C extends this with fixture-backed cases through the local `SyntheticFixtureOcrProvider`. Phase 2D adds provider-specific quality gates and expanded synthetic fixture coverage.
 
 ## Scope
 
@@ -28,7 +28,7 @@ OCR remains an assistive input layer. OCR output is unverified until a pharmacis
 
 The dataset intentionally includes supported medications, unsupported medication names, noisy text, possible identifier labels, and no-medication cases.
 
-Phase 2C cases can also include `fixture_filename`, which points to an approved synthetic PNG in `data/evaluation/ocr_fixtures/`. Fixture-backed cases use `SyntheticFixtureOcrProvider` to produce deterministic OCR text from the filename.
+Phase 2C and Phase 2D cases can also include `fixture_filename`, which points to an approved synthetic PNG or descriptor fixture in `data/evaluation/ocr_fixtures/`. Fixture-backed cases use `SyntheticFixtureOcrProvider` to produce deterministic OCR text from the filename.
 
 ## Metrics
 
@@ -68,6 +68,23 @@ python scripts/evaluate_ocr.py
 The script prints total cases, passed cases, failed cases, average character error rate, average word error rate, medication detection summary, privacy warning summary, and per-case status.
 
 The script also reports text-only cases, fixture-backed cases, and provider used.
+
+Phase 2D output also includes provider-level summaries and quality gate status.
+
+## Quality Gates
+
+`backend/app/ocr/quality_gates.py` checks:
+
+- maximum average character error rate for the synthetic benchmark
+- maximum average word error rate for the synthetic benchmark
+- minimum average token overlap
+- medication detection pass/fail count
+- privacy warning pass/fail count
+- provider must be non-networked in prototype mode
+- provider must not store images in prototype mode
+- provider output must remain unverified
+
+Identifier-heavy privacy cases still enforce privacy-warning matching. CER/WER gates are calculated over OCR quality metric cases so intentional privacy removal does not incorrectly fail a provider.
 
 ## Provider Report
 

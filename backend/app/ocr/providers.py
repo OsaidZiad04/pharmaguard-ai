@@ -86,6 +86,26 @@ class SyntheticFixtureOcrProvider(BaseOcrProvider):
         "synthetic_no_medication.png": (
             "Image text unreadable. Ask pharmacist to review source image and re-enter prescription text."
         ),
+        "synthetic_metformin_clean.fixture.md": (
+            "Rx: Metformin tablets. Pharmacist must confirm formulation and directions."
+        ),
+        "synthetic_amlodipine_low_contrast.fixture.md": (
+            "Rx: Amlodipine tablets. Low contrast text; pharmacist verification required."
+        ),
+        "synthetic_azithromycin_spaced_text.fixture.md": (
+            "Rx: Azithromycin capsules. Spaced text requires pharmacist verification."
+        ),
+        "synthetic_multiple_meds.fixture.md": (
+            "Rx: Paracetamol tablets and Ibuprofen tablets. "
+            "Pharmacist must review duplicate medicine context."
+        ),
+        "synthetic_identifier_heavy_fake.fixture.md": (
+            "Patient: Synthetic Example. DOB: 2000-01-01. Phone: 555-010-3333. "
+            "Clinic: Demo Clinic. Rx: Levothyroxine tablets."
+        ),
+        "synthetic_handwriting_like_noise.fixture.md": (
+            "Rx: Simvasttin tabiets. Handwriting-like OCR noise; pharmacist correction required."
+        ),
     }
 
     def extract_text(

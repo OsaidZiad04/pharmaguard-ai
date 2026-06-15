@@ -82,14 +82,22 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Add OCR provider readiness report at `python scripts/ocr_provider_report.py`. Complete.
 - Keep external OCR APIs, production OCR, and image storage deferred. Complete.
 
-## Phase 2D: OCR Quality Benchmarking and Provider Swap Readiness
+## Phase 2D: OCR Quality Benchmarking and Provider Swap Readiness - Complete
 
-- Add richer synthetic image fixtures.
-- Compare local/provider OCR candidates behind the same interface.
-- Add provider-specific quality gates and privacy checks.
-- Add pharmacist correction review metrics.
+- Add richer synthetic fixture coverage with PNG fixtures and descriptor fixtures. Complete.
+- Expand OCR evaluation to 18 synthetic cases with 10 fixture-backed cases. Complete.
+- Add provider-specific quality gates and privacy checks. Complete.
+- Add provider-level OCR benchmark summaries and gate results. Complete.
+- Keep OCR output unverified and pharmacist correction mandatory. Complete.
+- Keep production OCR, external APIs, and real prescription images deferred. Complete.
 
-## Phase 2E: Production-Ready OCR Integration
+## Phase 2E: OCR Provider Candidate Comparison
+
+- Evaluate candidate local or approved OCR providers behind the same provider interface.
+- Add provider-specific benchmark baselines using synthetic image fixtures.
+- Compare correction burden, privacy warning behavior, and supported medication detection.
+
+## Phase 2F: Production-Ready OCR Integration
 
 - Add prescription image upload workflow.
 - Integrate OCR behind a privacy-safe interface.
