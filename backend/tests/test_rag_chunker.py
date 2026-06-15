@@ -15,7 +15,16 @@ def test_chunker_loads_markdown_drug_profiles() -> None:
         "loratadine",
         "omeprazole",
         "salbutamol",
+        "metformin",
+        "amlodipine",
+        "levothyroxine",
+        "azithromycin",
+        "simvastatin",
+        "diclofenac",
+        "esomeprazole",
+        "aspirin",
     }.issubset(drug_names)
+    assert len(drug_names) >= 15
     assert "Knowledge Base Limitations" in section_titles
     assert "General Counseling Points" in section_titles
     assert all(chunk.metadata["source_file"].endswith(".md") for chunk in chunks)

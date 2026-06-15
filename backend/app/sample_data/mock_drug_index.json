@@ -143,5 +143,165 @@
     "safety_considerations": [
       "Worsening symptoms, frequent symptoms, unclear reliever use, or missing device context should trigger pharmacist review."
     ]
+  },
+  "metformin": {
+    "name": "Metformin",
+    "generic_name": "metformin",
+    "aliases": ["glucophage"],
+    "category": "Blood glucose support placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with blood glucose support workflows; verify patient context and product details."
+    ],
+    "pharmacist_notes": [
+      "Review kidney-related context, current medications, age, pregnancy status when relevant, and formulation.",
+      "Confirm pharmacist-approved directions and formulation before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist about formulation-specific instructions and stomach-related concerns."
+    ],
+    "safety_considerations": [
+      "Missing kidney-related context, unclear formulation, or missing medication context should trigger pharmacist review."
+    ]
+  },
+  "amlodipine": {
+    "name": "Amlodipine",
+    "generic_name": "amlodipine",
+    "aliases": ["norvasc"],
+    "category": "Blood pressure support placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with blood pressure support workflows; verify patient context and product details."
+    ],
+    "pharmacist_notes": [
+      "Review current medications, swelling concerns, dizziness concerns, age, pregnancy status when relevant, and cardiovascular context.",
+      "Confirm pharmacist-approved directions before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist about timing questions or new concerns."
+    ],
+    "safety_considerations": [
+      "Swelling, dizziness, unclear directions, or missing cardiovascular context should trigger pharmacist review."
+    ]
+  },
+  "levothyroxine": {
+    "name": "Levothyroxine",
+    "generic_name": "levothyroxine",
+    "aliases": ["synthroid"],
+    "category": "Thyroid medicine placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with thyroid medicine workflows; verify patient context and product details."
+    ],
+    "pharmacist_notes": [
+      "Review timing instructions, current medicines, supplements, product consistency, pregnancy status when relevant, and monitoring context.",
+      "Confirm pharmacist-approved directions before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist about timing, supplements, and product changes."
+    ],
+    "safety_considerations": [
+      "Product changes, unclear timing, missing medicine context, or missing monitoring context should trigger pharmacist review."
+    ]
+  },
+  "azithromycin": {
+    "name": "Azithromycin",
+    "generic_name": "azithromycin",
+    "aliases": ["zithromax"],
+    "category": "Antibacterial placeholder",
+    "common_uses": [
+      "Placeholder profile for pharmacist review workflows; verify indication, duration, allergy history, and patient context."
+    ],
+    "pharmacist_notes": [
+      "Review allergy history, current medications, pregnancy status when relevant, heart-rhythm context when relevant, and prescription duration.",
+      "Confirm pharmacist-approved directions and formulation before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist what to do if directions or duration are unclear."
+    ],
+    "safety_considerations": [
+      "Missing allergy history, unclear duration, heart-rhythm concerns, or interacting medicines should trigger pharmacist review."
+    ]
+  },
+  "simvastatin": {
+    "name": "Simvastatin",
+    "generic_name": "simvastatin",
+    "aliases": ["zocor"],
+    "category": "Cholesterol support placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with cholesterol support workflows; verify patient context and product details."
+    ],
+    "pharmacist_notes": [
+      "Review current medications, pregnancy status when relevant, liver-related context, muscle-related concerns, allergy history, and age.",
+      "Confirm pharmacist-approved directions before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist about interacting medicines, product changes, or muscle-related concerns."
+    ],
+    "safety_considerations": [
+      "Interacting medicines, pregnancy, liver-related history, or muscle-related concerns should trigger pharmacist review."
+    ]
+  },
+  "diclofenac": {
+    "name": "Diclofenac",
+    "generic_name": "diclofenac",
+    "aliases": ["voltaren"],
+    "category": "Pain/inflammation support placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with pain or inflammation support workflows; verify route, formulation, and patient context."
+    ],
+    "pharmacist_notes": [
+      "Review allergy history, pregnancy status, stomach or bleeding risk factors, kidney-related context, heart-related context, and current medicines.",
+      "Confirm pharmacist-approved directions, route, and formulation before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist before combining with other pain, fever, cold, flu, or anti-inflammatory products."
+    ],
+    "safety_considerations": [
+      "Unclear route, pregnancy, bleeding concerns, kidney-related context, or interacting medicines should trigger pharmacist review."
+    ]
+  },
+  "esomeprazole": {
+    "name": "Esomeprazole",
+    "generic_name": "esomeprazole",
+    "aliases": ["nexium"],
+    "category": "Acid-related symptom support placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with acid-related symptom support workflows; verify patient context and product details."
+    ],
+    "pharmacist_notes": [
+      "Review symptom duration, current medications, age, pregnancy or breastfeeding status when relevant, and warning symptoms.",
+      "Confirm pharmacist-approved directions, duration, and formulation before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist about timing, duration, and formulation-specific instructions."
+    ],
+    "safety_considerations": [
+      "Warning symptoms, recurring symptoms, missing duration, or missing medication context should trigger pharmacist review."
+    ]
+  },
+  "aspirin": {
+    "name": "Aspirin",
+    "generic_name": "aspirin",
+    "aliases": ["acetylsalicylic acid"],
+    "category": "Pain/support placeholder",
+    "common_uses": [
+      "Placeholder profile commonly associated with pain support workflows and other pharmacist-reviewed contexts; verify patient context and product details."
+    ],
+    "pharmacist_notes": [
+      "Review allergy history, age, pregnancy status, stomach or bleeding risk factors, current medications, and other aspirin-containing products.",
+      "Confirm pharmacist-approved directions, route, and formulation before counseling."
+    ],
+    "counseling_points": [
+      "Follow the final pharmacist-approved label directions.",
+      "Ask the pharmacist before combining with other pain, fever, cold, flu, or blood-thinning related products."
+    ],
+    "safety_considerations": [
+      "Bleeding concerns, stomach history, allergy concerns, interacting medicines, or unclear route should trigger pharmacist review."
+    ]
   }
 }

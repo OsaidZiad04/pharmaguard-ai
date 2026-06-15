@@ -50,6 +50,7 @@ Implemented now:
 - Phase 1 local TF-IDF RAG: Markdown loading, chunking, in-memory indexing, retrieval, and grounded draft generation.
 - Phase 1.5 RAG hardening: synthetic RAG evaluation cases, citation validation, unsupported-claim regression tests, and a CLI evaluation runner.
 - Phase 1.6 knowledge base and evaluation expansion: seven local drug profiles and 20 synthetic RAG evaluation cases.
+- Phase 1.7 controlled knowledge base expansion: 15 local drug profiles and 46 synthetic RAG evaluation cases.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
 - Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, and safety regressions.
@@ -73,8 +74,16 @@ Current local Markdown profiles:
 - loratadine
 - omeprazole
 - salbutamol
+- metformin
+- amlodipine
+- levothyroxine
+- azithromycin
+- simvastatin
+- diclofenac
+- esomeprazole
+- aspirin
 
-Supported aliases are explicit and conservative, such as `acetaminophen -> paracetamol` and local mock brand-style aliases including `ventolin -> salbutamol`. Condition-only queries do not map to a medication.
+Supported aliases are explicit and conservative, such as `acetaminophen -> paracetamol`, `ventolin -> salbutamol`, `glucophage -> metformin`, `norvasc -> amlodipine`, `synthroid -> levothyroxine`, `voltaren -> diclofenac`, and `nexium -> esomeprazole`. Condition-only queries do not map to a medication.
 
 ## Setup
 
@@ -124,9 +133,9 @@ cd backend
 python scripts/evaluate_rag.py
 ```
 
-The evaluation currently contains 20 synthetic cases. It reports retrieval checks (`top_k_hit`, `source_file_hit`, `section_hit`, `insufficient_context_correct`) and generation safety checks for required terms, forbidden terms, draft/pharmacist-review framing, unavailable information, and fabricated citations.
+The evaluation currently contains 46 synthetic cases. It reports retrieval checks (`top_k_hit`, `source_file_hit`, `section_hit`, `insufficient_context_correct`) and generation safety checks for required terms, forbidden terms, draft/pharmacist-review framing, unavailable information, and fabricated citations.
 
-Dense retrieval remains deferred until the TF-IDF baseline has stronger coverage and known failure modes. OCR remains Phase 2 and is intentionally not implemented in the knowledge base expansion phase.
+Dense retrieval remains deferred until the TF-IDF baseline has stronger coverage and known failure modes. OCR remains Phase 2 and is intentionally not implemented in the controlled knowledge base expansion phase.
 
 ## Future Roadmap
 

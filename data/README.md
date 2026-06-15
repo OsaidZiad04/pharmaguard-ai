@@ -24,8 +24,16 @@ This directory contains synthetic examples and placeholder medication knowledge 
 - loratadine
 - omeprazole
 - salbutamol
+- metformin
+- amlodipine
+- levothyroxine
+- azithromycin
+- simvastatin
+- diclofenac
+- esomeprazole
+- aspirin
 
-The profiles are local educational placeholders for pharmacist-support retrieval tests. They are not clinical validation, final medication references, or patient-specific instructions.
+The profiles are local educational placeholders for pharmacist-support retrieval tests. They are not complete real pharmacy coverage, clinical validation, final medication references, or patient-specific instructions.
 
 ## TODO
 

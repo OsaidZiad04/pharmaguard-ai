@@ -15,6 +15,22 @@ MEDICATION_ALIASES = {
     "prilosec": "omeprazole",
     "salbutamol": "salbutamol",
     "ventolin": "salbutamol",
+    "metformin": "metformin",
+    "glucophage": "metformin",
+    "amlodipine": "amlodipine",
+    "norvasc": "amlodipine",
+    "levothyroxine": "levothyroxine",
+    "synthroid": "levothyroxine",
+    "azithromycin": "azithromycin",
+    "zithromax": "azithromycin",
+    "simvastatin": "simvastatin",
+    "zocor": "simvastatin",
+    "diclofenac": "diclofenac",
+    "voltaren": "diclofenac",
+    "esomeprazole": "esomeprazole",
+    "nexium": "esomeprazole",
+    "aspirin": "aspirin",
+    "acetylsalicylic acid": "aspirin",
 }
 
 STRENGTH_PATTERN = re.compile(

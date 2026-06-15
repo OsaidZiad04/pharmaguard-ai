@@ -21,6 +21,14 @@ def test_retriever_returns_relevant_chunks_for_new_profiles() -> None:
         "loratadine allergy product counseling": "loratadine",
         "omeprazole acid symptom safety notes": "omeprazole",
         "salbutamol inhaler technique counseling": "salbutamol",
+        "metformin formulation counseling": "metformin",
+        "amlodipine swelling dizziness safety notes": "amlodipine",
+        "levothyroxine timing supplements counseling": "levothyroxine",
+        "azithromycin allergy duration counseling": "azithromycin",
+        "simvastatin muscle concerns counseling": "simvastatin",
+        "diclofenac topical oral formulation safety": "diclofenac",
+        "esomeprazole duration counseling": "esomeprazole",
+        "aspirin bleeding concerns counseling": "aspirin",
     }
 
     for query, expected_drug in queries.items():
@@ -32,8 +40,16 @@ def test_retriever_returns_relevant_chunks_for_new_profiles() -> None:
 
 def test_retriever_uses_conservative_aliases_only() -> None:
     ventolin_contexts = retrieve_contexts("ventolin inhaler technique review", top_k=5)
+    glucophage_contexts = retrieve_contexts("glucophage formulation counseling", top_k=5)
+    nexium_contexts = retrieve_contexts("nexium duration counseling", top_k=5)
     condition_only_contexts = retrieve_contexts("allergic rhinitis counseling options", top_k=5)
+    broad_condition_contexts = retrieve_contexts("diabetes counseling options", top_k=5)
 
     assert ventolin_contexts
     assert all(context.drug_name.lower() == "salbutamol" for context in ventolin_contexts)
+    assert glucophage_contexts
+    assert all(context.drug_name.lower() == "metformin" for context in glucophage_contexts)
+    assert nexium_contexts
+    assert all(context.drug_name.lower() == "esomeprazole" for context in nexium_contexts)
     assert condition_only_contexts == []
+    assert broad_condition_contexts == []

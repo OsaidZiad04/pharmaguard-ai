@@ -32,6 +32,22 @@
 - Add condition-only, final-advice, and exact-dose prompt coverage. Complete.
 - Keep OCR deferred to Phase 2 and dense retrieval deferred until the TF-IDF baseline is stronger. Complete.
 
+## Phase 1.7: Controlled Knowledge Base Expansion - Complete
+
+- Add local Markdown profiles for metformin, amlodipine, levothyroxine, azithromycin, simvastatin, diclofenac, esomeprazole, and aspirin. Complete.
+- Increase local profile coverage to 15 supported medications. Complete.
+- Add conservative aliases including glucophage, norvasc, synthroid, voltaren, nexium, zocor, zithromax, and acetylsalicylic acid. Complete.
+- Expand synthetic RAG evaluation coverage to 46 cases. Complete.
+- Keep condition-only queries from mapping to arbitrary medications. Complete.
+- Keep OCR deferred to Phase 2 and dense retrieval deferred. Complete.
+
+## Phase 1.8: Scalable Knowledge Base Architecture - Next
+
+- Define structured metadata for drug profiles, aliases, sections, and source provenance.
+- Add validation tooling for profile completeness and unsafe phrases.
+- Explore separating knowledge content from retrieval index construction.
+- Prepare for future approved reference ingestion without adding external APIs yet.
+
 ## Phase 2: OCR Integration
 
 - Add prescription image upload workflow.
