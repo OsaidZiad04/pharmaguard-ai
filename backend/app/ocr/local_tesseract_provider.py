@@ -50,7 +50,7 @@ class TesseractLocalOcrProvider(BaseOcrProvider):
         if not (self.benchmark_mode or self.explicitly_enabled):
             raise ProviderUnavailableError(
                 "Tesseract local OCR adapter is disabled by default and is not "
-                "available outside explicit benchmark mode."
+                "available outside explicit benchmark or prototype mode."
             )
         if not dependency_status.available:
             raise ProviderUnavailableError(

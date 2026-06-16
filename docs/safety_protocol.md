@@ -31,6 +31,8 @@ Phase 2H adds workflow traceability for synthetic E2E cases. Traces explicitly r
 
 Phase 2I makes these safety boundaries more visible in the pharmacist dashboard. The UI shows OCR as unverified, correction as required before analysis, source grounding status, draft-only counseling status, and pharmacist review required. This is visual workflow support only and does not change backend safety behavior.
 
+Phase 2L-M adds controlled OCR activation policy. Tesseract remains blocked in default workflow and production. It can be benchmarked only through benchmark scripts, and it can enter explicit prototype workflow mode only when local dependencies, explicit enablement, and recorded benchmark gates pass. Even then, OCR output remains unverified, image storage remains disabled, and pharmacist correction remains mandatory.
+
 ## Unsafe Output Avoidance
 
 The system should avoid:

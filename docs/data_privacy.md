@@ -63,6 +63,10 @@ Possible identifier findings remain category-level warnings, such as `patient_na
 
 The current OCR providers expose safety metadata for whether a provider is external, stores images, or requires network access. Current providers are local, non-networked, and non-storing. Future providers that use networks or storage require explicit privacy review before being enabled.
 
+Phase 2K replaces invalid tiny PNG placeholders with OCR-readable synthetic text fixtures. These images must remain fake and must not contain real names, real phone numbers, real clinic names, real IDs, real addresses, or real prescription scans.
+
+Phase 2L-M adds OCR activation policy. External OCR remains blocked by default. Tesseract explicit prototype mode, if enabled locally, remains local-only, non-networked, non-storing, unverified, and correction-gated. It must not process real prescriptions in this repository.
+
 ## Phase 2H Workflow Traces
 
 `data/evaluation/generated/e2e_traces.json` contains deterministic synthetic workflow traces generated from synthetic E2E cases.

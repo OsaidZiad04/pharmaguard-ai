@@ -56,3 +56,5 @@ RAG source display remains local, draft-only, and pharmacist-reviewed.
 This phase does not add real OCR, activate Tesseract, call external APIs, store prescription images, add real patient data, or claim clinical validation.
 
 Phase 2J adds only an optional backend benchmark command for the disabled Tesseract adapter. The dashboard continues to use the existing safe OCR workflow and does not expose Tesseract as an active provider.
+
+Phase 2L-M adds backend OCR activation policy. The dashboard still defaults to the existing safe OCR workflow. If a future UI exposes provider status, it must show blocked/allowed policy state clearly and must not let unverified OCR text bypass pharmacist correction.

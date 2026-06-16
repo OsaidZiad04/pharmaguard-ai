@@ -28,11 +28,17 @@ SUPPORTED_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 @router.post("/extract-image", response_model=OcrImageUploadResponse)
 async def extract_image(
     file: UploadFile = File(...),
-    provider_name: str = Query(default="mock"),
+    provider_name: str | None = Query(default=None),
+    ocr_mode: str | None = Query(default=None),
 ) -> OcrImageUploadResponse:
     filename = file.filename or "uploaded_image"
     content_type = (file.content_type or "").lower()
     _validate_upload_type(filename, content_type)
+    if (ocr_mode or "").strip().lower() == "benchmark":
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Benchmark OCR mode is only available through benchmark scripts.",
+        )
 
     file_bytes = await file.read()
     if len(file_bytes) > MAX_UPLOAD_BYTES:
@@ -47,6 +53,7 @@ async def extract_image(
             filename=filename,
             content_type=content_type,
             provider_name=provider_name,
+            ocr_mode=ocr_mode,
         )
     except ValueError as error:
         raise HTTPException(

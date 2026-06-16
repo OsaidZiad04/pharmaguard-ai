@@ -68,6 +68,8 @@ Implemented now:
 - Phase 2H workflow traceability and pharmacist review audit records: deterministic synthetic traces for safe workflow explainability.
 - Phase 2I pharmacist dashboard workflow polish: visible workflow statuses, safety indicators, and source-grounding summary.
 - Phase 2J local Tesseract OCR benchmarking: optional synthetic-fixture benchmark path for the disabled local adapter.
+- Phase 2K OCR-readable synthetic fixtures and Tesseract benchmark diagnostics.
+- Phase 2L-M controlled OCR activation policy and safe explicit Tesseract prototype mode.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
 - Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, OCR intake, and safety regressions.
@@ -77,6 +79,7 @@ Not implemented yet:
 - Production OCR.
 - External OCR providers.
 - Active Tesseract or EasyOCR OCR.
+- Default Tesseract OCR.
 - Prescription image storage.
 - External medical APIs.
 - Dense embeddings or persistent vector database.
@@ -167,6 +170,10 @@ Phase 2I improves the dashboard workflow display. The UI now shows ordered workf
 
 Phase 2J adds optional local Tesseract benchmarking against synthetic PNG fixtures only. Tesseract remains disabled by default, is not the default provider, and is not prototype-allowed. If local dependencies are missing, the benchmark exits successfully with a clear skipped status. Benchmark metrics are engineering checks only, not clinical validation.
 
+Phase 2K replaces invalid tiny fixture PNGs with OCR-readable synthetic text images and adds fixture inspection plus richer benchmark diagnostics.
+
+Phase 2L-M adds a controlled OCR activation policy. The safe default provider remains `mock_ocr_phase_2a`. Tesseract is blocked in `default_workflow`, allowed for `benchmark` only when dependencies are available, and allowed for `prototype_explicit` only when explicit enablement and recorded benchmark gates are satisfied. Tesseract is still not production allowed and never bypasses pharmacist correction.
+
 ## Testing
 
 ```bash
@@ -209,6 +216,13 @@ cd backend
 python scripts/ocr_candidate_report.py
 ```
 
+Run the OCR activation policy report:
+
+```bash
+cd backend
+python scripts/ocr_activation_policy_report.py
+```
+
 Run the end-to-end OCR-to-RAG workflow evaluation:
 
 ```bash
@@ -247,7 +261,7 @@ The KB report summarizes profile counts, aliases, review/source status, missing 
 
 See [docs/roadmap.md](docs/roadmap.md).
 
-For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For optional Tesseract benchmarking, see [docs/tesseract_benchmarking.md](docs/tesseract_benchmarking.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md). For dashboard workflow notes, see [docs/pharmacist_dashboard_workflow.md](docs/pharmacist_dashboard_workflow.md).
+For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR activation policy, see [docs/ocr_activation_policy.md](docs/ocr_activation_policy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For optional Tesseract benchmarking, see [docs/tesseract_benchmarking.md](docs/tesseract_benchmarking.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md). For dashboard workflow notes, see [docs/pharmacist_dashboard_workflow.md](docs/pharmacist_dashboard_workflow.md).
 
 ## Data Warning
 

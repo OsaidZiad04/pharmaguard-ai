@@ -80,3 +80,15 @@ A passing benchmark does not make Tesseract production-ready. A future policy ch
 - no automatic downstream use of unverified OCR
 
 A failing benchmark means the local adapter is not ready for workflow use. It should remain disabled.
+
+## Activation Policy Link
+
+Phase 2L-M adds controlled activation policy after benchmarking:
+
+- benchmark mode remains optional and local
+- upload-route benchmark mode is blocked; use `python scripts/benchmark_tesseract_ocr.py`
+- Tesseract is blocked in default workflow
+- Tesseract can enter `prototype_explicit` mode only with explicit enablement, available dependencies, and recorded benchmark gates
+- Tesseract is not production allowed
+
+See `docs/ocr_activation_policy.md`.

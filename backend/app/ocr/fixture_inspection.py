@@ -74,7 +74,8 @@ def inspect_ocr_fixture(path: Path) -> OcrFixtureInspectionResult:
     with Image.open(path) as image:
         grayscale = image.convert("L")
         width, height = grayscale.size
-        values = list(grayscale.getdata())
+        pixel_data = getattr(grayscale, "get_flattened_data", grayscale.getdata)
+        values = list(pixel_data())
 
     min_pixel = min(values) if values else None
     max_pixel = max(values) if values else None

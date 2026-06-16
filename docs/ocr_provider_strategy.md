@@ -24,7 +24,7 @@ Phase 2F also defines an inactive local adapter:
 
 - `tesseract_local_candidate`
 
-The Tesseract adapter is disabled by default, not prototype-allowed, and not part of the active OCR flow. Phase 2J adds explicit benchmark-mode extraction for synthetic PNG fixtures when optional local dependencies are installed outside the project.
+The Tesseract adapter is disabled by default, not the default provider, and not part of the default OCR flow. Phase 2J adds explicit benchmark-mode extraction for synthetic PNG fixtures when optional local dependencies are installed outside the project. Phase 2L-M adds policy-gated `prototype_explicit` mode, but Tesseract can only be used there when explicit enablement, local dependencies, and recorded synthetic benchmark gates pass.
 
 ## Provider Metadata
 
@@ -85,6 +85,21 @@ These gates are provider swap-readiness checks, not clinical validation.
 Phase 2F extends the provider report with inactive adapter status and dependency availability. Tesseract appears as adapter-defined but inactive; it is blocked unless dependency checks, explicit enablement, and quality gates pass in a future phase.
 
 Phase 2J extends the report language with benchmark availability. A provider can be adapter-defined and benchmark-available while still being inactive, not default, and not prototype-allowed.
+
+Phase 2L-M extends provider and candidate reports with activation policy fields:
+
+- `allowed_for_default_workflow`
+- `allowed_for_benchmark`
+- `allowed_for_prototype_explicit`
+- `allowed_for_production`
+- `correction_gate_required`
+- `activation_blocking_reasons`
+
+Run the activation policy report:
+
+```bash
+python scripts/ocr_activation_policy_report.py
+```
 
 ## Candidate Comparison
 

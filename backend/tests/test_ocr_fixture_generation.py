@@ -35,13 +35,15 @@ def test_generate_ocr_fixtures_creates_readable_non_blank_pngs() -> None:
         assert inspection.ocr_readable_candidate is True
 
 
-def test_fixture_inspection_flags_blank_small_images(tmp_path) -> None:
+def test_fixture_inspection_flags_blank_small_images() -> None:
     from PIL import Image
 
-    blank_path = tmp_path / "blank.png"
-    Image.new("RGB", (12, 12), "white").save(blank_path)
-
-    inspection = inspect_ocr_fixture(blank_path)
+    blank_path = Path(__file__).resolve().parents[1] / ".test_blank_fixture.png"
+    try:
+        Image.new("RGB", (12, 12), "white").save(blank_path)
+        inspection = inspect_ocr_fixture(blank_path)
+    finally:
+        blank_path.unlink(missing_ok=True)
 
     assert inspection.exists is True
     assert inspection.width == 12

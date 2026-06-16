@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, Phase 2G end-to-end OCR-to-RAG workflow evaluation, Phase 2H workflow traceability, Phase 2I pharmacist dashboard workflow polish, and Phase 2J optional local Tesseract benchmarking with synthetic fixtures.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, Phase 2G end-to-end OCR-to-RAG workflow evaluation, Phase 2H workflow traceability, Phase 2I pharmacist dashboard workflow polish, Phase 2J optional local Tesseract benchmarking with synthetic fixtures, Phase 2K OCR-readable synthetic fixtures, and Phase 2L-M controlled OCR activation policy.
 
 ## Pipeline
 
@@ -14,7 +14,7 @@ PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current im
 
 2. OCR Intake
    - Current: `backend/app/ocr/providers.py` exposes a provider boundary with deterministic local `MockOcrProvider` and `SyntheticFixtureOcrProvider` implementations. `/ocr/extract-image` accepts supported image formats, reads uploads in memory, does not persist images by default, returns unverified text, and flags possible identifier patterns.
-   - Current: `TesseractLocalOcrProvider` exists as a disabled local adapter. It can run only in explicit benchmark mode when local dependencies are available. It is not active, not the default provider, and not prototype-allowed.
+   - Current: `backend/app/ocr/activation_policy.py` gates provider selection before OCR extraction. `TesseractLocalOcrProvider` is blocked in default workflow, allowed for benchmark only when dependencies are available, and allowed for explicit prototype mode only when policy gates pass. It is not the default provider and is not production allowed.
    - Current: `/ocr/confirm-text` accepts pharmacist-corrected text and returns correction audit metadata. Only corrected text can be manually moved into prescription analysis.
    - Later: validated OCR providers can be swapped behind the same interface after privacy and safety review.
 
@@ -142,6 +142,25 @@ Phase 2J adds an optional benchmark path for the disabled local Tesseract adapte
 - If dependencies are unavailable, the benchmark exits successfully with a skipped status.
 
 Tesseract is still not the default provider and is not allowed in prototype workflow mode. Benchmark output remains unverified, cannot be sent downstream automatically, and is not clinical validation.
+
+## Phase 2K OCR-Readable Fixtures
+
+Phase 2K replaces invalid tiny PNG placeholders with readable synthetic text images and adds fixture inspection.
+
+- `backend/scripts/generate_ocr_fixtures.py` regenerates deterministic synthetic PNG fixtures.
+- `backend/scripts/inspect_ocr_fixtures.py` checks size, contrast, variation, and likely blank status.
+- Benchmark diagnostics report raw/normalized OCR output and preprocessing attempts.
+
+## Phase 2L-M OCR Activation Policy
+
+Phase 2L-M adds policy-gated OCR provider activation.
+
+- `backend/app/ocr/ocr_config.py` reads safe optional environment flags.
+- `backend/app/ocr/activation_policy.py` evaluates provider, mode, dependency, benchmark, and correction-gate requirements.
+- `backend/scripts/ocr_activation_policy_report.py` prints the policy matrix.
+- `/ocr/extract-image` accepts optional `provider_name` and `ocr_mode`, but benchmark mode is script-only and Tesseract remains blocked by default.
+
+This phase does not make Tesseract default, does not enable production OCR, does not store images, and does not let OCR output bypass pharmacist correction.
 
 ## Phase 2G End-to-End OCR-to-RAG Workflow Evaluation
 

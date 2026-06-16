@@ -2,6 +2,8 @@
 
 Phase 2F adds a disabled-by-default adapter boundary for a future local Tesseract OCR provider. Phase 2J adds an optional benchmark path for synthetic image fixtures only. This does not install Tesseract, install `pytesseract`, activate Tesseract as workflow OCR, store images, or bypass pharmacist correction.
 
+Phase 2L-M adds policy-gated explicit prototype workflow mode. Tesseract remains disabled by default and can enter workflow extraction only when explicit local enablement, dependency checks, and recorded synthetic benchmark gates pass.
+
 ## Current Adapter
 
 `backend/app/ocr/local_tesseract_provider.py` defines `TesseractLocalOcrProvider` behind the existing `BaseOcrProvider` interface.
@@ -48,9 +50,23 @@ Before any future activation, a local OCR provider must:
 
 ## Current Policy
 
-Mock and synthetic fixture providers remain the only active prototype OCR providers. Tesseract is adapter-defined but inactive. EasyOCR remains metadata-only. Cloud OCR remains blocked for prototype mode.
+Mock remains the safe default OCR provider. Synthetic fixture OCR remains available for synthetic evaluation and tests. Tesseract is blocked in `default_workflow`, allowed for `benchmark` when dependencies are available, and allowed for `prototype_explicit` only when policy gates pass. EasyOCR remains metadata-only. Cloud OCR remains blocked for prototype mode.
 
 OCR metrics are engineering checks only. They are not clinical validation.
+
+## Explicit Prototype Requirements
+
+The safe defaults are:
+
+```bash
+PHARMAGUARD_OCR_DEFAULT_PROVIDER=mock_ocr_phase_2a
+PHARMAGUARD_OCR_MODE=default_workflow
+PHARMAGUARD_ENABLE_TESSERACT_PROTOTYPE=false
+PHARMAGUARD_ALLOW_EXTERNAL_OCR=false
+PHARMAGUARD_TESSERACT_BENCHMARK_PASSED=false
+```
+
+To use Tesseract in explicit prototype mode, a future local run must set explicit enablement and benchmark-pass status after local dependencies and synthetic benchmark results are reviewed. Even then, OCR output remains unverified and pharmacist correction remains mandatory.
 
 ## Phase 2J Benchmark
 

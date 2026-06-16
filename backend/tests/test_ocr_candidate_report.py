@@ -22,4 +22,9 @@ def test_ocr_candidate_report_script_runs_successfully() -> None:
     assert "adapter_defined:" in result.stdout
     assert "benchmark_available:" in result.stdout
     assert "default_provider:" in result.stdout
+    assert "allowed_for_default_workflow:" in result.stdout
+    assert "allowed_for_benchmark:" in result.stdout
+    assert "allowed_for_prototype_explicit:" in result.stdout
+    assert "allowed_for_production:" in result.stdout
+    assert "correction_gate_required:" in result.stdout
     assert "not clinical validation" in result.stdout

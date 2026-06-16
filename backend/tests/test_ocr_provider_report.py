@@ -34,6 +34,11 @@ def test_ocr_provider_report_script_runs_successfully() -> None:
     assert "adapter_defined: True" in result.stdout
     assert "default_provider: True" in result.stdout
     assert "benchmark_available:" in result.stdout
+    assert "allowed_for_default_workflow:" in result.stdout
+    assert "allowed_for_benchmark:" in result.stdout
+    assert "allowed_for_prototype_explicit:" in result.stdout
+    assert "allowed_for_production:" in result.stdout
+    assert "correction_gate_required: True" in result.stdout
     assert "allowed_in_current_prototype_mode: True" in result.stdout
     assert "active_in_prototype: False" in result.stdout
 

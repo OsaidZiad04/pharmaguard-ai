@@ -12,11 +12,14 @@ from app.ocr.provider_candidates import (  # noqa: E402
     list_provider_candidates,
     summarize_candidate_readiness,
 )
+from app.ocr.activation_policy import evaluate_ocr_provider_activation  # noqa: E402
+from app.ocr.ocr_config import get_ocr_runtime_config  # noqa: E402
 from app.ocr.provider_dependencies import get_provider_dependency_status  # noqa: E402
 from app.ocr.provider_swap_readiness import assess_provider_swap_readiness  # noqa: E402
 
 
 def build_candidate_report_lines() -> list[str]:
+    config = get_ocr_runtime_config()
     candidates = list_provider_candidates()
     status_counts = Counter(candidate.current_status for candidate in candidates)
     prototype_allowed = [
@@ -47,6 +50,19 @@ def build_candidate_report_lines() -> list[str]:
         summary = summarize_candidate_readiness(candidate)
         readiness = assess_provider_swap_readiness(candidate)
         dependency_status = get_provider_dependency_status(candidate.provider_id)
+        activation_results = {
+            mode: evaluate_ocr_provider_activation(
+                provider_id=candidate.provider_id,
+                mode=mode,
+                config=config,
+            )
+            for mode in [
+                "default_workflow",
+                "benchmark",
+                "prototype_explicit",
+                "production",
+            ]
+        }
         lines.extend(
             [
                 f"- provider_id: {candidate.provider_id}",
@@ -65,6 +81,13 @@ def build_candidate_report_lines() -> list[str]:
                 f"  readiness_summary: {summary['readiness_summary']}",
                 f"  ready_for_prototype: {readiness.ready_for_prototype}",
                 f"  ready_for_future_evaluation: {readiness.ready_for_future_evaluation}",
+                f"  allowed_for_default_workflow: {activation_results['default_workflow'].allowed}",
+                f"  allowed_for_benchmark: {activation_results['benchmark'].allowed}",
+                f"  allowed_for_prototype_explicit: {activation_results['prototype_explicit'].allowed}",
+                f"  allowed_for_production: {activation_results['production'].allowed}",
+                f"  correction_gate_required: {activation_results['default_workflow'].correction_gate_required}",
+                "  activation_blocking_reasons: "
+                f"{ {mode: result.blocking_reasons for mode, result in activation_results.items()} }",
                 f"  blocking_reasons: {readiness.blocking_reasons}",
                 f"  warnings: {readiness.warnings}",
                 f"  required_next_steps: {readiness.required_next_steps}",

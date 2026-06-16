@@ -142,7 +142,25 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Compare OCR output against expected pharmacist-corrected text with CER, WER, token overlap, medication detection, and privacy-warning checks. Complete.
 - Keep provider activation gated by privacy, dependency, workflow, and quality checks. Complete.
 
-## Phase 2K: Production-Ready OCR Integration
+## Phase 2K: OCR-Readable Synthetic Fixtures & Tesseract Benchmark Diagnostics - Complete
+
+- Replace invalid tiny PNG fixtures with OCR-readable synthetic text images. Complete.
+- Add deterministic fixture generation script. Complete.
+- Add fixture inspection script for size, contrast, variation, and blank-image checks. Complete.
+- Add Tesseract benchmark diagnostics for raw/normalized text, empty output, preprocessing attempts, medication terms, and privacy warning checks. Complete.
+- Keep Tesseract disabled by default and pharmacist correction mandatory. Complete.
+
+## Phase 2L-M: Controlled Local OCR Activation Policy & Safe Tesseract Workflow Mode - Complete
+
+- Add OCR runtime config with safe environment defaults. Complete.
+- Add activation policy for default workflow, benchmark, prototype explicit, and production modes. Complete.
+- Keep mock OCR as the default provider. Complete.
+- Block Tesseract in default workflow and production. Complete.
+- Allow Tesseract only for benchmark or explicitly enabled prototype mode when policy gates pass. Complete.
+- Add OCR activation policy report. Complete.
+- Keep benchmark mode script-only and correction gate mandatory. Complete.
+
+## Phase 2N: Production-Ready OCR Integration Planning
 
 - Add production-ready OCR workflow only after provider validation.
 - Define confidence scoring and audit retention policy for OCR output.

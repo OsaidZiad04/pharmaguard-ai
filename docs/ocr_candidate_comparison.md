@@ -61,6 +61,8 @@ The report prints candidate counts, prototype eligibility, network/storage/depen
 
 Phase 2J report output also distinguishes adapter-defined status, active prototype status, default-provider status, and benchmark availability. Benchmark availability does not imply workflow activation.
 
+Phase 2L-M adds activation policy fields to candidate reporting. Tesseract can be benchmark-eligible while still blocked for default workflow and production. `prototype_explicit` mode remains blocked unless explicit local enablement, dependency checks, and recorded synthetic benchmark gates pass.
+
 ## Policy
 
 Candidate comparison is an engineering readiness tool, not clinical validation. Future OCR providers must pass privacy, workflow, and synthetic benchmark gates before they can be considered for pharmacist workflow evaluation. OCR output remains unverified until pharmacist correction.

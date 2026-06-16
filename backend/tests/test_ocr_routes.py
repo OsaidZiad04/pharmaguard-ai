@@ -133,7 +133,28 @@ def test_tesseract_provider_request_is_rejected_without_activation() -> None:
     )
 
     assert response.status_code == 400
-    assert "adapter-defined but inactive" in response.text
+    assert "OCR activation policy blocked provider" in response.text
+    assert "default_workflow" in response.text
+
+
+def test_tesseract_prototype_request_is_policy_blocked_by_default() -> None:
+    response = client.post(
+        "/ocr/extract-image?provider_name=tesseract_local_candidate&ocr_mode=prototype_explicit",
+        files={"file": ("synthetic.png", b"fake-image", "image/png")},
+    )
+
+    assert response.status_code == 400
+    assert "PHARMAGUARD_ENABLE_TESSERACT_PROTOTYPE is false" in response.text
+
+
+def test_benchmark_mode_is_not_available_through_upload_route() -> None:
+    response = client.post(
+        "/ocr/extract-image?provider_name=tesseract_local_candidate&ocr_mode=benchmark",
+        files={"file": ("synthetic.png", b"fake-image", "image/png")},
+    )
+
+    assert response.status_code == 400
+    assert "Benchmark OCR mode is only available through benchmark scripts" in response.text
 
 
 def test_confirm_text_endpoint_keeps_possible_identifier_warnings() -> None:
