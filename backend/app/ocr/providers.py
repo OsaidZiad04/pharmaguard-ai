@@ -80,16 +80,29 @@ class SyntheticFixtureOcrProvider(BaseOcrProvider):
 
     fixture_text_by_filename = {
         "synthetic_paracetamol_clean.png": (
-            "Rx: Paracetamol 500 mg tablets. Pharmacist must verify directions."
+            "SYNTHETIC PRESCRIPTION - NOT REAL. Medication: Paracetamol 500 mg. "
+            "Directions: Take 1 tablet every 8 hours as needed. Pharmacist review required."
         ),
         "synthetic_ibuprofen_noisy.png": (
-            "Patient: Synthetic Example. Rx: Ibuprofen tabiets. Pharmacist revlew required."
+            "SYNTHETIC PRESCRIPTION - NOT REAL. Medication: Ibuprofen 200 mg. "
+            "Directions: Take with food as directed. Pharmacist review required."
         ),
         "synthetic_amoxicillin_possible_identifier.png": (
-            "Phone: 555-010-2222. Rx: Amoxicillin capsules. Confirm allergy status."
+            "SYNTHETIC PRESCRIPTION - NOT REAL. Medication: Amoxicillin 500 mg. "
+            "Directions: Take as directed. Fake Patient Code: SYN-000123. "
+            "Fake Phone: 000-000-0000. Pharmacist review required."
         ),
         "synthetic_no_medication.png": (
-            "Image text unreadable. Ask pharmacist to review source image and re-enter prescription text."
+            "SYNTHETIC NOTE - NOT REAL. No medication listed. Pharmacist review required."
+        ),
+        "synthetic_metformin_clean.png": (
+            "SYNTHETIC PRESCRIPTION - NOT REAL. Medication: Metformin 500 mg. "
+            "Directions: Take with meals as directed. Pharmacist review required."
+        ),
+        "synthetic_multiple_meds.png": (
+            "SYNTHETIC PRESCRIPTION - NOT REAL. Medication: Paracetamol 500 mg. "
+            "Medication: Cetirizine 10 mg. Directions: Review each medication separately. "
+            "Pharmacist review required."
         ),
         "synthetic_metformin_clean.fixture.md": (
             "Rx: Metformin tablets. Pharmacist must confirm formulation and directions."

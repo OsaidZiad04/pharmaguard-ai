@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from io import BytesIO
 from pathlib import Path
+import re
 from statistics import mean
 from typing import Any
 
@@ -24,6 +26,7 @@ from app.ocr.provider_dependencies import (
     get_provider_dependency_status,
 )
 from app.ocr.quality_gates import evaluate_provider_quality_gates
+from app.services.extraction_service import extract_medication_candidates
 from app.services.ocr_service import detect_possible_identifiers
 
 
@@ -108,30 +111,52 @@ def evaluate_tesseract_case(
     reference_text = case["expected_corrected_text"]
 
     extracted_text = ""
+    raw_extracted_text = ""
     provider_name = provider.provider_name
     output_unverified = False
     pharmacist_review_required = False
     can_send_to_analysis = False
     failed_checks: list[str] = []
     error_message: str | None = None
+    selected_variant = "raw"
+    attempt_results: list[dict[str, Any]] = []
 
     try:
-        result = provider.extract_text(
-            file_bytes=fixture_path.read_bytes(),
-            filename=fixture_filename,
-            content_type=_content_type_for_fixture(fixture_filename),
-        )
-        extracted_text = result.extracted_text
-        provider_name = result.provider_name
-        output_unverified = result.unverified_ocr_output
-        pharmacist_review_required = result.pharmacist_review_required
-        can_send_to_analysis = result.can_send_to_analysis
+        for variant_name, variant_bytes in _image_variants_for_benchmark(fixture_path):
+            result = provider.extract_text(
+                file_bytes=variant_bytes,
+                filename=fixture_filename,
+                content_type=_content_type_for_fixture(fixture_filename),
+            )
+            if variant_name == "raw":
+                raw_extracted_text = result.extracted_text
+            attempt_results.append(
+                _ocr_attempt_result(
+                    variant_name=variant_name,
+                    extracted_text=result.extracted_text,
+                    reference_text=reference_text,
+                    expected_medications=case.get("expected_medications", []),
+                    expected_identifiers=case.get("expected_possible_identifiers", []),
+                    output_unverified=result.unverified_ocr_output,
+                    pharmacist_review_required=result.pharmacist_review_required,
+                    can_send_to_analysis=result.can_send_to_analysis,
+                )
+            )
+            provider_name = result.provider_name
+        selected_attempt = _select_best_attempt(attempt_results)
+        if selected_attempt is not None:
+            extracted_text = selected_attempt["extracted_text"]
+            selected_variant = selected_attempt["variant_name"]
+            output_unverified = selected_attempt["output_unverified"]
+            pharmacist_review_required = selected_attempt["pharmacist_review_required"]
+            can_send_to_analysis = selected_attempt["can_send_to_analysis"]
     except ProviderUnavailableError as error:
         failed_checks.append("tesseract_extraction_failed")
         error_message = str(error)
 
     detected_identifiers = detect_possible_identifiers(extracted_text)
     expected_identifiers = case.get("expected_possible_identifiers", [])
+    detected_medication_terms = _detected_medication_terms(extracted_text)
     medication_hit = medication_detection_hit(
         case.get("expected_medications", []),
         extracted_text,
@@ -160,11 +185,19 @@ def evaluate_tesseract_case(
         "failed_checks": sorted(set(failed_checks)),
         "error_message": error_message,
         "reference_text": reference_text,
+        "normalized_reference_text": _normalize_for_diagnostics(reference_text),
+        "raw_extracted_text": raw_extracted_text,
         "extracted_text": extracted_text,
+        "extracted_text_truncated": _truncate_text(extracted_text),
+        "normalized_extracted_text": _normalize_for_diagnostics(extracted_text),
+        "ocr_output_empty": not bool(extracted_text.strip()),
+        "selected_preprocessing_variant": selected_variant,
+        "preprocessing_attempts": attempt_results,
         "character_error_rate": cer,
         "word_error_rate": wer,
         "token_overlap_score": overlap,
         "medication_detection_hit": medication_hit,
+        "detected_medication_terms": detected_medication_terms,
         "privacy_warning_match": privacy_match,
         "output_unverified": output_unverified,
         "pharmacist_review_required": pharmacist_review_required,
@@ -316,6 +349,109 @@ def _content_type_for_fixture(filename: str) -> str:
     if suffix == ".webp":
         return "image/webp"
     return "image/png"
+
+
+def _image_variants_for_benchmark(fixture_path: Path) -> list[tuple[str, bytes]]:
+    raw_bytes = fixture_path.read_bytes()
+    variants = [("raw", raw_bytes)]
+
+    try:
+        from PIL import Image, ImageEnhance
+    except ImportError:
+        return variants
+
+    try:
+        with Image.open(fixture_path) as image:
+            grayscale = image.convert("L")
+            variants.append(("grayscale", _image_to_png_bytes(grayscale)))
+            upscale = grayscale.resize(
+                (grayscale.width * 2, grayscale.height * 2),
+                resample=Image.Resampling.LANCZOS,
+            )
+            variants.append(("grayscale_upscale_2x", _image_to_png_bytes(upscale)))
+            enhanced = ImageEnhance.Contrast(upscale).enhance(1.6)
+            variants.append(("contrast_upscale_2x", _image_to_png_bytes(enhanced)))
+            thresholded = enhanced.point(lambda pixel: 255 if pixel > 175 else 0)
+            variants.append(("threshold_upscale_2x", _image_to_png_bytes(thresholded)))
+    except Exception:
+        return variants
+
+    return variants
+
+
+def _image_to_png_bytes(image) -> bytes:
+    buffer = BytesIO()
+    image.save(buffer, format="PNG")
+    return buffer.getvalue()
+
+
+def _ocr_attempt_result(
+    variant_name: str,
+    extracted_text: str,
+    reference_text: str,
+    expected_medications: list[str],
+    expected_identifiers: list[str],
+    output_unverified: bool,
+    pharmacist_review_required: bool,
+    can_send_to_analysis: bool,
+) -> dict[str, Any]:
+    detected_identifiers = detect_possible_identifiers(extracted_text)
+    return {
+        "variant_name": variant_name,
+        "extracted_text": extracted_text,
+        "extracted_text_truncated": _truncate_text(extracted_text),
+        "normalized_extracted_text": _normalize_for_diagnostics(extracted_text),
+        "ocr_output_empty": not bool(extracted_text.strip()),
+        "character_error_rate": character_error_rate(reference_text, extracted_text),
+        "word_error_rate": word_error_rate(reference_text, extracted_text),
+        "token_overlap_score": token_overlap_score(reference_text, extracted_text),
+        "medication_detection_hit": medication_detection_hit(
+            expected_medications,
+            extracted_text,
+        ),
+        "privacy_warning_match": privacy_warning_match(
+            expected_identifiers,
+            detected_identifiers,
+        ),
+        "detected_medication_terms": _detected_medication_terms(extracted_text),
+        "detected_possible_identifiers": detected_identifiers,
+        "output_unverified": output_unverified,
+        "pharmacist_review_required": pharmacist_review_required,
+        "can_send_to_analysis": can_send_to_analysis,
+    }
+
+
+def _select_best_attempt(
+    attempt_results: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    if not attempt_results:
+        return None
+    return sorted(
+        attempt_results,
+        key=lambda attempt: (
+            attempt["medication_detection_hit"],
+            attempt["privacy_warning_match"],
+            attempt["token_overlap_score"],
+            -attempt["character_error_rate"],
+            -attempt["word_error_rate"],
+        ),
+        reverse=True,
+    )[0]
+
+
+def _detected_medication_terms(text: str) -> list[str]:
+    return [candidate["name"] for candidate in extract_medication_candidates(text)]
+
+
+def _normalize_for_diagnostics(text: str) -> str:
+    return re.sub(r"\s+", " ", (text or "").strip().lower())
+
+
+def _truncate_text(text: str, max_length: int = 240) -> str:
+    normalized = re.sub(r"\s+", " ", (text or "").strip())
+    if len(normalized) <= max_length:
+        return normalized
+    return normalized[: max_length - 3] + "..."
 
 
 def _mean(values: list[float]) -> float:

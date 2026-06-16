@@ -49,10 +49,25 @@ def main() -> int:
         print(
             f"- {status} {result['case_id']} | "
             f"fixture={result['fixture_filename']} | "
+            f"variant={result['selected_preprocessing_variant']} | "
+            f"empty={result['ocr_output_empty']} | "
             f"cer={result['character_error_rate']} | "
             f"wer={result['word_error_rate']} | "
             f"overlap={result['token_overlap_score']} | "
+            f"medication_terms={result['detected_medication_terms']} | "
+            f"privacy_match={result['privacy_warning_match']} | "
             f"failed_checks={result['failed_checks']}"
+        )
+        print(f"  expected: {result['reference_text']}")
+        print(f"  extracted: {result['extracted_text_truncated']}")
+        print(f"  normalized_extracted: {result['normalized_extracted_text']}")
+        print(
+            "  preprocessing_attempts: "
+            + ", ".join(
+                f"{attempt['variant_name']}:empty={attempt['ocr_output_empty']},"
+                f"overlap={attempt['token_overlap_score']}"
+                for attempt in result["preprocessing_attempts"]
+            )
         )
     if report["skipped_cases"]:
         print("skipped fixtures:")

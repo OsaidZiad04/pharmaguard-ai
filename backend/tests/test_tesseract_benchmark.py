@@ -14,15 +14,17 @@ from app.ocr.provider_dependencies import (
     get_provider_dependency_status,
 )
 from app.ocr.tesseract_benchmark import (
+    evaluate_tesseract_case,
     load_tesseract_benchmark_cases,
     run_tesseract_benchmark,
 )
+from app.schemas.ocr import OcrExtractedText
 
 
 def test_tesseract_benchmark_cases_use_only_synthetic_fixture_inputs() -> None:
     case_groups = load_tesseract_benchmark_cases()
 
-    assert case_groups["image_cases"]
+    assert len(case_groups["image_cases"]) >= 6
     assert case_groups["skipped_descriptor_cases"]
     assert all(
         case["fixture_filename"].endswith((".png", ".jpg", ".jpeg", ".webp"))
@@ -120,3 +122,70 @@ def test_tesseract_benchmark_script_runs_without_being_a_gate() -> None:
     assert "Local Tesseract OCR Benchmark" in result.stdout
     assert "not clinical validation" in result.stdout
     assert "Tesseract remains disabled by default" in result.stdout
+
+
+def test_tesseract_benchmark_diagnostics_include_empty_status_and_normalized_text() -> None:
+    case_groups = load_tesseract_benchmark_cases()
+    case = next(
+        fixture_case
+        for fixture_case in case_groups["image_cases"]
+        if fixture_case["fixture_filename"] == "synthetic_paracetamol_clean.png"
+    )
+    provider = _FakeTesseractProvider(
+        "SYNTHETIC PRESCRIPTION - NOT REAL Medication Paracetamol 500 mg Pharmacist review required"
+    )
+
+    result = evaluate_tesseract_case(case=case, provider=provider)
+
+    assert result["ocr_output_empty"] is False
+    assert "paracetamol" in result["normalized_extracted_text"]
+    assert result["reference_text"] == case["expected_corrected_text"]
+    assert result["detected_medication_terms"] == ["paracetamol"]
+    assert result["selected_preprocessing_variant"] in {
+        "raw",
+        "grayscale",
+        "grayscale_upscale_2x",
+        "contrast_upscale_2x",
+        "threshold_upscale_2x",
+    }
+    assert result["preprocessing_attempts"]
+
+
+def test_tesseract_benchmark_diagnostics_flag_empty_output() -> None:
+    case_groups = load_tesseract_benchmark_cases()
+    case = case_groups["image_cases"][0]
+    provider = _FakeTesseractProvider("")
+
+    result = evaluate_tesseract_case(case=case, provider=provider)
+
+    assert result["ocr_output_empty"] is True
+    assert result["normalized_extracted_text"] == ""
+    assert "medication_detection_mismatch" in result["failed_checks"]
+
+
+class _FakeTesseractProvider(TesseractLocalOcrProvider):
+    def __init__(self, extracted_text: str) -> None:
+        super().__init__(benchmark_mode=True)
+        self.extracted_text = extracted_text
+
+    def extract_text(
+        self,
+        file_bytes: bytes,
+        filename: str,
+        content_type: str,
+    ) -> OcrExtractedText:
+        return OcrExtractedText(
+            extracted_text=self.extracted_text,
+            confidence_score=0.9 if self.extracted_text else 0.0,
+            provider_name=self.provider_name,
+            is_external_provider=False,
+            stores_images=False,
+            requires_network=False,
+            supported_content_types=sorted(self.supported_content_types),
+            unverified_ocr_output=True,
+            pharmacist_review_required=True,
+            privacy_warnings=[],
+            detected_possible_identifiers=[],
+            correction_required=True,
+            can_send_to_analysis=False,
+        )
