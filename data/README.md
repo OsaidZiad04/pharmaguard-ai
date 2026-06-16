@@ -10,7 +10,7 @@ This directory contains synthetic examples, draft medication knowledge, registry
 
 ## Contents
 
-- `drug_profiles/`: neutral placeholder Markdown profiles and `drug_registry.json`.
+- `drug_profiles/`: neutral placeholder Markdown profiles, `drug_registry.json`, and `source_catalog.json`.
 - `sample_prescriptions/`: synthetic prescription text cases only.
 - `evaluation/`: synthetic RAG evaluation cases and templates.
 - `private/`: local-only storage for files that must not be committed.
@@ -37,7 +37,9 @@ Phase 2A OCR intake does not store uploaded images by default. Any future local 
 
 The profiles are local educational placeholders for pharmacist-support retrieval tests. They are not complete real pharmacy coverage, clinical validation, final medication references, or patient-specific instructions.
 
-`drug_profiles/drug_registry.json` is the governed MVP registry for this folder. It tracks supported generic names, conservative aliases, profile files, draft review status, placeholder source status, safety notes, and whether a profile is enabled for local RAG. All current entries are draft and unreviewed.
+`drug_profiles/drug_registry.json` is the governed MVP registry for this folder. It tracks supported generic names, conservative aliases, profile files, draft review status, placeholder source status, clinical validation status, patient-facing restrictions, counseling draft allowance, safety notes, and whether a profile is enabled for local RAG. All current entries are draft, unreviewed, not clinically validated, not patient-facing, and pharmacist-review-required.
+
+`drug_profiles/source_catalog.json` defines source categories and requirements for future trusted-source ingestion. It does not mean trusted sources have been ingested or clinically validated.
 
 Adding hundreds of manual Markdown files is not the intended long-term strategy. Future scale should use structured ingestion with provenance, source versioning, validation, and pharmacist approval before a profile is enabled.
 

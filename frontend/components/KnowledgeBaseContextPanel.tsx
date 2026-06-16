@@ -30,6 +30,16 @@ export function KnowledgeBaseContextPanel({ chunks }: KnowledgeBaseContextPanelP
                 <span className="rounded-md bg-pharma-wash px-2 py-1 font-medium text-pharma-muted">
                   {chunk.section_title}
                 </span>
+                {chunk.source_status ? (
+                  <span className="rounded-md bg-amber-50 px-2 py-1 font-medium text-amber-800">
+                    {formatStatus(chunk.source_status)}
+                  </span>
+                ) : null}
+                {chunk.clinical_validation_status ? (
+                  <span className="rounded-md bg-pharma-wash px-2 py-1 font-medium text-pharma-muted">
+                    {formatStatus(chunk.clinical_validation_status)}
+                  </span>
+                ) : null}
                 <span className="ml-auto font-semibold text-pharma-ink">
                   {chunk.score.toFixed(3)}
                 </span>
@@ -45,4 +55,8 @@ export function KnowledgeBaseContextPanel({ chunks }: KnowledgeBaseContextPanelP
       )}
     </section>
   );
+}
+
+function formatStatus(value: string) {
+  return value.replaceAll("_", " ");
 }

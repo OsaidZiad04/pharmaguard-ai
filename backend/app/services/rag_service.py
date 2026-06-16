@@ -89,6 +89,12 @@ def _to_retrieved_chunk(context: RetrievedContext) -> RetrievedChunk:
         section_title=context.section_title,
         text=context.text,
         score=context.score,
+        source_status=context.source_status,
+        review_status=context.review_status,
+        clinical_validation_status=context.clinical_validation_status,
+        requires_pharmacist_review=context.requires_pharmacist_review,
+        patient_facing_allowed=context.patient_facing_allowed,
+        counseling_draft_allowed=context.counseling_draft_allowed,
     )
 
 

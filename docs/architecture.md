@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, Phase 2G end-to-end OCR-to-RAG workflow evaluation, Phase 2H workflow traceability, Phase 2I pharmacist dashboard workflow polish, Phase 2J optional local Tesseract benchmarking with synthetic fixtures, Phase 2K OCR-readable synthetic fixtures, and Phase 2L-M controlled OCR activation policy.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, Phase 2G end-to-end OCR-to-RAG workflow evaluation, Phase 2H workflow traceability, Phase 2I pharmacist dashboard workflow polish, Phase 2J optional local Tesseract benchmarking with synthetic fixtures, Phase 2K OCR-readable synthetic fixtures, Phase 2L-M controlled OCR activation policy, and Phase 3A knowledge base governance.
 
 ## Pipeline
 
@@ -35,6 +35,7 @@ PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current im
    - Current: loads enabled local Markdown profiles from `data/drug_profiles/`, chunks them by headings and paragraphs, embeds chunks with local TF-IDF, stores vectors in memory, and retrieves top-k medication-specific context.
    - Phase 1.5: validates retrieved source metadata, checks generated citations, and runs synthetic RAG evaluation cases before OCR work begins.
    - Phase 1.8: uses `drug_registry.json` for supported identities, aliases, review status, source status, and RAG enablement metadata.
+   - Phase 3A: adds governance metadata for source status, review status, clinical validation status, pharmacist review requirements, patient-facing restrictions, and counseling-draft allowance. Retrieved chunks expose this metadata without changing retrieval ranking.
    - Later: replace or supplement TF-IDF with dense vector retrieval after baseline evaluation.
 
 7. Pharmacist Review
@@ -218,6 +219,18 @@ Phase 1.8 adds a governed registry around the local Markdown profiles without re
 - `app/kb/validator.py` checks required metadata, required Markdown sections, profile-file existence, unique aliases, disabled profiles, and unreviewed draft profiles.
 - `backend/scripts/kb_report.py` prints coverage and validation summaries for local governance review.
 - `app/kb/ingestion_plan.py` contains stubs for future structured ingestion, draft creation, pharmacist review, approval, and rejection. It performs no external calls.
+
+## Phase 3A Knowledge Base Governance
+
+Phase 3A adds source-aware and review-aware governance around the local knowledge base.
+
+- `data/drug_profiles/drug_registry.json` now includes governance fields such as `profile_id`, `canonical_name`, `clinical_validation_status`, `requires_pharmacist_review`, `patient_facing_allowed`, `counseling_draft_allowed`, `source_refs`, `last_reviewed_at`, and `reviewed_by_role`.
+- `data/drug_profiles/source_catalog.json` defines future source categories, including regulatory labels, official monographs, national formularies, peer-reviewed references, and local placeholders.
+- `backend/app/kb/governance.py` validates governance metadata, patient-facing restrictions, clinical validation metadata, trusted-source reference requirements, and alias conflicts.
+- `backend/scripts/kb_governance_report.py` prints governance status, blockers, and warnings.
+- Retrieved RAG chunks now include governance fields where available.
+
+All current profiles remain `draft`, `placeholder_educational`, and `not_validated`. They are enabled for engineering RAG only, are not patient-facing, and require pharmacist review.
 
 This phase prepares the project for hundreds of future medication profiles without encouraging hundreds of manually maintained Markdown files as the long-term architecture. Future ingestion should preserve provenance and require pharmacist approval before enabling RAG.
 

@@ -7,6 +7,11 @@ def test_retriever_returns_relevant_chunks_for_paracetamol() -> None:
     assert contexts
     assert all(context.drug_name.lower() == "paracetamol" for context in contexts)
     assert any(context.section_title == "General Counseling Points" for context in contexts)
+    assert all(context.source_status == "placeholder_educational" for context in contexts)
+    assert all(context.review_status == "draft" for context in contexts)
+    assert all(context.clinical_validation_status == "not_validated" for context in contexts)
+    assert all(context.requires_pharmacist_review is True for context in contexts)
+    assert all(context.patient_facing_allowed is False for context in contexts)
 
 
 def test_retriever_returns_empty_context_for_unknown_drug() -> None:

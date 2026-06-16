@@ -33,6 +33,8 @@ Phase 2I makes these safety boundaries more visible in the pharmacist dashboard.
 
 Phase 2L-M adds controlled OCR activation policy. Tesseract remains blocked in default workflow and production. It can be benchmarked only through benchmark scripts, and it can enter explicit prototype workflow mode only when local dependencies, explicit enablement, and recorded benchmark gates pass. Even then, OCR output remains unverified, image storage remains disabled, and pharmacist correction remains mandatory.
 
+Phase 3A adds knowledge-base governance metadata. Current drug profiles remain draft educational placeholders, not clinically validated sources. `patient_facing_allowed` is false for every current profile, `requires_pharmacist_review` is true, and counseling output remains draft-only under pharmacist review. The governance report is an engineering safety check, not clinical validation.
+
 ## Unsafe Output Avoidance
 
 The system should avoid:
@@ -42,6 +44,7 @@ The system should avoid:
 - treatment selection
 - drug substitution decisions
 - claims that a medication is appropriate for a specific patient
+- claims that draft placeholder KB content is clinically validated
 - hidden assumptions about allergies, pregnancy, age, renal function, or drug interactions
 
 ## Human Control
@@ -54,6 +57,7 @@ The pharmacist must verify:
 - dose, route, frequency, and duration
 - patient-specific risk factors
 - counseling note correctness
+- retrieved source governance status and whether profile content is draft or validated
 - whether the output is appropriate to share
 
 ## TODO

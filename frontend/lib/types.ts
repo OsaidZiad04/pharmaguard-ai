@@ -37,6 +37,12 @@ export interface RetrievedChunk {
   section_title: string;
   text: string;
   score: number;
+  source_status?: string | null;
+  review_status?: string | null;
+  clinical_validation_status?: string | null;
+  requires_pharmacist_review?: boolean | null;
+  patient_facing_allowed?: boolean | null;
+  counseling_draft_allowed?: boolean | null;
 }
 
 export interface RagDrugCard {

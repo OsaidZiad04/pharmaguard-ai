@@ -5,9 +5,15 @@
       "generic_name": "paracetamol",
       "display_name": "Paracetamol",
       "profile_file": "paracetamol.md",
-      "aliases": ["acetaminophen"],
+      "aliases": [
+        "acetaminophen"
+      ],
       "drug_class_general": "analgesic/antipyretic placeholder",
-      "common_context_tags": ["pain support", "fever support", "duplicate ingredient review"],
+      "common_context_tags": [
+        "pain support",
+        "fever support",
+        "duplicate ingredient review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -18,7 +24,17 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_paracetamol",
+      "canonical_name": "paracetamol",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "ibuprofen",
@@ -27,7 +43,11 @@
       "profile_file": "ibuprofen.md",
       "aliases": [],
       "drug_class_general": "NSAID placeholder",
-      "common_context_tags": ["pain support", "inflammation support", "gastrointestinal risk review"],
+      "common_context_tags": [
+        "pain support",
+        "inflammation support",
+        "gastrointestinal risk review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -38,7 +58,17 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_ibuprofen",
+      "canonical_name": "ibuprofen",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "amoxicillin",
@@ -47,7 +77,11 @@
       "profile_file": "amoxicillin.md",
       "aliases": [],
       "drug_class_general": "antibacterial placeholder",
-      "common_context_tags": ["allergy review", "prescription duration review", "antibacterial counseling"],
+      "common_context_tags": [
+        "allergy review",
+        "prescription duration review",
+        "antibacterial counseling"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -58,16 +92,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_amoxicillin",
+      "canonical_name": "amoxicillin",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "cetirizine",
       "generic_name": "cetirizine",
       "display_name": "Cetirizine",
       "profile_file": "cetirizine.md",
-      "aliases": ["zyrtec"],
+      "aliases": [
+        "zyrtec"
+      ],
       "drug_class_general": "antihistamine placeholder",
-      "common_context_tags": ["allergy symptom support", "sedation review", "multi-product review"],
+      "common_context_tags": [
+        "allergy symptom support",
+        "sedation review",
+        "multi-product review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -78,16 +128,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_cetirizine",
+      "canonical_name": "cetirizine",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "loratadine",
       "generic_name": "loratadine",
       "display_name": "Loratadine",
       "profile_file": "loratadine.md",
-      "aliases": ["claritin"],
+      "aliases": [
+        "claritin"
+      ],
       "drug_class_general": "antihistamine placeholder",
-      "common_context_tags": ["allergy symptom support", "multi-product review", "patient context review"],
+      "common_context_tags": [
+        "allergy symptom support",
+        "multi-product review",
+        "patient context review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -98,16 +164,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_loratadine",
+      "canonical_name": "loratadine",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "omeprazole",
       "generic_name": "omeprazole",
       "display_name": "Omeprazole",
       "profile_file": "omeprazole.md",
-      "aliases": ["prilosec"],
+      "aliases": [
+        "prilosec"
+      ],
       "drug_class_general": "acid-related symptom support placeholder",
-      "common_context_tags": ["acid symptom support", "duration review", "warning symptom review"],
+      "common_context_tags": [
+        "acid symptom support",
+        "duration review",
+        "warning symptom review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -118,16 +200,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_omeprazole",
+      "canonical_name": "omeprazole",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "salbutamol",
       "generic_name": "salbutamol",
       "display_name": "Salbutamol",
       "profile_file": "salbutamol.md",
-      "aliases": ["ventolin"],
+      "aliases": [
+        "ventolin"
+      ],
       "drug_class_general": "reliever inhaler placeholder",
-      "common_context_tags": ["inhaler technique review", "respiratory symptom review", "device counseling"],
+      "common_context_tags": [
+        "inhaler technique review",
+        "respiratory symptom review",
+        "device counseling"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -138,16 +236,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_salbutamol",
+      "canonical_name": "salbutamol",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "metformin",
       "generic_name": "metformin",
       "display_name": "Metformin",
       "profile_file": "metformin.md",
-      "aliases": ["glucophage"],
+      "aliases": [
+        "glucophage"
+      ],
       "drug_class_general": "blood glucose support placeholder",
-      "common_context_tags": ["formulation review", "kidney context review", "stomach concern review"],
+      "common_context_tags": [
+        "formulation review",
+        "kidney context review",
+        "stomach concern review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -158,16 +272,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_metformin",
+      "canonical_name": "metformin",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "amlodipine",
       "generic_name": "amlodipine",
       "display_name": "Amlodipine",
       "profile_file": "amlodipine.md",
-      "aliases": ["norvasc"],
+      "aliases": [
+        "norvasc"
+      ],
       "drug_class_general": "blood pressure support placeholder",
-      "common_context_tags": ["blood pressure support", "swelling review", "dizziness review"],
+      "common_context_tags": [
+        "blood pressure support",
+        "swelling review",
+        "dizziness review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -178,16 +308,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_amlodipine",
+      "canonical_name": "amlodipine",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "levothyroxine",
       "generic_name": "levothyroxine",
       "display_name": "Levothyroxine",
       "profile_file": "levothyroxine.md",
-      "aliases": ["synthroid"],
+      "aliases": [
+        "synthroid"
+      ],
       "drug_class_general": "thyroid medicine placeholder",
-      "common_context_tags": ["timing review", "supplement review", "product consistency review"],
+      "common_context_tags": [
+        "timing review",
+        "supplement review",
+        "product consistency review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -198,16 +344,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_levothyroxine",
+      "canonical_name": "levothyroxine",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "azithromycin",
       "generic_name": "azithromycin",
       "display_name": "Azithromycin",
       "profile_file": "azithromycin.md",
-      "aliases": ["zithromax"],
+      "aliases": [
+        "zithromax"
+      ],
       "drug_class_general": "antibacterial placeholder",
-      "common_context_tags": ["allergy review", "duration review", "heart-rhythm context review"],
+      "common_context_tags": [
+        "allergy review",
+        "duration review",
+        "heart-rhythm context review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -218,16 +380,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_azithromycin",
+      "canonical_name": "azithromycin",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "simvastatin",
       "generic_name": "simvastatin",
       "display_name": "Simvastatin",
       "profile_file": "simvastatin.md",
-      "aliases": ["zocor"],
+      "aliases": [
+        "zocor"
+      ],
       "drug_class_general": "cholesterol support placeholder",
-      "common_context_tags": ["medicine interaction review", "muscle concern review", "liver context review"],
+      "common_context_tags": [
+        "medicine interaction review",
+        "muscle concern review",
+        "liver context review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -238,16 +416,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_simvastatin",
+      "canonical_name": "simvastatin",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "diclofenac",
       "generic_name": "diclofenac",
       "display_name": "Diclofenac",
       "profile_file": "diclofenac.md",
-      "aliases": ["voltaren"],
+      "aliases": [
+        "voltaren"
+      ],
       "drug_class_general": "pain/inflammation support placeholder",
-      "common_context_tags": ["route review", "bleeding risk review", "anti-inflammatory product review"],
+      "common_context_tags": [
+        "route review",
+        "bleeding risk review",
+        "anti-inflammatory product review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -258,16 +452,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_diclofenac",
+      "canonical_name": "diclofenac",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "esomeprazole",
       "generic_name": "esomeprazole",
       "display_name": "Esomeprazole",
       "profile_file": "esomeprazole.md",
-      "aliases": ["nexium"],
+      "aliases": [
+        "nexium"
+      ],
       "drug_class_general": "acid-related symptom support placeholder",
-      "common_context_tags": ["acid symptom support", "duration review", "formulation review"],
+      "common_context_tags": [
+        "acid symptom support",
+        "duration review",
+        "formulation review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -278,16 +488,32 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_esomeprazole",
+      "canonical_name": "esomeprazole",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     },
     {
       "drug_id": "aspirin",
       "generic_name": "aspirin",
       "display_name": "Aspirin",
       "profile_file": "aspirin.md",
-      "aliases": ["acetylsalicylic acid"],
+      "aliases": [
+        "acetylsalicylic acid"
+      ],
       "drug_class_general": "pain/support placeholder",
-      "common_context_tags": ["bleeding risk review", "duplicate aspirin review", "age context review"],
+      "common_context_tags": [
+        "bleeding risk review",
+        "duplicate aspirin review",
+        "age context review"
+      ],
       "review_status": "draft",
       "reviewed_by": null,
       "last_reviewed": null,
@@ -298,7 +524,17 @@
         "Draft educational placeholder only.",
         "Patient-specific context must be verified."
       ],
-      "enabled_for_rag": true
+      "enabled_for_rag": true,
+      "profile_id": "profile_aspirin",
+      "canonical_name": "aspirin",
+      "clinical_validation_status": "not_validated",
+      "requires_pharmacist_review": true,
+      "patient_facing_allowed": false,
+      "counseling_draft_allowed": true,
+      "source_refs": [],
+      "last_reviewed_at": null,
+      "reviewed_by_role": null,
+      "notes": "Draft educational placeholder profile for engineering RAG evaluation only; not clinically validated and not patient-facing."
     }
   ]
 }

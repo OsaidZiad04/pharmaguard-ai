@@ -160,6 +160,16 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Add OCR activation policy report. Complete.
 - Keep benchmark mode script-only and correction gate mandatory. Complete.
 
+## Phase 3A: Knowledge Base Governance Upgrade - Complete
+
+- Add governance metadata to all 15 current drug registry entries. Complete.
+- Keep current profiles draft, placeholder educational, not clinically validated, not patient-facing, and pharmacist-review-required. Complete.
+- Add `source_catalog.json` for future source categories and review requirements. Complete.
+- Add KB governance validation and `python scripts/kb_governance_report.py`. Complete.
+- Integrate governance summary into the existing KB report. Complete.
+- Add governance metadata to retrieved RAG source chunks without changing retrieval ranking. Complete.
+- Keep RAG outputs pharmacist-support only and avoid clinical validation claims. Complete.
+
 ## Phase 2N: Production-Ready OCR Integration Planning
 
 - Add production-ready OCR workflow only after provider validation.

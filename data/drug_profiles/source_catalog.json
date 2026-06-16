@@ -1,0 +1,44 @@
+{
+  "source_categories": [
+    {
+      "source_category": "regulatory_label",
+      "allowed_for_clinical_use": true,
+      "requires_pharmacist_review": true,
+      "requires_url_or_document_id": true,
+      "requires_last_reviewed_at": true,
+      "notes": "Future category for reviewed regulatory labeling or equivalent official product information. Not currently ingested."
+    },
+    {
+      "source_category": "official_drug_monograph",
+      "allowed_for_clinical_use": true,
+      "requires_pharmacist_review": true,
+      "requires_url_or_document_id": true,
+      "requires_last_reviewed_at": true,
+      "notes": "Future category for pharmacist-reviewed official monographs. Not currently ingested."
+    },
+    {
+      "source_category": "national_formulary",
+      "allowed_for_clinical_use": true,
+      "requires_pharmacist_review": true,
+      "requires_url_or_document_id": true,
+      "requires_last_reviewed_at": true,
+      "notes": "Future category for national formulary content after provenance capture and pharmacist review."
+    },
+    {
+      "source_category": "peer_reviewed_reference",
+      "allowed_for_clinical_use": false,
+      "requires_pharmacist_review": true,
+      "requires_url_or_document_id": true,
+      "requires_last_reviewed_at": true,
+      "notes": "Future supporting reference category. It must not be treated as standalone clinical validation."
+    },
+    {
+      "source_category": "local_placeholder",
+      "allowed_for_clinical_use": false,
+      "requires_pharmacist_review": true,
+      "requires_url_or_document_id": false,
+      "requires_last_reviewed_at": false,
+      "notes": "Current local educational placeholder material for engineering demos and prototype RAG only."
+    }
+  ]
+}

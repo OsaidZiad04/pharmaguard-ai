@@ -122,11 +122,27 @@ def _split_context_text(text: str) -> list[str]:
 def _source_lines(contexts: list[RetrievedContext]) -> list[str]:
     source_lines = []
     for context in contexts:
+        governance_tags = _governance_source_tags(context)
         source_lines.append(
             f"- {context.source_file} | {context.section_title} | "
-            f"{context.chunk_id} | score {context.score:.4f}"
+            f"{context.chunk_id} | score {context.score:.4f}{governance_tags}"
         )
     return _dedupe(source_lines)
+
+
+def _governance_source_tags(context: RetrievedContext) -> str:
+    tags = []
+    if context.source_status:
+        tags.append(f"source_status {context.source_status}")
+    if context.review_status:
+        tags.append(f"review_status {context.review_status}")
+    if context.clinical_validation_status:
+        tags.append(f"clinical_validation_status {context.clinical_validation_status}")
+    if context.requires_pharmacist_review is not None:
+        tags.append(f"pharmacist_review_required {context.requires_pharmacist_review}")
+    if not tags:
+        return ""
+    return " | " + " | ".join(tags)
 
 
 def _section_or_unavailable(texts: list[str]) -> list[str]:

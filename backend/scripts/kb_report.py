@@ -6,6 +6,7 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 if str(BACKEND_ROOT) not in sys.path:
     sys.path.insert(0, str(BACKEND_ROOT))
 
+from app.kb.governance import validate_governance_metadata  # noqa: E402
 from app.kb.validator import build_coverage_report  # noqa: E402
 
 
@@ -13,6 +14,7 @@ def build_report_lines() -> list[str]:
     report = build_coverage_report()
     validation = report.validation_report
     blocking_issues = [issue for issue in validation.issues if issue.severity == "error"]
+    governance_report = validate_governance_metadata()
 
     lines = [
         "PharmaGuard AI Knowledge Base Report",
@@ -29,6 +31,12 @@ def build_report_lines() -> list[str]:
         f"Alias conflicts: {validation.alias_conflicts}",
         f"Disabled profiles: {validation.disabled_profiles}",
         f"Unreviewed draft profiles: {validation.unreviewed_profiles}",
+        "Governance summary:",
+        f"- Profiles by clinical_validation_status: {governance_report.profiles_by_clinical_validation_status}",
+        f"- Patient-facing allowed profiles: {governance_report.patient_facing_allowed_count}",
+        f"- Pharmacist review required profiles: {governance_report.pharmacist_review_required_count}",
+        f"- Governance blocking issues: {len(governance_report.blocking_issues)}",
+        f"- Governance warnings: {len(governance_report.warnings)}",
     ]
 
     if validation.issues:

@@ -8,6 +8,12 @@ class RetrievedChunk(BaseModel):
     section_title: str
     text: str
     score: float = Field(ge=0.0)
+    source_status: str | None = None
+    review_status: str | None = None
+    clinical_validation_status: str | None = None
+    requires_pharmacist_review: bool | None = None
+    patient_facing_allowed: bool | None = None
+    counseling_draft_allowed: bool | None = None
 
 
 class RagQueryRequest(BaseModel):

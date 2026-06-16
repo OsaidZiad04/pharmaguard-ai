@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import re
 
+from app.kb.governance import governance_metadata_for_entry
 from app.kb.registry import get_drug_registry, normalize_drug_term
 from app.rag.chunker import DocumentChunk, load_drug_profile_chunks
 from app.rag.embedder import TfidfEmbedder
@@ -21,6 +22,12 @@ class RetrievedContext:
     section_title: str
     text: str
     score: float
+    source_status: str | None = None
+    review_status: str | None = None
+    clinical_validation_status: str | None = None
+    requires_pharmacist_review: bool | None = None
+    patient_facing_allowed: bool | None = None
+    counseling_draft_allowed: bool | None = None
 
 
 class LocalRagIndex:
@@ -33,6 +40,7 @@ class LocalRagIndex:
             chunk.metadata["drug_name"].lower() for chunk in self.chunks
         }
         self.alias_map = _load_alias_map(self.known_drug_names)
+        self.governance_map = _load_governance_map(self.known_drug_names)
 
         if self.chunks:
             vectors = self.embedder.fit_transform(
@@ -63,6 +71,7 @@ class LocalRagIndex:
                 continue
             if result.score < self.min_relevance:
                 continue
+            governance_metadata = self.governance_map.get(target_drug, {})
 
             contexts.append(
                 RetrievedContext(
@@ -72,6 +81,7 @@ class LocalRagIndex:
                     section_title=metadata["section_title"],
                     text=result.chunk.text,
                     score=result.score,
+                    **governance_metadata,
                 )
             )
 
@@ -166,6 +176,21 @@ def _load_registry_alias_map(known_drug_names: set[str]) -> dict[str, str]:
             if normalized_alias and normalized_alias not in registry.duplicate_aliases:
                 aliases[normalized_alias] = canonical_name
     return aliases
+
+
+def _load_governance_map(known_drug_names: set[str]) -> dict[str, dict]:
+    try:
+        registry = get_drug_registry()
+    except (FileNotFoundError, ValueError):
+        return {}
+
+    governance_by_drug: dict[str, dict] = {}
+    for entry in registry.list_enabled_drugs():
+        canonical_name = normalize_drug_term(entry.generic_name)
+        if canonical_name not in known_drug_names:
+            continue
+        governance_by_drug[canonical_name] = governance_metadata_for_entry(entry)
+    return governance_by_drug
 
 
 def _contains_term(normalized_text: str, normalized_term: str) -> bool:

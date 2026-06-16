@@ -117,3 +117,16 @@ Phase 2I reflects this workflow in the frontend. The dashboard shows ordered sta
 - pharmacist review required
 
 The frontend display does not add a backend automation path and does not allow unverified OCR to bypass correction.
+
+## Knowledge Base Governance
+
+Phase 3A adds governance metadata to retrieved RAG context. Workflow evaluation continues to verify source grounding, and retrieved chunks can now include:
+
+- source status
+- review status
+- clinical validation status
+- pharmacist review requirement
+- patient-facing restriction
+- counseling draft allowance
+
+Current profiles remain draft placeholder material and not clinically validated. This metadata supports safer workflow review; it does not make E2E evaluation a clinical validation process.

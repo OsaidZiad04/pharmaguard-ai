@@ -48,8 +48,9 @@ The source grounding panel summarizes retrieved local Markdown context:
 - source file count
 - section count
 - insufficient-context warning state
+- source/review/clinical-validation status when returned by the backend
 
-RAG source display remains local, draft-only, and pharmacist-reviewed.
+RAG source display remains local, draft-only, and pharmacist-review-required. Phase 3A adds compact governance indicators so the dashboard can show when retrieved chunks are placeholder educational content and not clinically validated.
 
 ## Scope Boundaries
 

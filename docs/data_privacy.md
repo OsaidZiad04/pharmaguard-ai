@@ -22,6 +22,8 @@ Use synthetic examples that are clearly fictional. The examples in `data/sample_
 
 The local drug profiles and `data/drug_profiles/drug_registry.json` contain educational placeholder knowledge-base metadata only. They must not contain patient identifiers, clinic identifiers, real prescription details, or claims of clinical validation.
 
+Phase 3A adds `data/drug_profiles/source_catalog.json` and governance metadata fields for future source provenance and pharmacist review. These fields describe reference-source governance only. They must not be used to store patient records, prescription identifiers, clinic details, or real workflow audit data.
+
 ## Real Prescription Handling
 
 If real prescriptions are ever used for local experimentation:

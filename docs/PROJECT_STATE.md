@@ -31,6 +31,7 @@ The current system includes:
 - Disabled-by-default Tesseract local OCR adapter, dependency checks, and optional synthetic benchmark path.
 - OCR-readable synthetic PNG fixtures with fixture inspection.
 - Controlled OCR activation policy with safe defaults and policy reporting.
+- Knowledge-base governance metadata, source catalog, and governance reporting.
 - End-to-end OCR-to-RAG workflow evaluation.
 - Workflow traceability and pharmacist review audit records for synthetic E2E cases.
 - Pharmacist dashboard workflow polish with visible status and safety panels.
@@ -44,6 +45,7 @@ The current system includes:
 - Deterministic synthetic workflow trace export and trace report.
 - OCR provider readiness report.
 - Knowledge-base coverage report.
+- Knowledge-base governance report.
 - Safety guardrails for low confidence, missing patient context, unknown medications, and insufficient local context.
 
 The current system does not include:
@@ -70,7 +72,7 @@ The local RAG pipeline loads Markdown drug profiles from `data/drug_profiles/`, 
 
 ### KB Registry Pipeline
 
-The knowledge base is governed by `data/drug_profiles/drug_registry.json`. The registry tracks generic names, aliases, profile files, review status, source status, safety notes, and whether a profile is enabled for RAG. The KB validator checks required registry fields, required Markdown sections, missing files, alias conflicts, disabled profiles, and unreviewed draft profiles. The KB report summarizes coverage and validation status.
+The knowledge base is governed by `data/drug_profiles/drug_registry.json`. The registry tracks generic names, aliases, profile files, review status, source status, safety notes, and whether a profile is enabled for RAG. Phase 3A adds governance fields for profile identity, clinical validation status, pharmacist review requirements, patient-facing restrictions, counseling draft allowance, source references, reviewer role, and review timestamps. `data/drug_profiles/source_catalog.json` defines source categories and requirements for future trusted-source ingestion. The KB validator checks required registry fields, required Markdown sections, missing files, alias conflicts, disabled profiles, and unreviewed draft profiles. The KB governance validator checks source/review/clinical-validation metadata and unsafe output policy. The KB reports summarize coverage, validation, and governance status.
 
 ### OCR Pipeline
 
@@ -221,6 +223,13 @@ The frontend is a pharmacist dashboard, not a chatbot. It includes prescription 
 - Key behavior added: Safe OCR config defaults, provider/mode policy evaluation, default workflow blocking for Tesseract, benchmark-mode gating, explicit prototype-mode gating, route-level benchmark-mode block, provider/candidate activation reporting, and correction-gate requirements for all providers.
 - Verification summary: Activation policy tests pass; reports show mock OCR as default, Tesseract blocked in default workflow and production, cloud OCR blocked, and correction gate required.
 
+### Phase 3A: Knowledge Base Governance Upgrade
+
+- Objective: Upgrade the local drug knowledge base into a review-aware, source-aware governance layer without changing clinical content or claiming validation.
+- Main files/modules added: `data/drug_profiles/source_catalog.json`, `backend/app/kb/governance.py`, `backend/scripts/kb_governance_report.py`, `docs/kb_governance.md`, governance tests.
+- Key behavior added: Governance metadata for all 15 profiles, source catalog categories, patient-facing output restrictions, counseling draft allowance under pharmacist review, clinical validation status checks, source-reference requirements for trusted-source-ready profiles, governance summary in `kb_report.py`, and governance metadata on retrieved RAG chunks.
+- Verification summary: Current profiles remain draft, placeholder educational, not clinically validated, not patient-facing, and pharmacist-review-required; governance report passes with 0 blockers and expected draft/placeholder warnings.
+
 ## 5. Supported Knowledge Base
 
 Current total drug profiles: 15.
@@ -249,15 +258,34 @@ Current registry status:
 
 - `review_status`: `draft`
 - `source_status`: `placeholder_educational`
+- `clinical_validation_status`: `not_validated`
+- `requires_pharmacist_review`: `true`
+- `patient_facing_allowed`: `false`
+- `counseling_draft_allowed`: `true`
 - All profiles are draft educational placeholder content.
 - No profile is clinically validated.
+- No profile is allowed for patient-facing output without pharmacist review.
+- Retrieved RAG chunks can expose governance metadata for source grounding review.
 - The current KB is suitable for local workflow and evaluation scaffolding only.
+
+Governance files:
+
+- `data/drug_profiles/drug_registry.json`
+- `data/drug_profiles/source_catalog.json`
+
+Source catalog categories:
+
+- `regulatory_label`
+- `official_drug_monograph`
+- `national_formulary`
+- `peer_reviewed_reference`
+- `local_placeholder`
 
 ## 6. Evaluation Status
 
 Current verification status:
 
-- Backend tests: pending final Phase 2L-M verification update.
+- Backend tests: 145 passed, 1 skipped.
 - RAG evaluation: 46/46 passed.
 - OCR evaluation: 18/18 passed, including 10 fixture-backed cases.
 - E2E OCR-to-RAG workflow evaluation: 10/10 passed.
@@ -268,6 +296,7 @@ Current verification status:
 - Optional Tesseract benchmark: command runs; current runtime reports skipped because `tesseract_binary` is not detected on `PATH`.
 - OCR activation policy report: PASS.
 - KB report: PASS, 0 blocking issues.
+- KB governance report: PASS, 0 blocking issues and expected draft/placeholder warnings.
 - OCR provider report: PASS, 2 active local providers allowed in prototype mode and quality-gate eligible; Tesseract adapter shown as inactive and not prototype-allowed.
 - OCR candidate report: PASS, 5 candidates with 2 prototype allowed, Tesseract adapter-defined but inactive, and cloud OCR blocked.
 - Frontend typecheck: passed.
@@ -281,6 +310,7 @@ cd backend && python scripts/generate_ocr_fixtures.py
 cd backend && python scripts/inspect_ocr_fixtures.py
 cd backend && python scripts/evaluate_rag.py
 cd backend && python scripts/kb_report.py
+cd backend && python scripts/kb_governance_report.py
 cd backend && python scripts/evaluate_ocr.py
 cd backend && python scripts/ocr_provider_report.py
 cd backend && python scripts/ocr_candidate_report.py
@@ -310,6 +340,10 @@ Current non-negotiable boundaries:
 - Workflow traces show the correction boundary and blocked unverified OCR downstream use.
 - Dashboard shows OCR unverified status, correction boundary, source grounding, draft-only counseling, and pharmacist review required.
 - Synthetic trace records do not store raw image bytes or real patient data.
+- Current KB profiles are draft placeholder educational content and not clinically validated.
+- Current KB profiles are not allowed for patient-facing output.
+- Counseling drafts are allowed only as pharmacist-review-required support.
+- KB governance reports are engineering checks, not clinical validation.
 - Current OCR providers are local, non-networked, and non-storing.
 - Tesseract adapter exists only as disabled/benchmark-only scaffolding and is not active OCR.
 - Tesseract is blocked in default workflow and can only be used in explicit prototype workflow mode when policy gates pass.
@@ -327,16 +361,16 @@ Current non-negotiable boundaries:
 - `backend/app/api/`: HTTP route modules for health, prescriptions, drugs, counseling, RAG, and OCR.
 - `backend/app/services/`: Application services for extraction, safety, lookup, counseling, RAG orchestration, OCR, and OCR audit.
 - `backend/app/rag/`: Local TF-IDF RAG components, generation, citation validation, and RAG evaluation.
-- `backend/app/kb/`: Drug registry loading, KB validation, coverage schema, and future ingestion scaffolding.
+- `backend/app/kb/`: Drug registry loading, KB validation, governance validation, coverage schema, and future ingestion scaffolding.
 - `backend/app/ocr/`: OCR provider interface, local provider implementations, activation policy, safe OCR config, inactive local adapter benchmarking, dependency checks, fixture inspection, evaluation metrics, quality gates, provider candidates, swap-readiness checks, and synthetic OCR evaluation runner logic.
 - `backend/app/workflows/`: Synthetic end-to-end workflow evaluation and trace models from OCR-like input through corrected text, prescription analysis, RAG, counseling, and pharmacist review.
-- `backend/scripts/`: CLI scripts for RAG evaluation, KB reporting, OCR evaluation, OCR provider reporting, OCR candidate reporting, E2E workflow evaluation, trace export, and trace reporting.
+- `backend/scripts/`: CLI scripts for RAG evaluation, KB reporting, KB governance reporting, OCR evaluation, OCR provider reporting, OCR candidate reporting, E2E workflow evaluation, trace export, and trace reporting.
 - `backend/tests/`: Backend pytest regression tests.
 - `frontend/components/`: Pharmacist dashboard UI components, including workflow status, safety review, and source-grounding panels.
 - `frontend/lib/`: Frontend API client and shared TypeScript types.
-- `data/drug_profiles/`: Draft educational Markdown profiles and drug registry.
+- `data/drug_profiles/`: Draft educational Markdown profiles, drug registry, and source catalog.
 - `data/evaluation/`: Synthetic RAG, OCR, E2E workflow datasets, generated synthetic trace records, and synthetic OCR fixtures.
-- `docs/`: Architecture, safety, privacy, roadmap, OCR evaluation, KB scaling, and living project documentation.
+- `docs/`: Architecture, safety, privacy, roadmap, OCR evaluation, KB scaling/governance, and living project documentation.
 
 ## 9. Current Limitations
 
@@ -351,6 +385,8 @@ Current non-negotiable boundaries:
 - No persistent audit database exists.
 - Retrieval uses local TF-IDF only.
 - The knowledge base is draft educational placeholder content only.
+- Source catalog categories are governance scaffolding only; trusted sources have not been ingested.
+- No current drug profile has pharmacist-reviewed source evidence, reviewer role, review timestamp, or clinical validation.
 - There is no clinical validation.
 - Deployment is not hardened.
 - Production authentication and authorization are not implemented.
@@ -362,6 +398,7 @@ Current non-negotiable boundaries:
 Proposed roadmap:
 
 - Phase 2N: Production-Ready OCR Integration Planning.
+- Phase 3B: Trusted Source Ingestion Design and Review Workflow Planning.
 - Phase 3: End-to-End Prescription Workflow Evaluation.
 - Phase 4: Drug Knowledge Graph.
 - Phase 5: Deployment & Portfolio Polish.

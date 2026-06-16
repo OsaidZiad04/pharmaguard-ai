@@ -38,12 +38,18 @@ REQUIRED_REGISTRY_FIELDS = [
 ]
 ALLOWED_REVIEW_STATUSES = {
     "draft",
+    "pending_review",
+    "reviewed",
+    "rejected",
     "pharmacist_reviewed",
     "approved_for_demo",
     "disabled",
 }
 ALLOWED_SOURCE_STATUSES = {
     "placeholder_educational",
+    "trusted_source_pending",
+    "trusted_source_ready",
+    "pharmacist_reviewed",
     "pharmacist_supplied",
     "public_reference_pending_review",
     "validated_reference",
@@ -218,4 +224,3 @@ def _missing_sections(profile_path: Path) -> list[str]:
     text = profile_path.read_text(encoding="utf-8")
     headings = {heading.strip() for heading in HEADING_PATTERN.findall(text)}
     return [section for section in REQUIRED_PROFILE_SECTIONS if section not in headings]
-

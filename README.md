@@ -70,6 +70,7 @@ Implemented now:
 - Phase 2J local Tesseract OCR benchmarking: optional synthetic-fixture benchmark path for the disabled local adapter.
 - Phase 2K OCR-readable synthetic fixtures and Tesseract benchmark diagnostics.
 - Phase 2L-M controlled OCR activation policy and safe explicit Tesseract prototype mode.
+- Phase 3A knowledge base governance upgrade: explicit source/review/clinical-validation metadata, source catalog, governance report, and source-aware RAG metadata.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
 - Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, OCR intake, and safety regressions.
@@ -106,7 +107,9 @@ Current local Markdown profiles:
 - esomeprazole
 - aspirin
 
-`data/drug_profiles/drug_registry.json` is now the preferred source of truth for supported generic names, aliases, review status, source status, and whether a profile is enabled for local RAG. All 15 current profiles are marked `review_status: draft` and `source_status: placeholder_educational`; this makes clear that the current content is educational placeholder material, not clinical validation.
+`data/drug_profiles/drug_registry.json` is now the preferred source of truth for supported generic names, aliases, review status, source status, governance metadata, and whether a profile is enabled for local RAG. All 15 current profiles are marked `review_status: draft`, `source_status: placeholder_educational`, `clinical_validation_status: not_validated`, `requires_pharmacist_review: true`, `patient_facing_allowed: false`, and `counseling_draft_allowed: true`; this makes clear that the current content is educational placeholder material, not clinical validation.
+
+`data/drug_profiles/source_catalog.json` defines source categories and requirements for future trusted-source ingestion. Run `python scripts/kb_governance_report.py` from `backend/` to review governance status. A passing governance report is an engineering governance check, not clinical validation.
 
 Supported aliases are explicit and conservative, such as `acetaminophen -> paracetamol`, `ventolin -> salbutamol`, `glucophage -> metformin`, `norvasc -> amlodipine`, `synthroid -> levothyroxine`, `voltaren -> diclofenac`, and `nexium -> esomeprazole`. Condition-only queries and broad classes such as `antibiotic`, `painkiller`, or `antihistamine` do not map to a medication.
 
@@ -195,6 +198,13 @@ cd backend
 python scripts/kb_report.py
 ```
 
+Run the knowledge-base governance report:
+
+```bash
+cd backend
+python scripts/kb_governance_report.py
+```
+
 Run the synthetic OCR evaluation:
 
 ```bash
@@ -255,13 +265,13 @@ The evaluation currently contains 46 synthetic cases. It reports retrieval check
 
 The OCR evaluation currently contains 18 synthetic cases, including 10 fixture-backed cases, and reports character error rate, word error rate, medication term detection, privacy-warning matching, provider-level summaries, and quality gate status. The optional Tesseract benchmark uses only synthetic image fixtures and is skipped when local Tesseract dependencies are unavailable. The E2E workflow evaluation currently contains 10 synthetic cases covering corrected-text handoff into prescription analysis, RAG, and counseling. Trace export currently produces 10 deterministic synthetic traces. These are engineering checks for the OCR workflow, not clinical validation.
 
-The KB report summarizes profile counts, aliases, review/source status, missing sections, alias conflicts, disabled profiles, and unreviewed draft profiles. Dense retrieval remains deferred until the TF-IDF baseline and KB governance are stronger. Production OCR and external OCR providers remain deferred.
+The KB report summarizes profile counts, aliases, review/source status, missing sections, alias conflicts, disabled profiles, and unreviewed draft profiles. The KB governance report summarizes source/review/clinical-validation status, patient-facing restrictions, counseling draft allowance, pharmacist review requirements, source catalog categories, blockers, and warnings. Dense retrieval remains deferred until the TF-IDF baseline and KB governance are stronger. Production OCR and external OCR providers remain deferred.
 
 ## Future Roadmap
 
 See [docs/roadmap.md](docs/roadmap.md).
 
-For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR activation policy, see [docs/ocr_activation_policy.md](docs/ocr_activation_policy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For optional Tesseract benchmarking, see [docs/tesseract_benchmarking.md](docs/tesseract_benchmarking.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md). For dashboard workflow notes, see [docs/pharmacist_dashboard_workflow.md](docs/pharmacist_dashboard_workflow.md).
+For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For KB governance, see [docs/kb_governance.md](docs/kb_governance.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR activation policy, see [docs/ocr_activation_policy.md](docs/ocr_activation_policy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For optional Tesseract benchmarking, see [docs/tesseract_benchmarking.md](docs/tesseract_benchmarking.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md). For dashboard workflow notes, see [docs/pharmacist_dashboard_workflow.md](docs/pharmacist_dashboard_workflow.md).
 
 ## Data Warning
 

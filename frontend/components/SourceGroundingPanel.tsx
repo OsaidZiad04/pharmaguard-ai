@@ -13,6 +13,14 @@ export function SourceGroundingPanel({
 }: SourceGroundingPanelProps) {
   const sourceFiles = Array.from(new Set(chunks.map((chunk) => chunk.source_file)));
   const sectionTitles = Array.from(new Set(chunks.map((chunk) => chunk.section_title)));
+  const sourceStatuses = Array.from(
+    new Set(chunks.map((chunk) => chunk.source_status).filter(isNonEmptyStatus))
+  );
+  const validationStatuses = Array.from(
+    new Set(
+      chunks.map((chunk) => chunk.clinical_validation_status).filter(isNonEmptyStatus)
+    )
+  );
 
   return (
     <section className="rounded-lg border border-pharma-line bg-white p-5 shadow-panel">
@@ -55,6 +63,22 @@ export function SourceGroundingPanel({
                 {sourceFile}
               </span>
             ))}
+            {sourceStatuses.map((status) => (
+              <span
+                key={status}
+                className="rounded-md border border-amber-200 bg-white px-2.5 py-1 text-xs font-medium text-amber-800"
+              >
+                {formatStatus(status)}
+              </span>
+            ))}
+            {validationStatuses.map((status) => (
+              <span
+                key={status}
+                className="rounded-md border border-pharma-line bg-white px-2.5 py-1 text-xs font-medium text-pharma-muted"
+              >
+                {formatStatus(status)}
+              </span>
+            ))}
           </div>
         </div>
       ) : (
@@ -64,6 +88,14 @@ export function SourceGroundingPanel({
       )}
     </section>
   );
+}
+
+function formatStatus(value: string) {
+  return value.replaceAll("_", " ");
+}
+
+function isNonEmptyStatus(value: string | null | undefined): value is string {
+  return Boolean(value);
 }
 
 function Metric({ label, value }: { label: string; value: string }) {
