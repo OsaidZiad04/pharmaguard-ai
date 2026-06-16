@@ -8,6 +8,8 @@ from typing import Literal
 from pydantic import BaseModel, Field
 
 from app.ocr.provider_dependencies import (
+    MOCK_PROVIDER_ID,
+    SYNTHETIC_FIXTURE_PROVIDER_ID,
     TESSERACT_PROVIDER_ID,
     get_provider_dependency_status,
 )
@@ -23,6 +25,9 @@ OCR_PROVIDER_CANDIDATES_PATH = (
     / "evaluation"
     / "ocr_provider_candidates.json"
 )
+ACTIVE_PROVIDER_IDS = {MOCK_PROVIDER_ID, SYNTHETIC_FIXTURE_PROVIDER_ID}
+ADAPTER_DEFINED_PROVIDER_IDS = ACTIVE_PROVIDER_IDS | {TESSERACT_PROVIDER_ID}
+DEFAULT_PROVIDER_ID = MOCK_PROVIDER_ID
 
 
 class OcrProviderCandidate(BaseModel):
@@ -78,6 +83,7 @@ def candidate_allowed_in_prototype(candidate: OcrProviderCandidate) -> bool:
 
 def summarize_candidate_readiness(candidate: OcrProviderCandidate) -> dict:
     blockers = list(candidate.integration_blockers)
+    dependency_status = get_provider_dependency_status(candidate.provider_id)
     if candidate.current_status != "implemented":
         blockers.append("Provider is metadata-only and is not active.")
     if candidate.requires_network:
@@ -88,14 +94,24 @@ def summarize_candidate_readiness(candidate: OcrProviderCandidate) -> dict:
         blockers.append("Model downloads are disallowed in this phase.")
     if candidate.requires_system_dependency:
         blockers.append("System dependency review is required.")
-        dependency_status = get_provider_dependency_status(candidate.provider_id)
         if not dependency_status.available:
             blockers.append("Provider dependency checks are not satisfied.")
+    adapter_defined = candidate.provider_id in ADAPTER_DEFINED_PROVIDER_IDS
+    active_in_prototype = candidate.provider_id in ACTIVE_PROVIDER_IDS
+    benchmark_available = (
+        dependency_status.available
+        if candidate.provider_id == TESSERACT_PROVIDER_ID
+        else active_in_prototype
+    )
 
     return {
         "provider_id": candidate.provider_id,
         "display_name": candidate.display_name,
         "current_status": candidate.current_status,
+        "adapter_defined": adapter_defined,
+        "active_in_prototype": active_in_prototype,
+        "default_provider": candidate.provider_id == DEFAULT_PROVIDER_ID,
+        "benchmark_available": benchmark_available,
         "prototype_allowed": candidate_allowed_in_prototype(candidate),
         "production_possible_after_review": candidate.production_possible_after_review,
         "expected_privacy_risk": candidate.expected_privacy_risk,
@@ -103,9 +119,7 @@ def summarize_candidate_readiness(candidate: OcrProviderCandidate) -> dict:
         "stores_images": candidate.stores_images,
         "requires_system_dependency": candidate.requires_system_dependency,
         "requires_model_download": candidate.requires_model_download,
-        "dependency_status": get_provider_dependency_status(
-            candidate.provider_id
-        ).model_dump(),
+        "dependency_status": dependency_status.model_dump(),
         "readiness_summary": _readiness_summary(candidate),
         "required_quality_gates": candidate.required_quality_gates,
         "required_privacy_controls": candidate.required_privacy_controls,

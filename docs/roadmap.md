@@ -133,11 +133,14 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Improve OCR card correction-boundary messaging. Complete.
 - Keep backend behavior unchanged and OCR unverified until pharmacist correction. Complete.
 
-## Phase 2J: Local OCR Adapter Benchmarking
+## Phase 2J: Local Tesseract OCR Benchmarking with Synthetic Fixtures Only - Complete
 
-- If dependencies are installed outside the project, benchmark the disabled Tesseract adapter against synthetic fixtures without making it default.
-- Compare OCR text against pharmacist corrections.
-- Keep provider activation gated by privacy, dependency, and quality checks.
+- Add explicit benchmark-mode extraction for the disabled Tesseract adapter. Complete.
+- Keep Tesseract disabled by default, not prototype-allowed, and not the default provider. Complete.
+- Benchmark synthetic image fixtures only and skip descriptor fixtures. Complete.
+- Exit gracefully when local dependencies are unavailable. Complete.
+- Compare OCR output against expected pharmacist-corrected text with CER, WER, token overlap, medication detection, and privacy-warning checks. Complete.
+- Keep provider activation gated by privacy, dependency, workflow, and quality checks. Complete.
 
 ## Phase 2K: Production-Ready OCR Integration
 

@@ -71,7 +71,7 @@
     "expected_privacy_risk": "low",
     "prototype_allowed": false,
     "production_possible_after_review": true,
-    "notes": "Planned local OCR engine candidate. Phase 2F adds an adapter skeleton, but it remains disabled by default and is not active OCR.",
+    "notes": "Planned local OCR engine candidate. Phase 2J permits explicit synthetic benchmark mode when dependencies are installed, but the adapter remains disabled by default and is not active OCR.",
     "required_quality_gates": [
       "base_provider_interface",
       "provider_metadata",
@@ -89,8 +89,8 @@
     ],
     "integration_blockers": [
       "System dependency status must be verified before activation.",
-      "Adapter skeleton is disabled by default.",
-      "Synthetic benchmark has not been run against this provider."
+      "Adapter is disabled by default.",
+      "Synthetic benchmark results must be reviewed before any activation policy change."
     ]
   },
   {

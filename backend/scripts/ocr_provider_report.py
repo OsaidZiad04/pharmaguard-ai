@@ -9,7 +9,11 @@ if str(BACKEND_ROOT) not in sys.path:
 from app.services.ocr_service import list_available_ocr_providers  # noqa: E402
 from app.services.ocr_service import list_known_ocr_provider_adapters  # noqa: E402
 from app.ocr.evaluation import run_ocr_evaluation  # noqa: E402
-from app.ocr.provider_dependencies import get_provider_dependency_status  # noqa: E402
+from app.ocr.provider_dependencies import (  # noqa: E402
+    MOCK_PROVIDER_ID,
+    TESSERACT_PROVIDER_ID,
+    get_provider_dependency_status,
+)
 
 
 def build_provider_report_lines() -> list[str]:
@@ -45,10 +49,18 @@ def build_provider_report_lines() -> list[str]:
         quality_gate_eligible = bool(gate_result.get("passed", False))
         prototype_allowed = active_in_prototype and allowed and quality_gate_eligible
         safety_status = "allowed" if allowed else "blocked"
+        benchmark_available = (
+            dependency_status.available
+            if provider.provider_name == TESSERACT_PROVIDER_ID
+            else active_in_prototype
+        )
         lines.extend(
             [
                 f"- provider_name: {provider.provider_name}",
+                "  adapter_defined: True",
                 f"  active_in_prototype: {active_in_prototype}",
+                f"  default_provider: {provider.provider_name == MOCK_PROVIDER_ID}",
+                f"  benchmark_only: {getattr(provider, 'benchmark_only', False)}",
                 f"  is_external_provider: {provider.is_external_provider}",
                 f"  stores_images: {provider.stores_images}",
                 f"  requires_network: {provider.requires_network}",
@@ -56,6 +68,7 @@ def build_provider_report_lines() -> list[str]:
                 f"  enabled_by_default: {getattr(provider, 'enabled_by_default', True)}",
                 f"  dependency_available: {dependency_status.available}",
                 f"  dependency_details: {dependency_status.details}",
+                f"  benchmark_available: {benchmark_available}",
                 f"  can_be_used_without_network: {not provider.requires_network}",
                 f"  supported_content_types: {sorted(provider.supported_content_types)}",
                 f"  safety_status: {safety_status}",

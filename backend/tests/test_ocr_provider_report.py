@@ -31,6 +31,9 @@ def test_ocr_provider_report_script_runs_successfully() -> None:
     assert "tesseract_local_candidate" in result.stdout
     assert "quality_gate_eligible: True" in result.stdout
     assert "can_be_used_without_network: True" in result.stdout
+    assert "adapter_defined: True" in result.stdout
+    assert "default_provider: True" in result.stdout
+    assert "benchmark_available:" in result.stdout
     assert "allowed_in_current_prototype_mode: True" in result.stdout
     assert "active_in_prototype: False" in result.stdout
 

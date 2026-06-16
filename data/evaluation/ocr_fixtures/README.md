@@ -27,3 +27,5 @@ Current descriptor fixtures:
 - `synthetic_handwriting_like_noise.fixture.md`
 
 The `SyntheticFixtureOcrProvider` is filename-driven. PNG files and descriptor fixtures exist to exercise upload/evaluation plumbing without introducing a production OCR engine.
+
+Phase 2J uses only real synthetic image fixtures for the optional Tesseract benchmark. Descriptor fixtures are skipped by that benchmark and remain filename-driven cases for the synthetic fixture provider.

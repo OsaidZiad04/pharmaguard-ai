@@ -20,11 +20,11 @@ Both current providers are:
 - non-storing
 - pharmacist-review required
 
-Phase 2F also defines an inactive adapter skeleton:
+Phase 2F also defines an inactive local adapter:
 
 - `tesseract_local_candidate`
 
-The Tesseract adapter is disabled by default, not prototype-allowed, and not part of the active OCR flow.
+The Tesseract adapter is disabled by default, not prototype-allowed, and not part of the active OCR flow. Phase 2J adds explicit benchmark-mode extraction for synthetic PNG fixtures when optional local dependencies are installed outside the project.
 
 ## Provider Metadata
 
@@ -84,6 +84,8 @@ These gates are provider swap-readiness checks, not clinical validation.
 
 Phase 2F extends the provider report with inactive adapter status and dependency availability. Tesseract appears as adapter-defined but inactive; it is blocked unless dependency checks, explicit enablement, and quality gates pass in a future phase.
 
+Phase 2J extends the report language with benchmark availability. A provider can be adapter-defined and benchmark-available while still being inactive, not default, and not prototype-allowed.
+
 ## Candidate Comparison
 
 Phase 2E adds a candidate registry at `data/evaluation/ocr_provider_candidates.json`.
@@ -102,7 +104,17 @@ Run from `backend/`:
 python scripts/ocr_candidate_report.py
 ```
 
-The candidate report is metadata-only. It does not install dependencies, call external APIs, or process real images. Phase 2F adds an inactive Tesseract adapter skeleton, but it remains disabled and is not used for extraction.
+The candidate report is metadata-only. It does not install dependencies, call external APIs, or process real images. Phase 2J can benchmark Tesseract only through an explicit synthetic fixture command. The candidate remains disabled and not active in the pharmacist workflow.
+
+## Optional Tesseract Benchmark
+
+Run from `backend/`:
+
+```bash
+python scripts/benchmark_tesseract_ocr.py
+```
+
+The benchmark uses only approved synthetic image fixtures. It exits successfully with a skipped status when local Tesseract dependencies are unavailable. Results are engineering checks only, not clinical validation, and do not change provider activation policy.
 
 ## Future Provider Requirements
 

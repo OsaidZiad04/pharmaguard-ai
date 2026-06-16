@@ -28,10 +28,11 @@ The current system includes:
 - Synthetic OCR fixture provider and fixture-backed OCR evaluation.
 - OCR provider quality gates and provider-level benchmark summaries.
 - OCR provider candidate registry and swap-readiness matrix.
-- Disabled-by-default Tesseract local OCR adapter skeleton and dependency checks.
+- Disabled-by-default Tesseract local OCR adapter, dependency checks, and optional synthetic benchmark path.
 - End-to-end OCR-to-RAG workflow evaluation.
 - Workflow traceability and pharmacist review audit records for synthetic E2E cases.
 - Pharmacist dashboard workflow polish with visible status and safety panels.
+- Optional local Tesseract OCR benchmarking against synthetic fixtures only.
 - Pharmacist OCR correction workflow.
 - OCR correction audit metadata returned by `/ocr/confirm-text`.
 - RAG evaluation with synthetic cases.
@@ -79,11 +80,11 @@ Current OCR providers:
 
 Both current providers are local, non-external, non-networked, and non-storing.
 
-Inactive adapter skeleton:
+Inactive benchmark-only adapter:
 
 - `tesseract_local_candidate`
 
-The Tesseract adapter is disabled by default, not prototype-allowed, and unavailable unless a future phase explicitly installs/checks dependencies and passes safety gates.
+The Tesseract adapter is disabled by default and not prototype-allowed. It can run only through the explicit synthetic benchmark command when optional local dependencies are available. Benchmark results do not change provider activation policy.
 
 ### Frontend Workflow
 
@@ -196,6 +197,13 @@ The frontend is a pharmacist dashboard, not a chatbot. It includes prescription 
 - Key behavior added: Ordered workflow status display, OCR correction-boundary messaging, provider/no-storage/local-only OCR indicators, compact safety/review indicators, source-grounding metrics, insufficient-context visibility, and pharmacist review reminders.
 - Verification summary: Backend tests pass 113 tests; all existing backend reports pass; frontend typecheck and build pass.
 
+### Phase 2J: Local Tesseract OCR Benchmarking with Synthetic Fixtures Only
+
+- Objective: Benchmark the optional local Tesseract adapter against synthetic image fixtures without making it default or active in the pharmacist workflow.
+- Main files/modules added: `backend/app/ocr/tesseract_benchmark.py`, `backend/scripts/benchmark_tesseract_ocr.py`, `docs/tesseract_benchmarking.md`, Tesseract benchmark tests.
+- Key behavior added: Runtime-only Pillow/`pytesseract` imports, benchmark-mode-only extraction, descriptor fixture skipping, Tesseract benchmark metrics, quality gate reporting, graceful skipped status when dependencies are unavailable, and provider/candidate report fields for benchmark availability.
+- Verification summary: Backend tests pass with the benchmark test skipped when optional local extraction is unavailable. The optional Tesseract benchmark command runs and exits successfully. In the current runtime, `pytesseract` and Pillow are importable, but the local `tesseract` binary is not on `PATH`, so the benchmark reports a skipped status instead of failing normal verification.
+
 ## 5. Supported Knowledge Base
 
 Current total drug profiles: 15.
@@ -232,13 +240,14 @@ Current registry status:
 
 Current verification status:
 
-- Backend tests: 113 passed.
+- Backend tests: 120 passed, 1 skipped.
 - RAG evaluation: 46/46 passed.
 - OCR evaluation: 18/18 passed, including 10 fixture-backed cases.
 - E2E OCR-to-RAG workflow evaluation: 10/10 passed.
 - E2E trace export: 10 synthetic traces exported.
 - E2E trace report: PASS, unverified OCR downstream use blocked in 10/10 traces.
 - Dashboard workflow polish: frontend typecheck/build passed.
+- Optional Tesseract benchmark: command runs; current runtime reports skipped because `tesseract_binary` is not detected on `PATH`.
 - KB report: PASS, 0 blocking issues.
 - OCR provider report: PASS, 2 active local providers allowed in prototype mode and quality-gate eligible; Tesseract adapter shown as inactive and not prototype-allowed.
 - OCR candidate report: PASS, 5 candidates with 2 prototype allowed, Tesseract adapter-defined but inactive, and cloud OCR blocked.
@@ -257,6 +266,7 @@ cd backend && python scripts/ocr_candidate_report.py
 cd backend && python scripts/evaluate_e2e_workflow.py
 cd backend && python scripts/export_e2e_traces.py
 cd backend && python scripts/e2e_trace_report.py
+cd backend && python scripts/benchmark_tesseract_ocr.py
 cd frontend && npm.cmd run typecheck
 cd frontend && npm.cmd run build
 ```
@@ -279,7 +289,7 @@ Current non-negotiable boundaries:
 - Dashboard shows OCR unverified status, correction boundary, source grounding, draft-only counseling, and pharmacist review required.
 - Synthetic trace records do not store raw image bytes or real patient data.
 - Current OCR providers are local, non-networked, and non-storing.
-- Tesseract adapter exists only as disabled scaffolding and is not active OCR.
+- Tesseract adapter exists only as disabled/benchmark-only scaffolding and is not active OCR.
 - Explicit external OCR provider names are rejected in prototype mode.
 - Planned OCR candidates are metadata only and must not be activated accidentally.
 - Cloud OCR is disallowed for prototype mode pending formal privacy review.
@@ -295,7 +305,7 @@ Current non-negotiable boundaries:
 - `backend/app/services/`: Application services for extraction, safety, lookup, counseling, RAG orchestration, OCR, and OCR audit.
 - `backend/app/rag/`: Local TF-IDF RAG components, generation, citation validation, and RAG evaluation.
 - `backend/app/kb/`: Drug registry loading, KB validation, coverage schema, and future ingestion scaffolding.
-- `backend/app/ocr/`: OCR provider interface, local provider implementations, inactive local adapter scaffolding, dependency checks, evaluation metrics, quality gates, provider candidates, swap-readiness checks, and synthetic OCR evaluation runner logic.
+- `backend/app/ocr/`: OCR provider interface, local provider implementations, inactive local adapter benchmarking, dependency checks, evaluation metrics, quality gates, provider candidates, swap-readiness checks, and synthetic OCR evaluation runner logic.
 - `backend/app/workflows/`: Synthetic end-to-end workflow evaluation and trace models from OCR-like input through corrected text, prescription analysis, RAG, counseling, and pharmacist review.
 - `backend/scripts/`: CLI scripts for RAG evaluation, KB reporting, OCR evaluation, OCR provider reporting, OCR candidate reporting, E2E workflow evaluation, trace export, and trace reporting.
 - `backend/tests/`: Backend pytest regression tests.
@@ -307,13 +317,13 @@ Current non-negotiable boundaries:
 
 ## 9. Current Limitations
 
-- OCR is mock/synthetic-fixture only.
+- OCR workflow providers are mock/synthetic-fixture only.
 - No real OCR provider is integrated.
-- Tesseract adapter is disabled by default and not benchmarked as active OCR.
+- Tesseract adapter is disabled by default and can only run in explicit synthetic benchmark mode.
 - E2E workflow evaluation is synthetic and does not prove clinical validity.
 - Workflow traces are synthetic engineering audit artifacts, not production audit logs.
 - Dashboard workflow status is a frontend state display, not a production audit record.
-- Planned OCR engines are not installed or active; the Tesseract adapter skeleton is present but disabled.
+- Planned OCR engines are not installed or active; the Tesseract adapter is present but disabled outside explicit benchmark mode.
 - No real prescription images are used.
 - No persistent audit database exists.
 - Retrieval uses local TF-IDF only.
@@ -328,7 +338,7 @@ Current non-negotiable boundaries:
 
 Proposed roadmap:
 
-- Phase 2J: Local OCR Adapter Benchmarking.
+- Phase 2K: Production-Ready OCR Integration Planning.
 - Phase 3: End-to-End Prescription Workflow Evaluation.
 - Phase 4: Drug Knowledge Graph.
 - Phase 5: Deployment & Portfolio Polish.

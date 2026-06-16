@@ -32,6 +32,7 @@ class BaseOcrProvider(ABC):
     requires_model_download: bool = False
     enabled_by_default: bool = True
     prototype_allowed: bool = True
+    benchmark_only: bool = False
     supported_content_types: set[str] = SUPPORTED_CONTENT_TYPES
 
     def supports_content_type(self, content_type: str) -> bool:

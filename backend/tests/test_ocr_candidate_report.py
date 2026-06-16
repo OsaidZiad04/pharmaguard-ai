@@ -19,4 +19,7 @@ def test_ocr_candidate_report_script_runs_successfully() -> None:
     assert "planned candidates: 2" in result.stdout
     assert "disallowed candidates: 1" in result.stdout
     assert "cloud_ocr_candidate_placeholder" in result.stdout
+    assert "adapter_defined:" in result.stdout
+    assert "benchmark_available:" in result.stdout
+    assert "default_provider:" in result.stdout
     assert "not clinical validation" in result.stdout

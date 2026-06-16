@@ -47,20 +47,32 @@ def get_provider_dependency_status(provider_id: str) -> ProviderDependencyStatus
         )
 
     if normalized_id == TESSERACT_PROVIDER_ID:
-        python_package_available = check_python_package_available("pytesseract")
+        pytesseract_available = check_python_package_available("pytesseract")
+        pillow_available = check_python_package_available("PIL")
+        python_package_available = pytesseract_available and pillow_available
         system_binary_available = check_tesseract_available()
         available = python_package_available and system_binary_available
+        missing_dependencies = [
+            dependency_name
+            for dependency_name, dependency_available in [
+                ("pytesseract", pytesseract_available),
+                ("Pillow", pillow_available),
+                ("tesseract_binary", system_binary_available),
+            ]
+            if not dependency_available
+        ]
         details = (
-            "pytesseract and local tesseract binary detected."
+            "pytesseract, Pillow, and local tesseract binary detected."
             if available
-            else "pytesseract and/or local tesseract binary not detected."
+            else "Missing optional local dependency/dependencies: "
+            f"{', '.join(missing_dependencies)} not detected."
         )
         return ProviderDependencyStatus(
             provider_id=normalized_id,
             available=available,
             python_package_available=python_package_available,
             system_binary_available=system_binary_available,
-            checked_dependencies=["pytesseract", "tesseract_binary"],
+            checked_dependencies=["pytesseract", "Pillow", "tesseract_binary"],
             details=details,
         )
 

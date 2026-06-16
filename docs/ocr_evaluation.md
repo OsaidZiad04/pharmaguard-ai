@@ -1,7 +1,7 @@
 # OCR Evaluation And Correction Audit
 
 Phase 2B adds a local evaluation and audit layer around the Phase 2A OCR intake boundary.
-Phase 2C extends this with fixture-backed cases through the local `SyntheticFixtureOcrProvider`. Phase 2D adds provider-specific quality gates and expanded synthetic fixture coverage. Phase 2F adds a disabled local Tesseract adapter skeleton, but it is not included in OCR evaluation until a future benchmark phase explicitly enables it.
+Phase 2C extends this with fixture-backed cases through the local `SyntheticFixtureOcrProvider`. Phase 2D adds provider-specific quality gates and expanded synthetic fixture coverage. Phase 2F adds a disabled local Tesseract adapter. Phase 2J adds optional Tesseract benchmarking against synthetic image fixtures only.
 Phase 2G adds a separate end-to-end OCR-to-RAG workflow evaluation after pharmacist correction.
 
 ## Scope
@@ -72,6 +72,24 @@ The script also reports text-only cases, fixture-backed cases, and provider used
 
 Phase 2D output also includes provider-level summaries and quality gate status.
 
+## Optional Tesseract Benchmark
+
+Run from `backend/`:
+
+```bash
+python scripts/benchmark_tesseract_ocr.py
+```
+
+This runner is separate from the default OCR evaluation. It:
+
+- uses only synthetic image fixtures from `data/evaluation/ocr_fixtures/`
+- skips descriptor-only fixtures
+- runs Tesseract only when optional local dependencies are detected
+- exits successfully with a skipped status when dependencies are missing
+- reports CER, WER, token overlap, medication detection, privacy-warning matching, and quality gate status
+
+The benchmark does not make Tesseract the default provider and does not allow unverified OCR to move downstream.
+
 ## Quality Gates
 
 `backend/app/ocr/quality_gates.py` checks:
@@ -95,7 +113,7 @@ Run from `backend/`:
 python scripts/ocr_provider_report.py
 ```
 
-The report lists active local OCR providers and inactive adapter skeletons, whether they are external, whether they store images, whether they require network access, optional dependency status, supported content types, and whether each provider is allowed in current prototype mode.
+The report lists active local OCR providers and inactive adapters, whether they are external, whether they store images, whether they require network access, optional dependency status, supported content types, and whether each provider is allowed in current prototype mode.
 
 ## Candidate Matrix
 

@@ -49,7 +49,7 @@ def test_planned_local_candidates_are_not_activated_accidentally() -> None:
     assert easyocr.current_status == "planned"
     assert candidate_allowed_in_prototype(tesseract) is False
     assert candidate_allowed_in_prototype(easyocr) is False
-    assert "adapter skeleton" in tesseract.notes.lower()
+    assert "disabled by default" in tesseract.notes.lower()
 
 
 def test_candidate_readiness_summary_includes_blockers() -> None:
@@ -71,4 +71,8 @@ def test_tesseract_candidate_summary_includes_dependency_status() -> None:
 
     assert summary["prototype_allowed"] is False
     assert summary["dependency_status"]["provider_id"] == "tesseract_local_candidate"
+    assert summary["adapter_defined"] is True
+    assert summary["active_in_prototype"] is False
+    assert summary["default_provider"] is False
+    assert "benchmark_available" in summary
     assert "Adapter-defined but inactive" in summary["readiness_summary"]

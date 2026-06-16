@@ -63,10 +63,11 @@ Implemented now:
 - Phase 2C OCR provider interface and synthetic image fixtures: local provider metadata, synthetic fixture provider, fixture-backed OCR evaluation, and provider readiness report.
 - Phase 2D OCR quality benchmarking and provider swap readiness: expanded synthetic fixtures, provider-level benchmark summaries, and prototype quality gates.
 - Phase 2E OCR provider candidate comparison: metadata-only candidate registry, readiness matrix, and candidate report for future provider decisions.
-- Phase 2F optional local OCR provider adapter spike: disabled-by-default Tesseract adapter skeleton and local dependency checks.
+- Phase 2F optional local OCR provider adapter spike: disabled-by-default Tesseract adapter and local dependency checks.
 - Phase 2G end-to-end OCR-to-RAG workflow evaluation: synthetic workflow cases proving corrected text is the downstream boundary.
 - Phase 2H workflow traceability and pharmacist review audit records: deterministic synthetic traces for safe workflow explainability.
 - Phase 2I pharmacist dashboard workflow polish: visible workflow statuses, safety indicators, and source-grounding summary.
+- Phase 2J local Tesseract OCR benchmarking: optional synthetic-fixture benchmark path for the disabled local adapter.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
 - Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, OCR intake, and safety regressions.
@@ -156,13 +157,15 @@ Phase 2D expands OCR benchmarking to 18 synthetic cases, including 10 fixture-ba
 
 Phase 2E adds a metadata-only OCR provider candidate matrix. Tesseract and EasyOCR are documented as planned local candidates; no OCR engine packages are installed or activated. Cloud OCR remains disallowed for prototype mode pending formal privacy review.
 
-Phase 2F adds a `tesseract_local_candidate` adapter skeleton and dependency checks without installing or activating Tesseract. The adapter is disabled by default, not prototype-allowed, and returns a controlled unavailable status if requested.
+Phase 2F adds a `tesseract_local_candidate` adapter and dependency checks without installing or activating Tesseract. The adapter is disabled by default, not prototype-allowed, and returns a controlled unavailable status if requested through the normal OCR flow.
 
 Phase 2G adds synthetic end-to-end OCR-to-RAG workflow evaluation. It verifies that unverified OCR is not sent downstream, pharmacist-corrected text can be analyzed, supported medications retrieve source-backed RAG context, unknown medications remain insufficient context, and counseling drafts stay pharmacist-support only.
 
 Phase 2H adds workflow traceability for synthetic E2E cases. Trace records show OCR unverified status, blocked unverified downstream use, pharmacist correction, corrected-text analysis, RAG source checks, draft counseling status, and pharmacist review requirement. Generated traces are deterministic synthetic artifacts under `data/evaluation/generated/e2e_traces.json`; they do not store raw image bytes or real patient data.
 
 Phase 2I improves the dashboard workflow display. The UI now shows ordered workflow statuses, OCR correction boundary messaging, compact safety/review indicators, source-grounding metrics, and pharmacist review reminders without changing backend behavior.
+
+Phase 2J adds optional local Tesseract benchmarking against synthetic PNG fixtures only. Tesseract remains disabled by default, is not the default provider, and is not prototype-allowed. If local dependencies are missing, the benchmark exits successfully with a clear skipped status. Benchmark metrics are engineering checks only, not clinical validation.
 
 ## Testing
 
@@ -227,9 +230,16 @@ cd backend
 python scripts/e2e_trace_report.py
 ```
 
+Run the optional local Tesseract benchmark:
+
+```bash
+cd backend
+python scripts/benchmark_tesseract_ocr.py
+```
+
 The evaluation currently contains 46 synthetic cases. It reports retrieval checks (`top_k_hit`, `source_file_hit`, `section_hit`, `insufficient_context_correct`) and generation safety checks for required terms, forbidden terms, draft/pharmacist-review framing, unavailable information, and fabricated citations.
 
-The OCR evaluation currently contains 18 synthetic cases, including 10 fixture-backed cases, and reports character error rate, word error rate, medication term detection, privacy-warning matching, provider-level summaries, and quality gate status. The E2E workflow evaluation currently contains 10 synthetic cases covering corrected-text handoff into prescription analysis, RAG, and counseling. Trace export currently produces 10 deterministic synthetic traces. These are engineering checks for the OCR workflow, not clinical validation.
+The OCR evaluation currently contains 18 synthetic cases, including 10 fixture-backed cases, and reports character error rate, word error rate, medication term detection, privacy-warning matching, provider-level summaries, and quality gate status. The optional Tesseract benchmark uses only synthetic image fixtures and is skipped when local Tesseract dependencies are unavailable. The E2E workflow evaluation currently contains 10 synthetic cases covering corrected-text handoff into prescription analysis, RAG, and counseling. Trace export currently produces 10 deterministic synthetic traces. These are engineering checks for the OCR workflow, not clinical validation.
 
 The KB report summarizes profile counts, aliases, review/source status, missing sections, alias conflicts, disabled profiles, and unreviewed draft profiles. Dense retrieval remains deferred until the TF-IDF baseline and KB governance are stronger. Production OCR and external OCR providers remain deferred.
 
@@ -237,7 +247,7 @@ The KB report summarizes profile counts, aliases, review/source status, missing 
 
 See [docs/roadmap.md](docs/roadmap.md).
 
-For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md). For dashboard workflow notes, see [docs/pharmacist_dashboard_workflow.md](docs/pharmacist_dashboard_workflow.md).
+For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For optional Tesseract benchmarking, see [docs/tesseract_benchmarking.md](docs/tesseract_benchmarking.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md). For dashboard workflow notes, see [docs/pharmacist_dashboard_workflow.md](docs/pharmacist_dashboard_workflow.md).
 
 ## Data Warning
 

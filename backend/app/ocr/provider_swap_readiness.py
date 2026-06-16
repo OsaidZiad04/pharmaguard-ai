@@ -58,6 +58,18 @@ def assess_provider_swap_readiness(
         if not dependency_status.available:
             blocking_reasons.append("Provider dependency checks are not satisfied.")
             required_next_steps.append("Install and verify optional local dependencies outside prototype mode.")
+    if candidate.provider_id == TESSERACT_PROVIDER_ID:
+        if dependency_status.available:
+            warnings.append(
+                "Local Tesseract dependencies are detected for benchmark-only evaluation."
+            )
+        else:
+            warnings.append(
+                "Local Tesseract dependencies are not available for optional benchmarking."
+            )
+        required_next_steps.append(
+            "Run synthetic Tesseract benchmarks before any provider policy change."
+        )
     if candidate.requires_model_download:
         warnings.append("Provider requires model download/cache review.")
         required_next_steps.append("Define model cache location and offline install policy.")

@@ -36,7 +36,10 @@ INACTIVE_PROVIDER_NAMES = {
 }
 
 
-def get_ocr_provider(provider_name: str = "mock") -> BaseOcrProvider:
+def get_ocr_provider(
+    provider_name: str = "mock",
+    allow_benchmark_provider: bool = False,
+) -> BaseOcrProvider:
     """Select a safe local OCR provider.
 
     Unknown local provider names fall back to the deterministic mock provider.
@@ -48,8 +51,19 @@ def get_ocr_provider(provider_name: str = "mock") -> BaseOcrProvider:
         raise ValueError("External OCR providers are not enabled in prototype mode.")
 
     provider_class = PROVIDER_ALIASES.get(normalized_name, MockOcrProvider)
-    provider = provider_class()
+    if provider_class is TesseractLocalOcrProvider and allow_benchmark_provider:
+        provider = TesseractLocalOcrProvider(benchmark_mode=True)
+    else:
+        provider = provider_class()
     if normalized_name in INACTIVE_PROVIDER_NAMES or not provider.enabled_by_default:
+        if (
+            allow_benchmark_provider
+            and isinstance(provider, TesseractLocalOcrProvider)
+            and not provider.is_external_provider
+            and not provider.requires_network
+            and not provider.stores_images
+        ):
+            return provider
         dependency_status = (
             provider.dependency_status()
             if isinstance(provider, TesseractLocalOcrProvider)
@@ -74,7 +88,7 @@ def list_available_ocr_providers() -> list[BaseOcrProvider]:
 
 
 def list_known_ocr_provider_adapters() -> list[BaseOcrProvider]:
-    """Return active providers plus inactive adapter skeletons for reporting."""
+    """Return active providers plus inactive adapters for reporting."""
     return [
         MockOcrProvider(),
         SyntheticFixtureOcrProvider(),
@@ -88,9 +102,13 @@ def extract_text_from_image(
     content_type: str,
     provider: BaseOcrProvider | None = None,
     provider_name: str = "mock",
+    allow_benchmark_provider: bool = False,
 ) -> OcrExtractedText:
     """Run a safe local OCR provider without external API calls."""
-    ocr_provider = provider or get_ocr_provider(provider_name)
+    ocr_provider = provider or get_ocr_provider(
+        provider_name,
+        allow_benchmark_provider=allow_benchmark_provider,
+    )
     if not ocr_provider.supports_content_type(content_type):
         raise ValueError(f"Provider does not support content type: {content_type}")
     try:
