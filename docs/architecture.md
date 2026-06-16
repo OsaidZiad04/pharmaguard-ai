@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, Phase 2G end-to-end OCR-to-RAG workflow evaluation, and Phase 2H workflow traceability.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, Phase 2G end-to-end OCR-to-RAG workflow evaluation, Phase 2H workflow traceability, and Phase 2I pharmacist dashboard workflow polish.
 
 ## Pipeline
 
@@ -231,3 +231,14 @@ Dense retrieval is a documented future option only. It is deferred until the TF-
 - `app`: Next.js app router pages and global styles.
 - `components`: pharmacy dashboard panels.
 - `lib`: API client and shared TypeScript types.
+
+## Phase 2I Dashboard Workflow Polish
+
+Phase 2I keeps the existing dashboard architecture and adds workflow clarity:
+
+- `WorkflowStatusPanel` shows OCR intake through pharmacist review as ordered statuses.
+- `SafetyReviewPanel` summarizes OCR, correction, privacy, source, counseling, and review guardrails.
+- `SourceGroundingPanel` summarizes retrieved chunks, source files, sections, and insufficient-context state.
+- `PrescriptionImageUploadCard` now makes provider mode, no image storage, local-only status, unverified OCR, and the correction boundary more explicit.
+
+The UI derives status from existing frontend state and API responses. It does not add new backend automation or allow unverified OCR to move downstream.

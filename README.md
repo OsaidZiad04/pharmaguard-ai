@@ -66,6 +66,7 @@ Implemented now:
 - Phase 2F optional local OCR provider adapter spike: disabled-by-default Tesseract adapter skeleton and local dependency checks.
 - Phase 2G end-to-end OCR-to-RAG workflow evaluation: synthetic workflow cases proving corrected text is the downstream boundary.
 - Phase 2H workflow traceability and pharmacist review audit records: deterministic synthetic traces for safe workflow explainability.
+- Phase 2I pharmacist dashboard workflow polish: visible workflow statuses, safety indicators, and source-grounding summary.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
 - Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, OCR intake, and safety regressions.
@@ -161,6 +162,8 @@ Phase 2G adds synthetic end-to-end OCR-to-RAG workflow evaluation. It verifies t
 
 Phase 2H adds workflow traceability for synthetic E2E cases. Trace records show OCR unverified status, blocked unverified downstream use, pharmacist correction, corrected-text analysis, RAG source checks, draft counseling status, and pharmacist review requirement. Generated traces are deterministic synthetic artifacts under `data/evaluation/generated/e2e_traces.json`; they do not store raw image bytes or real patient data.
 
+Phase 2I improves the dashboard workflow display. The UI now shows ordered workflow statuses, OCR correction boundary messaging, compact safety/review indicators, source-grounding metrics, and pharmacist review reminders without changing backend behavior.
+
 ## Testing
 
 ```bash
@@ -234,7 +237,7 @@ The KB report summarizes profile counts, aliases, review/source status, missing 
 
 See [docs/roadmap.md](docs/roadmap.md).
 
-For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md).
+For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md). For dashboard workflow notes, see [docs/pharmacist_dashboard_workflow.md](docs/pharmacist_dashboard_workflow.md).
 
 ## Data Warning
 

@@ -125,13 +125,21 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Add trace report for step, safety flag, pharmacist review, source grounding, and blocked unsafe-flow summaries. Complete.
 - Keep traces free of raw image bytes and real patient data. Complete.
 
-## Phase 2I: Local OCR Adapter Benchmarking
+## Phase 2I: Pharmacist Dashboard Workflow Polish - Complete
+
+- Add visible ordered workflow status panel. Complete.
+- Add compact safety/review indicators. Complete.
+- Add source-grounding summary panel. Complete.
+- Improve OCR card correction-boundary messaging. Complete.
+- Keep backend behavior unchanged and OCR unverified until pharmacist correction. Complete.
+
+## Phase 2J: Local OCR Adapter Benchmarking
 
 - If dependencies are installed outside the project, benchmark the disabled Tesseract adapter against synthetic fixtures without making it default.
 - Compare OCR text against pharmacist corrections.
 - Keep provider activation gated by privacy, dependency, and quality checks.
 
-## Phase 2J: Production-Ready OCR Integration
+## Phase 2K: Production-Ready OCR Integration
 
 - Add production-ready OCR workflow only after provider validation.
 - Define confidence scoring and audit retention policy for OCR output.

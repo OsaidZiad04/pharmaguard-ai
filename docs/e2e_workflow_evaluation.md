@@ -104,3 +104,16 @@ python scripts/export_e2e_traces.py
 ```
 
 The trace file is deterministic and synthetic. It does not store raw image bytes, real prescription data, or real patient identifiers.
+
+## Dashboard Workflow Display
+
+Phase 2I reflects this workflow in the frontend. The dashboard shows ordered status steps and compact safety indicators derived from existing UI state:
+
+- OCR unverified
+- correction required
+- corrected text ready
+- RAG source grounding checked
+- counseling draft-only
+- pharmacist review required
+
+The frontend display does not add a backend automation path and does not allow unverified OCR to bypass correction.

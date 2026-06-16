@@ -16,10 +16,16 @@ import { DrugInfoCard } from "@/components/DrugInfoCard";
 import { KnowledgeBaseContextPanel } from "@/components/KnowledgeBaseContextPanel";
 import { PatientCounselingSheet } from "@/components/PatientCounselingSheet";
 import { PharmacistReviewPanel } from "@/components/PharmacistReviewPanel";
-import { PrescriptionImageUploadCard } from "@/components/PrescriptionImageUploadCard";
+import {
+  OcrWorkflowStatus,
+  PrescriptionImageUploadCard
+} from "@/components/PrescriptionImageUploadCard";
 import { PrescriptionIntakeCard } from "@/components/PrescriptionIntakeCard";
 import { SafetyAlertPanel } from "@/components/SafetyAlertPanel";
+import { SafetyReviewPanel } from "@/components/SafetyReviewPanel";
+import { SourceGroundingPanel } from "@/components/SourceGroundingPanel";
 import { WorkflowStepper } from "@/components/WorkflowStepper";
+import { WorkflowStatusPanel, WorkflowStatusStep } from "@/components/WorkflowStatusPanel";
 
 const SAMPLE_TEXT =
   "Rx: Paracetamol 500 mg tablets. Take 1 tablet every 6 hours as needed. Synthetic adult case; no real patient data.";
@@ -32,6 +38,12 @@ export function PrescriptionDesk() {
   const [error, setError] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [ocrWorkflowStatus, setOcrWorkflowStatus] = useState<OcrWorkflowStatus>({
+    ocrUnverified: false,
+    correctionRequired: false,
+    correctedTextReady: false,
+    possibleIdentifierWarningCount: 0
+  });
 
   const alerts = useMemo(
     () =>
@@ -51,6 +63,23 @@ export function PrescriptionDesk() {
         ...(counseling?.retrieved_sources ?? [])
       ]),
     [drugLookup, counseling]
+  );
+
+  const insufficientKnowledgeBaseContext =
+    Boolean(drugLookup?.insufficient_context) ||
+    Boolean(counseling?.insufficient_context) ||
+    alerts.some((alert) => alert.code === "INSUFFICIENT_KNOWLEDGE_BASE_CONTEXT");
+
+  const workflowSteps = useMemo<WorkflowStatusStep[]>(
+    () =>
+      buildWorkflowSteps({
+        ocrWorkflowStatus,
+        analysis,
+        knowledgeChunks,
+        counseling,
+        insufficientKnowledgeBaseContext
+      }),
+    [ocrWorkflowStatus, analysis, knowledgeChunks, counseling, insufficientKnowledgeBaseContext]
   );
 
   async function handleAnalyze() {
@@ -124,6 +153,7 @@ export function PrescriptionDesk() {
         </section>
 
         <WorkflowStepper />
+        <WorkflowStatusPanel steps={workflowSteps} />
 
         {error && (
           <section className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-800">
@@ -133,7 +163,13 @@ export function PrescriptionDesk() {
 
         <div className="grid gap-5 xl:grid-cols-[minmax(0,1.2fr)_minmax(360px,0.8fr)]">
           <div className="space-y-5">
-            <PrescriptionImageUploadCard onUseCorrectedText={handleUseCorrectedOcrText} />
+            <div>
+              <SectionLabel title="Intake and correction" detail="OCR must be confirmed before analysis" />
+              <PrescriptionImageUploadCard
+                onUseCorrectedText={handleUseCorrectedOcrText}
+                onWorkflowStatusChange={setOcrWorkflowStatus}
+              />
+            </div>
             <PrescriptionIntakeCard
               value={prescriptionText}
               isLoading={isAnalyzing}
@@ -145,12 +181,27 @@ export function PrescriptionDesk() {
           </div>
 
           <div className="space-y-5">
+            <SectionLabel title="Review and grounding" detail="Retrieved context remains draft support" />
+            <SafetyReviewPanel
+              ocrUnverified={ocrWorkflowStatus.ocrUnverified}
+              correctionRequired={ocrWorkflowStatus.correctionRequired}
+              correctedTextReady={ocrWorkflowStatus.correctedTextReady}
+              possibleIdentifierWarningCount={ocrWorkflowStatus.possibleIdentifierWarningCount}
+              ragSourcesAvailable={knowledgeChunks.length > 0}
+              insufficientKnowledgeBaseContext={insufficientKnowledgeBaseContext}
+              counselingDraftReady={Boolean(counseling)}
+              pharmacistReviewRequired
+            />
             <PharmacistReviewPanel
               analysis={analysis}
               isGenerating={isGenerating}
               onGenerateCounseling={handleGenerateCounseling}
             />
             <DrugInfoCard lookup={drugLookup} />
+            <SourceGroundingPanel
+              chunks={knowledgeChunks}
+              insufficientContext={insufficientKnowledgeBaseContext}
+            />
             <KnowledgeBaseContextPanel chunks={knowledgeChunks} />
             <SafetyAlertPanel alerts={alerts} />
           </div>
@@ -158,6 +209,78 @@ export function PrescriptionDesk() {
       </div>
     </main>
   );
+}
+
+function SectionLabel({ title, detail }: { title: string; detail: string }) {
+  return (
+    <div className="mb-3 flex flex-col gap-1">
+      <p className="text-xs font-semibold uppercase tracking-wide text-pharma-teal">{title}</p>
+      <p className="text-sm text-pharma-muted">{detail}</p>
+    </div>
+  );
+}
+
+function buildWorkflowSteps({
+  ocrWorkflowStatus,
+  analysis,
+  knowledgeChunks,
+  counseling,
+  insufficientKnowledgeBaseContext
+}: {
+  ocrWorkflowStatus: OcrWorkflowStatus;
+  analysis: PrescriptionAnalysisResponse | null;
+  knowledgeChunks: RetrievedChunk[];
+  counseling: CounselingResponse | null;
+  insufficientKnowledgeBaseContext: boolean;
+}): WorkflowStatusStep[] {
+  const hasMedication = Boolean(analysis?.extracted_medications.length);
+  const hasSources = knowledgeChunks.length > 0;
+
+  return [
+    {
+      label: "OCR Intake",
+      status: ocrWorkflowStatus.ocrUnverified ? "completed" : "waiting",
+      summary: ocrWorkflowStatus.ocrUnverified
+        ? "OCR captured as unverified."
+        : "Upload synthetic image or use text input."
+    },
+    {
+      label: "Pharmacist Correction",
+      status: ocrWorkflowStatus.correctedTextReady
+        ? "completed"
+        : ocrWorkflowStatus.correctionRequired
+          ? "required"
+          : "waiting",
+      summary: ocrWorkflowStatus.correctedTextReady
+        ? "Corrected text is ready for analysis."
+        : "Correction is required before analysis."
+    },
+    {
+      label: "Prescription Analysis",
+      status: analysis ? "completed" : ocrWorkflowStatus.correctedTextReady ? "ready" : "waiting",
+      summary: analysis ? "Corrected or entered text analyzed." : "Waiting for confirmed text."
+    },
+    {
+      label: "Medication Extraction",
+      status: analysis ? (hasMedication ? "completed" : "blocked") : "waiting",
+      summary: hasMedication ? "Medication candidate extracted." : "No supported medication confirmed yet."
+    },
+    {
+      label: "RAG Source Check",
+      status: insufficientKnowledgeBaseContext ? "blocked" : hasSources ? "completed" : "waiting",
+      summary: hasSources ? "Local source context retrieved." : "Sources appear after medication match."
+    },
+    {
+      label: "Counseling Draft",
+      status: counseling ? "completed" : insufficientKnowledgeBaseContext ? "blocked" : hasMedication ? "ready" : "waiting",
+      summary: counseling ? "Draft-only counseling generated." : "Requires pharmacist confirmation."
+    },
+    {
+      label: "Pharmacist Review",
+      status: "required",
+      summary: "Mandatory before patient-facing use."
+    }
+  ];
 }
 
 function dedupeAlerts(alerts: SafetyAlert[]) {

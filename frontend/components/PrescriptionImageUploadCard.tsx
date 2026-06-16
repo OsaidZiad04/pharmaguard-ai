@@ -12,10 +12,20 @@ import type {
 
 interface PrescriptionImageUploadCardProps {
   onUseCorrectedText: (correctedText: string) => void;
+  onWorkflowStatusChange?: (status: OcrWorkflowStatus) => void;
+}
+
+export interface OcrWorkflowStatus {
+  ocrUnverified: boolean;
+  correctionRequired: boolean;
+  correctedTextReady: boolean;
+  possibleIdentifierWarningCount: number;
+  providerName?: string;
 }
 
 export function PrescriptionImageUploadCard({
-  onUseCorrectedText
+  onUseCorrectedText,
+  onWorkflowStatusChange
 }: PrescriptionImageUploadCardProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -41,6 +51,13 @@ export function PrescriptionImageUploadCard({
       setOcrResult(result);
       setConfirmation(null);
       setCorrectedText(result.extracted_text);
+      onWorkflowStatusChange?.({
+        ocrUnverified: result.unverified_ocr_output,
+        correctionRequired: result.correction_required,
+        correctedTextReady: false,
+        possibleIdentifierWarningCount: result.privacy_warnings.length,
+        providerName: result.provider_name
+      });
       setSelectedFile(null);
       if (inputRef.current) {
         inputRef.current.value = "";
@@ -68,6 +85,14 @@ export function PrescriptionImageUploadCard({
       });
       if (response.can_send_to_analysis) {
         setConfirmation(response);
+        onWorkflowStatusChange?.({
+          ocrUnverified: ocrResult.unverified_ocr_output,
+          correctionRequired: response.correction_required,
+          correctedTextReady: response.can_send_to_analysis,
+          possibleIdentifierWarningCount:
+            response.privacy_warnings.length || ocrResult.privacy_warnings.length,
+          providerName: ocrResult.provider_name
+        });
         onUseCorrectedText(response.corrected_text);
         setStatusMessage("Corrected text is ready in the prescription text panel.");
       }
@@ -141,6 +166,13 @@ export function PrescriptionImageUploadCard({
               value={`${Math.round(ocrResult.confidence_score * 100)}% unverified`}
             />
             <StatusItem label="Analysis status" value="Correction required" />
+            <StatusItem label="Storage" value={ocrResult.stores_images ? "Stores images" : "No image storage"} />
+            <StatusItem label="Network" value={ocrResult.requires_network ? "Networked" : "Local only"} />
+          </div>
+
+          <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-900">
+            Unverified OCR cannot move to analysis automatically. Confirmed pharmacist-corrected text is the
+            only path into the prescription text panel.
           </div>
 
           <PrivacyWarnings warnings={ocrResult.privacy_warnings} />

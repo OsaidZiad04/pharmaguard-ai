@@ -89,3 +89,16 @@ python scripts/e2e_trace_report.py
 Traceability does not change runtime behavior. It does not make OCR automatic, does not activate Tesseract, does not call external APIs, and does not add persistent production storage.
 
 Corrected pharmacist text remains the boundary for downstream prescription analysis. Pharmacist review remains mandatory for clinical-facing output.
+
+## Dashboard Display
+
+Phase 2I adds a runtime workflow status display that mirrors the trace policy:
+
+- unverified OCR is visibly blocked from downstream use
+- pharmacist correction is shown as required
+- corrected text readiness is shown before analysis
+- local RAG source grounding is summarized
+- counseling remains draft-only
+- pharmacist review is always required
+
+The dashboard derives these statuses from existing state and API responses. It does not read production trace records or create a persistence layer.
