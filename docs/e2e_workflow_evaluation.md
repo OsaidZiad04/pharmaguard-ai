@@ -63,6 +63,7 @@ Returned checks include:
 - counseling generation status
 - safety status
 - pharmacist review-required status
+- synthetic workflow trace record
 
 ## Runner
 
@@ -77,3 +78,29 @@ The report prints total, passed, and failed cases plus summaries for privacy war
 ## Safety Boundary
 
 Corrected text is the only boundary that can move into prescription analysis. Unverified OCR text is never treated as final truth and does not automatically trigger RAG, counseling, lookup, or prescription analysis.
+
+## Traceability
+
+Phase 2H adds trace records for each synthetic E2E case. Each trace records step status, source refs, safety notes, safety flags, and pharmacist review status.
+
+Trace records show:
+
+- OCR output is unverified
+- unverified OCR downstream use is blocked
+- pharmacist correction is required
+- corrected text is used for analysis
+- RAG sources are checked
+- counseling drafts remain draft support only
+- pharmacist review is required
+
+The generated trace file is:
+
+`data/evaluation/generated/e2e_traces.json`
+
+Regenerate it from `backend/`:
+
+```bash
+python scripts/export_e2e_traces.py
+```
+
+The trace file is deterministic and synthetic. It does not store raw image bytes, real prescription data, or real patient identifiers.

@@ -29,6 +29,7 @@ def test_e2e_runner_passes_current_synthetic_baseline() -> None:
     assert report["privacy_warning_summary"]["failed"] == 0
     assert report["rag_source_grounding_summary"]["failed"] == 0
     assert report["pharmacist_review_required_summary"]["failed"] == 0
+    assert all(case_result["trace"]["trace_id"] for case_result in report["case_results"])
 
 
 def test_clean_supported_medication_retrieves_source_backed_context() -> None:

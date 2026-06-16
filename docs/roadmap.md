@@ -117,13 +117,21 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Check unknown medications, possible identifier warnings, exact-dose prompts, and final-advice prompts. Complete.
 - Keep real OCR, Tesseract activation, external APIs, and real prescription data deferred. Complete.
 
-## Phase 2H: Local OCR Adapter Benchmarking
+## Phase 2H: Workflow Traceability & Pharmacist Review Audit Records - Complete
+
+- Add structured workflow trace models. Complete.
+- Generate traces from synthetic E2E workflow evaluation. Complete.
+- Export deterministic synthetic trace records. Complete.
+- Add trace report for step, safety flag, pharmacist review, source grounding, and blocked unsafe-flow summaries. Complete.
+- Keep traces free of raw image bytes and real patient data. Complete.
+
+## Phase 2I: Local OCR Adapter Benchmarking
 
 - If dependencies are installed outside the project, benchmark the disabled Tesseract adapter against synthetic fixtures without making it default.
 - Compare OCR text against pharmacist corrections.
 - Keep provider activation gated by privacy, dependency, and quality checks.
 
-## Phase 2I: Production-Ready OCR Integration
+## Phase 2J: Production-Ready OCR Integration
 
 - Add production-ready OCR workflow only after provider validation.
 - Define confidence scoring and audit retention policy for OCR output.

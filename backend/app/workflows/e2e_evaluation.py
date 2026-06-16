@@ -5,7 +5,7 @@ import re
 from pathlib import Path
 from typing import Any
 
-from app.ocr.providers import SyntheticFixtureOcrProvider
+from app.ocr.providers import MockOcrProvider, SyntheticFixtureOcrProvider
 from app.rag.evaluation import FINAL_ADVICE_FORBIDDEN_TERMS
 from app.schemas.counseling import ConfirmedMedication, CounselingRequest
 from app.services.counseling_service import generate_counseling_note
@@ -15,6 +15,12 @@ from app.services.ocr_service import build_privacy_warnings, detect_possible_ide
 from app.services.rag_service import query_local_knowledge_base
 from app.services.safety_service import assess_prescription_analysis
 from app.utils.confidence import aggregate_confidence
+from app.workflows.trace import (
+    PharmacistReviewRecord,
+    WorkflowSafetyFlag,
+    WorkflowTrace,
+    WorkflowTraceStep,
+)
 
 
 E2E_WORKFLOW_CASES_PATH = (
@@ -26,6 +32,7 @@ E2E_WORKFLOW_CASES_PATH = (
 OCR_FIXTURES_DIR = (
     Path(__file__).resolve().parents[3] / "data" / "evaluation" / "ocr_fixtures"
 )
+SYNTHETIC_TRACE_CREATED_AT = "2026-06-16T00:00:00Z"
 
 
 def load_e2e_workflow_cases(
@@ -197,6 +204,16 @@ def evaluate_e2e_workflow_case(case: dict[str, Any]) -> dict[str, Any]:
     failed_checks = [
         check_name for check_name, passed in checks.items() if not passed
     ]
+    trace = _build_trace(
+        case=case,
+        detected_identifiers=detected_identifiers,
+        correction_completed=correction_audit.can_send_to_analysis,
+        analysis_candidates=analysis_candidates,
+        retrieved_source_files=retrieved_source_files,
+        insufficient_context=insufficient_context,
+        counseling_available=counseling_available,
+        expected_unsupported=expected_unsupported,
+    )
 
     return {
         "case_id": case["case_id"],
@@ -258,8 +275,294 @@ def evaluate_e2e_workflow_case(case: dict[str, Any]) -> dict[str, Any]:
             ],
         },
         "checks": checks,
+        "trace": trace.model_dump(),
         "notes": case.get("notes", ""),
     }
+
+
+def _build_trace(
+    *,
+    case: dict[str, Any],
+    detected_identifiers: list[str],
+    correction_completed: bool,
+    analysis_candidates: list[dict],
+    retrieved_source_files: list[str],
+    insufficient_context: bool,
+    counseling_available: bool,
+    expected_unsupported: list[str],
+) -> WorkflowTrace:
+    provider_name = (
+        SyntheticFixtureOcrProvider.provider_name
+        if case["input_mode"] == "fixture_ocr"
+        else MockOcrProvider.provider_name
+    )
+    fixture_source_refs = (
+        [case["synthetic_filename"]]
+        if case["input_mode"] == "fixture_ocr" and case.get("synthetic_filename")
+        else []
+    )
+    extracted_medication_names = sorted(
+        {candidate["name"] for candidate in analysis_candidates}
+    )
+
+    steps = [
+        WorkflowTraceStep(
+            step_name="ocr_extraction",
+            status="completed",
+            summary=(
+                "Synthetic OCR-like input captured and marked unverified; "
+                "no raw image bytes are stored."
+            ),
+            input_reference_type=(
+                "synthetic_fixture_reference"
+                if case["input_mode"] == "fixture_ocr"
+                else "synthetic_text_case"
+            ),
+            output_reference_type="unverified_ocr_text_reference",
+            safety_notes=[
+                "OCR output is unverified.",
+                "Possible identifiers are warning categories only.",
+                "Trace stores references and summaries, not raw image bytes.",
+            ],
+            source_refs=fixture_source_refs,
+        ),
+        WorkflowTraceStep(
+            step_name="unverified_ocr_downstream_use",
+            status="blocked",
+            summary=(
+                "Unverified OCR output was not sent to prescription analysis, "
+                "RAG, counseling, or lookup."
+            ),
+            input_reference_type="unverified_ocr_text_reference",
+            output_reference_type="none",
+            safety_notes=[
+                "Pharmacist correction is required before downstream workflow steps.",
+            ],
+        ),
+        WorkflowTraceStep(
+            step_name="pharmacist_correction_gate",
+            status="completed" if correction_completed else "blocked",
+            summary=(
+                "Pharmacist-corrected text is the boundary for downstream analysis."
+                if correction_completed
+                else "Correction gate did not complete; downstream analysis remains blocked."
+            ),
+            input_reference_type="unverified_ocr_text_reference",
+            output_reference_type="pharmacist_corrected_text_reference",
+            safety_notes=[
+                "Corrected text is marked synthetic in this evaluation trace.",
+                "Corrected text may proceed to analysis only after pharmacist review.",
+            ],
+        ),
+        WorkflowTraceStep(
+            step_name="prescription_analysis",
+            status="completed" if correction_completed else "skipped",
+            summary="Prescription analysis used pharmacist-corrected text only.",
+            input_reference_type="pharmacist_corrected_text_reference",
+            output_reference_type="prescription_analysis_summary",
+            safety_notes=[
+                "Patient context is not stored in this synthetic trace.",
+                "Missing patient context keeps pharmacist review required.",
+            ],
+        ),
+        WorkflowTraceStep(
+            step_name="medication_extraction",
+            status="completed",
+            summary=(
+                "Medication extraction found: "
+                + (", ".join(extracted_medication_names) or "no supported medications")
+                + "."
+            ),
+            input_reference_type="pharmacist_corrected_text_reference",
+            output_reference_type="medication_candidate_summary",
+            safety_notes=[
+                "Unsupported medication-like terms are not guessed.",
+            ],
+        ),
+        WorkflowTraceStep(
+            step_name="rag_retrieval",
+            status="completed" if retrieved_source_files else "blocked",
+            summary=(
+                "RAG source grounding checked against local Markdown profiles."
+                if retrieved_source_files
+                else "No source-backed RAG context was available for this case."
+            ),
+            input_reference_type="supported_medication_summary",
+            output_reference_type="retrieved_source_summary",
+            safety_notes=[
+                "RAG uses local draft educational Markdown profiles only.",
+                "Insufficient context blocks unsupported medication-specific content.",
+            ],
+            source_refs=retrieved_source_files,
+        ),
+        WorkflowTraceStep(
+            step_name="counseling_generation",
+            status="completed" if counseling_available else "blocked",
+            summary=(
+                "Draft-only counseling support generated from retrieved sources."
+                if counseling_available
+                else "Counseling generation was blocked because source-grounded context was unavailable."
+            ),
+            input_reference_type="retrieved_source_summary",
+            output_reference_type="draft_counseling_summary",
+            safety_notes=[
+                "Counseling is draft support only.",
+                "This is not a final clinical decision.",
+            ],
+            source_refs=retrieved_source_files,
+        ),
+        WorkflowTraceStep(
+            step_name="pharmacist_review",
+            status="completed",
+            summary="Pharmacist review remains required before patient-facing use.",
+            input_reference_type="draft_output_summary",
+            output_reference_type="pharmacist_review_record",
+            safety_notes=[
+                "Final medication decisions remain with the pharmacist.",
+            ],
+            source_refs=retrieved_source_files,
+        ),
+    ]
+
+    safety_flags = _build_safety_flags(
+        detected_identifiers=detected_identifiers,
+        expected_unsupported=expected_unsupported,
+        insufficient_context=insufficient_context,
+        counseling_available=counseling_available,
+    )
+    final_status = _trace_final_status(
+        detected_identifiers=detected_identifiers,
+        expected_unsupported=expected_unsupported,
+        insufficient_context=insufficient_context,
+        counseling_available=counseling_available,
+    )
+
+    return WorkflowTrace(
+        trace_id=f"trace-{case['case_id'].lower()}",
+        case_id=case["case_id"],
+        created_at=SYNTHETIC_TRACE_CREATED_AT,
+        input_mode=case["input_mode"],
+        provider_name=provider_name,
+        steps=steps,
+        safety_flags=safety_flags,
+        pharmacist_review_required=True,
+        pharmacist_review_record=PharmacistReviewRecord(
+            review_required=True,
+            correction_required=True,
+            correction_completed=correction_completed,
+            corrected_text_used_for_analysis=correction_completed,
+            notes=(
+                "Synthetic evaluation trace. Pharmacist correction is required "
+                "before analysis and pharmacist review is required before use."
+            ),
+        ),
+        final_status=final_status,
+    )
+
+
+def _build_safety_flags(
+    *,
+    detected_identifiers: list[str],
+    expected_unsupported: list[str],
+    insufficient_context: bool,
+    counseling_available: bool,
+) -> list[WorkflowSafetyFlag]:
+    flags = [
+        WorkflowSafetyFlag(
+            code="OCR_OUTPUT_UNVERIFIED",
+            severity="info",
+            step_name="ocr_extraction",
+            summary="OCR output is assistive and unverified.",
+        ),
+        WorkflowSafetyFlag(
+            code="UNVERIFIED_OCR_DOWNSTREAM_BLOCKED",
+            severity="info",
+            step_name="unverified_ocr_downstream_use",
+            summary="Unverified OCR cannot bypass pharmacist correction.",
+        ),
+        WorkflowSafetyFlag(
+            code="PHARMACIST_CORRECTION_BOUNDARY",
+            severity="info",
+            step_name="pharmacist_correction_gate",
+            summary="Corrected text is the boundary for downstream analysis.",
+        ),
+        WorkflowSafetyFlag(
+            code="PHARMACIST_REVIEW_REQUIRED",
+            severity="info",
+            step_name="pharmacist_review",
+            summary="Pharmacist review is required for clinical-facing output.",
+        ),
+        WorkflowSafetyFlag(
+            code="NO_RAW_IMAGE_STORAGE",
+            severity="info",
+            step_name="ocr_extraction",
+            summary="Trace does not store raw image bytes.",
+        ),
+    ]
+
+    if detected_identifiers:
+        flags.append(
+            WorkflowSafetyFlag(
+                code="POSSIBLE_IDENTIFIER_WARNING",
+                severity="warning",
+                step_name="ocr_extraction",
+                summary=(
+                    "Possible identifier categories detected: "
+                    + ", ".join(sorted(detected_identifiers))
+                    + "."
+                ),
+            )
+        )
+
+    if expected_unsupported:
+        flags.append(
+            WorkflowSafetyFlag(
+                code="UNSUPPORTED_MEDICATION_DO_NOT_GUESS",
+                severity="warning",
+                step_name="medication_extraction",
+                summary=(
+                    "Unsupported medication-like terms were not resolved: "
+                    + ", ".join(sorted(expected_unsupported))
+                    + "."
+                ),
+            )
+        )
+
+    if insufficient_context:
+        flags.append(
+            WorkflowSafetyFlag(
+                code="INSUFFICIENT_KNOWLEDGE_BASE_CONTEXT",
+                severity="warning",
+                step_name="rag_retrieval",
+                summary="Missing or unsupported context prevents unsupported medication-specific content.",
+            )
+        )
+
+    if not counseling_available:
+        flags.append(
+            WorkflowSafetyFlag(
+                code="COUNSELING_DRAFT_BLOCKED",
+                severity="warning",
+                step_name="counseling_generation",
+                summary="Counseling draft was blocked because source-grounded context was unavailable.",
+            )
+        )
+
+    return flags
+
+
+def _trace_final_status(
+    *,
+    detected_identifiers: list[str],
+    expected_unsupported: list[str],
+    insufficient_context: bool,
+    counseling_available: bool,
+) -> str:
+    if not counseling_available:
+        return "blocked"
+    if detected_identifiers or expected_unsupported or insufficient_context:
+        return "completed_with_warnings"
+    return "completed"
 
 
 def _ocr_text_for_case(case: dict[str, Any]) -> str:

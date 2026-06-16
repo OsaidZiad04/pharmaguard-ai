@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, and Phase 2G end-to-end OCR-to-RAG workflow evaluation.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, Phase 2G end-to-end OCR-to-RAG workflow evaluation, and Phase 2H workflow traceability.
 
 ## Pipeline
 
@@ -141,6 +141,17 @@ Phase 2G evaluates the integrated safe workflow without adding automation from u
 - `backend/scripts/evaluate_e2e_workflow.py` prints privacy, extraction, RAG grounding, counseling, safety, and pharmacist-review summaries.
 
 The evaluator uses corrected pharmacist text as the downstream boundary. It does not make `/ocr/extract-image` automatically call prescription analysis, RAG, lookup, or counseling.
+
+## Phase 2H Workflow Traceability
+
+Phase 2H adds trace records around the synthetic E2E workflow.
+
+- `backend/app/workflows/trace.py` defines trace, step, safety flag, and pharmacist review records.
+- `backend/scripts/export_e2e_traces.py` exports deterministic synthetic traces.
+- `backend/scripts/e2e_trace_report.py` summarizes trace steps, safety flags, source grounding, and blocked unsafe-flow checks.
+- `data/evaluation/generated/e2e_traces.json` stores generated synthetic traces.
+
+Trace records store workflow summaries and source references. They do not store raw image bytes, real prescription images, real patient data, or production audit logs.
 
 ## Phase 1.7 Controlled Knowledge Base Expansion
 

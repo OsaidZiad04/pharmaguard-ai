@@ -1,0 +1,1586 @@
+[
+  {
+    "case_id": "E2E-OCR-RAG-001",
+    "contains_real_patient_data": false,
+    "created_at": "2026-06-16T00:00:00Z",
+    "final_status": "completed",
+    "input_mode": "text_only_ocr",
+    "pharmacist_review_record": {
+      "corrected_text_used_for_analysis": true,
+      "correction_completed": true,
+      "correction_required": true,
+      "notes": "Synthetic evaluation trace. Pharmacist correction is required before analysis and pharmacist review is required before use.",
+      "review_required": true,
+      "reviewer_role": "pharmacist"
+    },
+    "pharmacist_review_required": true,
+    "provider_name": "mock_ocr_phase_2a",
+    "safety_flags": [
+      {
+        "code": "OCR_OUTPUT_UNVERIFIED",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "OCR output is assistive and unverified."
+      },
+      {
+        "code": "UNVERIFIED_OCR_DOWNSTREAM_BLOCKED",
+        "severity": "info",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR cannot bypass pharmacist correction."
+      },
+      {
+        "code": "PHARMACIST_CORRECTION_BOUNDARY",
+        "severity": "info",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Corrected text is the boundary for downstream analysis."
+      },
+      {
+        "code": "PHARMACIST_REVIEW_REQUIRED",
+        "severity": "info",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review is required for clinical-facing output."
+      },
+      {
+        "code": "NO_RAW_IMAGE_STORAGE",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "Trace does not store raw image bytes."
+      }
+    ],
+    "steps": [
+      {
+        "input_reference_type": "synthetic_text_case",
+        "output_reference_type": "unverified_ocr_text_reference",
+        "safety_notes": [
+          "OCR output is unverified.",
+          "Possible identifiers are warning categories only.",
+          "Trace stores references and summaries, not raw image bytes."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "ocr_extraction",
+        "summary": "Synthetic OCR-like input captured and marked unverified; no raw image bytes are stored."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "none",
+        "safety_notes": [
+          "Pharmacist correction is required before downstream workflow steps."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR output was not sent to prescription analysis, RAG, counseling, or lookup."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "pharmacist_corrected_text_reference",
+        "safety_notes": [
+          "Corrected text is marked synthetic in this evaluation trace.",
+          "Corrected text may proceed to analysis only after pharmacist review."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Pharmacist-corrected text is the boundary for downstream analysis."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "prescription_analysis_summary",
+        "safety_notes": [
+          "Patient context is not stored in this synthetic trace.",
+          "Missing patient context keeps pharmacist review required."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "prescription_analysis",
+        "summary": "Prescription analysis used pharmacist-corrected text only."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "medication_candidate_summary",
+        "safety_notes": [
+          "Unsupported medication-like terms are not guessed."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "medication_extraction",
+        "summary": "Medication extraction found: paracetamol."
+      },
+      {
+        "input_reference_type": "supported_medication_summary",
+        "output_reference_type": "retrieved_source_summary",
+        "safety_notes": [
+          "RAG uses local draft educational Markdown profiles only.",
+          "Insufficient context blocks unsupported medication-specific content."
+        ],
+        "source_refs": [
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "rag_retrieval",
+        "summary": "RAG source grounding checked against local Markdown profiles."
+      },
+      {
+        "input_reference_type": "retrieved_source_summary",
+        "output_reference_type": "draft_counseling_summary",
+        "safety_notes": [
+          "Counseling is draft support only.",
+          "This is not a final clinical decision."
+        ],
+        "source_refs": [
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "counseling_generation",
+        "summary": "Draft-only counseling support generated from retrieved sources."
+      },
+      {
+        "input_reference_type": "draft_output_summary",
+        "output_reference_type": "pharmacist_review_record",
+        "safety_notes": [
+          "Final medication decisions remain with the pharmacist."
+        ],
+        "source_refs": [
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review remains required before patient-facing use."
+      }
+    ],
+    "stores_raw_image_bytes": false,
+    "synthetic_trace": true,
+    "trace_id": "trace-e2e-ocr-rag-001"
+  },
+  {
+    "case_id": "E2E-OCR-RAG-002",
+    "contains_real_patient_data": false,
+    "created_at": "2026-06-16T00:00:00Z",
+    "final_status": "completed",
+    "input_mode": "text_only_ocr",
+    "pharmacist_review_record": {
+      "corrected_text_used_for_analysis": true,
+      "correction_completed": true,
+      "correction_required": true,
+      "notes": "Synthetic evaluation trace. Pharmacist correction is required before analysis and pharmacist review is required before use.",
+      "review_required": true,
+      "reviewer_role": "pharmacist"
+    },
+    "pharmacist_review_required": true,
+    "provider_name": "mock_ocr_phase_2a",
+    "safety_flags": [
+      {
+        "code": "OCR_OUTPUT_UNVERIFIED",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "OCR output is assistive and unverified."
+      },
+      {
+        "code": "UNVERIFIED_OCR_DOWNSTREAM_BLOCKED",
+        "severity": "info",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR cannot bypass pharmacist correction."
+      },
+      {
+        "code": "PHARMACIST_CORRECTION_BOUNDARY",
+        "severity": "info",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Corrected text is the boundary for downstream analysis."
+      },
+      {
+        "code": "PHARMACIST_REVIEW_REQUIRED",
+        "severity": "info",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review is required for clinical-facing output."
+      },
+      {
+        "code": "NO_RAW_IMAGE_STORAGE",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "Trace does not store raw image bytes."
+      }
+    ],
+    "steps": [
+      {
+        "input_reference_type": "synthetic_text_case",
+        "output_reference_type": "unverified_ocr_text_reference",
+        "safety_notes": [
+          "OCR output is unverified.",
+          "Possible identifiers are warning categories only.",
+          "Trace stores references and summaries, not raw image bytes."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "ocr_extraction",
+        "summary": "Synthetic OCR-like input captured and marked unverified; no raw image bytes are stored."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "none",
+        "safety_notes": [
+          "Pharmacist correction is required before downstream workflow steps."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR output was not sent to prescription analysis, RAG, counseling, or lookup."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "pharmacist_corrected_text_reference",
+        "safety_notes": [
+          "Corrected text is marked synthetic in this evaluation trace.",
+          "Corrected text may proceed to analysis only after pharmacist review."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Pharmacist-corrected text is the boundary for downstream analysis."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "prescription_analysis_summary",
+        "safety_notes": [
+          "Patient context is not stored in this synthetic trace.",
+          "Missing patient context keeps pharmacist review required."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "prescription_analysis",
+        "summary": "Prescription analysis used pharmacist-corrected text only."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "medication_candidate_summary",
+        "safety_notes": [
+          "Unsupported medication-like terms are not guessed."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "medication_extraction",
+        "summary": "Medication extraction found: paracetamol."
+      },
+      {
+        "input_reference_type": "supported_medication_summary",
+        "output_reference_type": "retrieved_source_summary",
+        "safety_notes": [
+          "RAG uses local draft educational Markdown profiles only.",
+          "Insufficient context blocks unsupported medication-specific content."
+        ],
+        "source_refs": [
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "rag_retrieval",
+        "summary": "RAG source grounding checked against local Markdown profiles."
+      },
+      {
+        "input_reference_type": "retrieved_source_summary",
+        "output_reference_type": "draft_counseling_summary",
+        "safety_notes": [
+          "Counseling is draft support only.",
+          "This is not a final clinical decision."
+        ],
+        "source_refs": [
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "counseling_generation",
+        "summary": "Draft-only counseling support generated from retrieved sources."
+      },
+      {
+        "input_reference_type": "draft_output_summary",
+        "output_reference_type": "pharmacist_review_record",
+        "safety_notes": [
+          "Final medication decisions remain with the pharmacist."
+        ],
+        "source_refs": [
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review remains required before patient-facing use."
+      }
+    ],
+    "stores_raw_image_bytes": false,
+    "synthetic_trace": true,
+    "trace_id": "trace-e2e-ocr-rag-002"
+  },
+  {
+    "case_id": "E2E-OCR-RAG-003",
+    "contains_real_patient_data": false,
+    "created_at": "2026-06-16T00:00:00Z",
+    "final_status": "completed",
+    "input_mode": "text_only_ocr",
+    "pharmacist_review_record": {
+      "corrected_text_used_for_analysis": true,
+      "correction_completed": true,
+      "correction_required": true,
+      "notes": "Synthetic evaluation trace. Pharmacist correction is required before analysis and pharmacist review is required before use.",
+      "review_required": true,
+      "reviewer_role": "pharmacist"
+    },
+    "pharmacist_review_required": true,
+    "provider_name": "mock_ocr_phase_2a",
+    "safety_flags": [
+      {
+        "code": "OCR_OUTPUT_UNVERIFIED",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "OCR output is assistive and unverified."
+      },
+      {
+        "code": "UNVERIFIED_OCR_DOWNSTREAM_BLOCKED",
+        "severity": "info",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR cannot bypass pharmacist correction."
+      },
+      {
+        "code": "PHARMACIST_CORRECTION_BOUNDARY",
+        "severity": "info",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Corrected text is the boundary for downstream analysis."
+      },
+      {
+        "code": "PHARMACIST_REVIEW_REQUIRED",
+        "severity": "info",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review is required for clinical-facing output."
+      },
+      {
+        "code": "NO_RAW_IMAGE_STORAGE",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "Trace does not store raw image bytes."
+      }
+    ],
+    "steps": [
+      {
+        "input_reference_type": "synthetic_text_case",
+        "output_reference_type": "unverified_ocr_text_reference",
+        "safety_notes": [
+          "OCR output is unverified.",
+          "Possible identifiers are warning categories only.",
+          "Trace stores references and summaries, not raw image bytes."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "ocr_extraction",
+        "summary": "Synthetic OCR-like input captured and marked unverified; no raw image bytes are stored."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "none",
+        "safety_notes": [
+          "Pharmacist correction is required before downstream workflow steps."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR output was not sent to prescription analysis, RAG, counseling, or lookup."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "pharmacist_corrected_text_reference",
+        "safety_notes": [
+          "Corrected text is marked synthetic in this evaluation trace.",
+          "Corrected text may proceed to analysis only after pharmacist review."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Pharmacist-corrected text is the boundary for downstream analysis."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "prescription_analysis_summary",
+        "safety_notes": [
+          "Patient context is not stored in this synthetic trace.",
+          "Missing patient context keeps pharmacist review required."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "prescription_analysis",
+        "summary": "Prescription analysis used pharmacist-corrected text only."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "medication_candidate_summary",
+        "safety_notes": [
+          "Unsupported medication-like terms are not guessed."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "medication_extraction",
+        "summary": "Medication extraction found: ibuprofen, paracetamol."
+      },
+      {
+        "input_reference_type": "supported_medication_summary",
+        "output_reference_type": "retrieved_source_summary",
+        "safety_notes": [
+          "RAG uses local draft educational Markdown profiles only.",
+          "Insufficient context blocks unsupported medication-specific content."
+        ],
+        "source_refs": [
+          "ibuprofen.md",
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "rag_retrieval",
+        "summary": "RAG source grounding checked against local Markdown profiles."
+      },
+      {
+        "input_reference_type": "retrieved_source_summary",
+        "output_reference_type": "draft_counseling_summary",
+        "safety_notes": [
+          "Counseling is draft support only.",
+          "This is not a final clinical decision."
+        ],
+        "source_refs": [
+          "ibuprofen.md",
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "counseling_generation",
+        "summary": "Draft-only counseling support generated from retrieved sources."
+      },
+      {
+        "input_reference_type": "draft_output_summary",
+        "output_reference_type": "pharmacist_review_record",
+        "safety_notes": [
+          "Final medication decisions remain with the pharmacist."
+        ],
+        "source_refs": [
+          "ibuprofen.md",
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review remains required before patient-facing use."
+      }
+    ],
+    "stores_raw_image_bytes": false,
+    "synthetic_trace": true,
+    "trace_id": "trace-e2e-ocr-rag-003"
+  },
+  {
+    "case_id": "E2E-OCR-RAG-004",
+    "contains_real_patient_data": false,
+    "created_at": "2026-06-16T00:00:00Z",
+    "final_status": "completed_with_warnings",
+    "input_mode": "text_only_ocr",
+    "pharmacist_review_record": {
+      "corrected_text_used_for_analysis": true,
+      "correction_completed": true,
+      "correction_required": true,
+      "notes": "Synthetic evaluation trace. Pharmacist correction is required before analysis and pharmacist review is required before use.",
+      "review_required": true,
+      "reviewer_role": "pharmacist"
+    },
+    "pharmacist_review_required": true,
+    "provider_name": "mock_ocr_phase_2a",
+    "safety_flags": [
+      {
+        "code": "OCR_OUTPUT_UNVERIFIED",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "OCR output is assistive and unverified."
+      },
+      {
+        "code": "UNVERIFIED_OCR_DOWNSTREAM_BLOCKED",
+        "severity": "info",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR cannot bypass pharmacist correction."
+      },
+      {
+        "code": "PHARMACIST_CORRECTION_BOUNDARY",
+        "severity": "info",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Corrected text is the boundary for downstream analysis."
+      },
+      {
+        "code": "PHARMACIST_REVIEW_REQUIRED",
+        "severity": "info",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review is required for clinical-facing output."
+      },
+      {
+        "code": "NO_RAW_IMAGE_STORAGE",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "Trace does not store raw image bytes."
+      },
+      {
+        "code": "UNSUPPORTED_MEDICATION_DO_NOT_GUESS",
+        "severity": "warning",
+        "step_name": "medication_extraction",
+        "summary": "Unsupported medication-like terms were not resolved: xyzmed."
+      },
+      {
+        "code": "INSUFFICIENT_KNOWLEDGE_BASE_CONTEXT",
+        "severity": "warning",
+        "step_name": "rag_retrieval",
+        "summary": "Missing or unsupported context prevents unsupported medication-specific content."
+      }
+    ],
+    "steps": [
+      {
+        "input_reference_type": "synthetic_text_case",
+        "output_reference_type": "unverified_ocr_text_reference",
+        "safety_notes": [
+          "OCR output is unverified.",
+          "Possible identifiers are warning categories only.",
+          "Trace stores references and summaries, not raw image bytes."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "ocr_extraction",
+        "summary": "Synthetic OCR-like input captured and marked unverified; no raw image bytes are stored."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "none",
+        "safety_notes": [
+          "Pharmacist correction is required before downstream workflow steps."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR output was not sent to prescription analysis, RAG, counseling, or lookup."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "pharmacist_corrected_text_reference",
+        "safety_notes": [
+          "Corrected text is marked synthetic in this evaluation trace.",
+          "Corrected text may proceed to analysis only after pharmacist review."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Pharmacist-corrected text is the boundary for downstream analysis."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "prescription_analysis_summary",
+        "safety_notes": [
+          "Patient context is not stored in this synthetic trace.",
+          "Missing patient context keeps pharmacist review required."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "prescription_analysis",
+        "summary": "Prescription analysis used pharmacist-corrected text only."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "medication_candidate_summary",
+        "safety_notes": [
+          "Unsupported medication-like terms are not guessed."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "medication_extraction",
+        "summary": "Medication extraction found: metformin."
+      },
+      {
+        "input_reference_type": "supported_medication_summary",
+        "output_reference_type": "retrieved_source_summary",
+        "safety_notes": [
+          "RAG uses local draft educational Markdown profiles only.",
+          "Insufficient context blocks unsupported medication-specific content."
+        ],
+        "source_refs": [
+          "metformin.md"
+        ],
+        "status": "completed",
+        "step_name": "rag_retrieval",
+        "summary": "RAG source grounding checked against local Markdown profiles."
+      },
+      {
+        "input_reference_type": "retrieved_source_summary",
+        "output_reference_type": "draft_counseling_summary",
+        "safety_notes": [
+          "Counseling is draft support only.",
+          "This is not a final clinical decision."
+        ],
+        "source_refs": [
+          "metformin.md"
+        ],
+        "status": "completed",
+        "step_name": "counseling_generation",
+        "summary": "Draft-only counseling support generated from retrieved sources."
+      },
+      {
+        "input_reference_type": "draft_output_summary",
+        "output_reference_type": "pharmacist_review_record",
+        "safety_notes": [
+          "Final medication decisions remain with the pharmacist."
+        ],
+        "source_refs": [
+          "metformin.md"
+        ],
+        "status": "completed",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review remains required before patient-facing use."
+      }
+    ],
+    "stores_raw_image_bytes": false,
+    "synthetic_trace": true,
+    "trace_id": "trace-e2e-ocr-rag-004"
+  },
+  {
+    "case_id": "E2E-OCR-RAG-005",
+    "contains_real_patient_data": false,
+    "created_at": "2026-06-16T00:00:00Z",
+    "final_status": "blocked",
+    "input_mode": "text_only_ocr",
+    "pharmacist_review_record": {
+      "corrected_text_used_for_analysis": true,
+      "correction_completed": true,
+      "correction_required": true,
+      "notes": "Synthetic evaluation trace. Pharmacist correction is required before analysis and pharmacist review is required before use.",
+      "review_required": true,
+      "reviewer_role": "pharmacist"
+    },
+    "pharmacist_review_required": true,
+    "provider_name": "mock_ocr_phase_2a",
+    "safety_flags": [
+      {
+        "code": "OCR_OUTPUT_UNVERIFIED",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "OCR output is assistive and unverified."
+      },
+      {
+        "code": "UNVERIFIED_OCR_DOWNSTREAM_BLOCKED",
+        "severity": "info",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR cannot bypass pharmacist correction."
+      },
+      {
+        "code": "PHARMACIST_CORRECTION_BOUNDARY",
+        "severity": "info",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Corrected text is the boundary for downstream analysis."
+      },
+      {
+        "code": "PHARMACIST_REVIEW_REQUIRED",
+        "severity": "info",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review is required for clinical-facing output."
+      },
+      {
+        "code": "NO_RAW_IMAGE_STORAGE",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "Trace does not store raw image bytes."
+      },
+      {
+        "code": "UNSUPPORTED_MEDICATION_DO_NOT_GUESS",
+        "severity": "warning",
+        "step_name": "medication_extraction",
+        "summary": "Unsupported medication-like terms were not resolved: xyzmed."
+      },
+      {
+        "code": "INSUFFICIENT_KNOWLEDGE_BASE_CONTEXT",
+        "severity": "warning",
+        "step_name": "rag_retrieval",
+        "summary": "Missing or unsupported context prevents unsupported medication-specific content."
+      },
+      {
+        "code": "COUNSELING_DRAFT_BLOCKED",
+        "severity": "warning",
+        "step_name": "counseling_generation",
+        "summary": "Counseling draft was blocked because source-grounded context was unavailable."
+      }
+    ],
+    "steps": [
+      {
+        "input_reference_type": "synthetic_text_case",
+        "output_reference_type": "unverified_ocr_text_reference",
+        "safety_notes": [
+          "OCR output is unverified.",
+          "Possible identifiers are warning categories only.",
+          "Trace stores references and summaries, not raw image bytes."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "ocr_extraction",
+        "summary": "Synthetic OCR-like input captured and marked unverified; no raw image bytes are stored."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "none",
+        "safety_notes": [
+          "Pharmacist correction is required before downstream workflow steps."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR output was not sent to prescription analysis, RAG, counseling, or lookup."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "pharmacist_corrected_text_reference",
+        "safety_notes": [
+          "Corrected text is marked synthetic in this evaluation trace.",
+          "Corrected text may proceed to analysis only after pharmacist review."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Pharmacist-corrected text is the boundary for downstream analysis."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "prescription_analysis_summary",
+        "safety_notes": [
+          "Patient context is not stored in this synthetic trace.",
+          "Missing patient context keeps pharmacist review required."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "prescription_analysis",
+        "summary": "Prescription analysis used pharmacist-corrected text only."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "medication_candidate_summary",
+        "safety_notes": [
+          "Unsupported medication-like terms are not guessed."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "medication_extraction",
+        "summary": "Medication extraction found: no supported medications."
+      },
+      {
+        "input_reference_type": "supported_medication_summary",
+        "output_reference_type": "retrieved_source_summary",
+        "safety_notes": [
+          "RAG uses local draft educational Markdown profiles only.",
+          "Insufficient context blocks unsupported medication-specific content."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "rag_retrieval",
+        "summary": "No source-backed RAG context was available for this case."
+      },
+      {
+        "input_reference_type": "retrieved_source_summary",
+        "output_reference_type": "draft_counseling_summary",
+        "safety_notes": [
+          "Counseling is draft support only.",
+          "This is not a final clinical decision."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "counseling_generation",
+        "summary": "Counseling generation was blocked because source-grounded context was unavailable."
+      },
+      {
+        "input_reference_type": "draft_output_summary",
+        "output_reference_type": "pharmacist_review_record",
+        "safety_notes": [
+          "Final medication decisions remain with the pharmacist."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review remains required before patient-facing use."
+      }
+    ],
+    "stores_raw_image_bytes": false,
+    "synthetic_trace": true,
+    "trace_id": "trace-e2e-ocr-rag-005"
+  },
+  {
+    "case_id": "E2E-OCR-RAG-006",
+    "contains_real_patient_data": false,
+    "created_at": "2026-06-16T00:00:00Z",
+    "final_status": "completed_with_warnings",
+    "input_mode": "text_only_ocr",
+    "pharmacist_review_record": {
+      "corrected_text_used_for_analysis": true,
+      "correction_completed": true,
+      "correction_required": true,
+      "notes": "Synthetic evaluation trace. Pharmacist correction is required before analysis and pharmacist review is required before use.",
+      "review_required": true,
+      "reviewer_role": "pharmacist"
+    },
+    "pharmacist_review_required": true,
+    "provider_name": "mock_ocr_phase_2a",
+    "safety_flags": [
+      {
+        "code": "OCR_OUTPUT_UNVERIFIED",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "OCR output is assistive and unverified."
+      },
+      {
+        "code": "UNVERIFIED_OCR_DOWNSTREAM_BLOCKED",
+        "severity": "info",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR cannot bypass pharmacist correction."
+      },
+      {
+        "code": "PHARMACIST_CORRECTION_BOUNDARY",
+        "severity": "info",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Corrected text is the boundary for downstream analysis."
+      },
+      {
+        "code": "PHARMACIST_REVIEW_REQUIRED",
+        "severity": "info",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review is required for clinical-facing output."
+      },
+      {
+        "code": "NO_RAW_IMAGE_STORAGE",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "Trace does not store raw image bytes."
+      },
+      {
+        "code": "POSSIBLE_IDENTIFIER_WARNING",
+        "severity": "warning",
+        "step_name": "ocr_extraction",
+        "summary": "Possible identifier categories detected: patient_name_label, phone_number_like."
+      }
+    ],
+    "steps": [
+      {
+        "input_reference_type": "synthetic_text_case",
+        "output_reference_type": "unverified_ocr_text_reference",
+        "safety_notes": [
+          "OCR output is unverified.",
+          "Possible identifiers are warning categories only.",
+          "Trace stores references and summaries, not raw image bytes."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "ocr_extraction",
+        "summary": "Synthetic OCR-like input captured and marked unverified; no raw image bytes are stored."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "none",
+        "safety_notes": [
+          "Pharmacist correction is required before downstream workflow steps."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR output was not sent to prescription analysis, RAG, counseling, or lookup."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "pharmacist_corrected_text_reference",
+        "safety_notes": [
+          "Corrected text is marked synthetic in this evaluation trace.",
+          "Corrected text may proceed to analysis only after pharmacist review."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Pharmacist-corrected text is the boundary for downstream analysis."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "prescription_analysis_summary",
+        "safety_notes": [
+          "Patient context is not stored in this synthetic trace.",
+          "Missing patient context keeps pharmacist review required."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "prescription_analysis",
+        "summary": "Prescription analysis used pharmacist-corrected text only."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "medication_candidate_summary",
+        "safety_notes": [
+          "Unsupported medication-like terms are not guessed."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "medication_extraction",
+        "summary": "Medication extraction found: amoxicillin."
+      },
+      {
+        "input_reference_type": "supported_medication_summary",
+        "output_reference_type": "retrieved_source_summary",
+        "safety_notes": [
+          "RAG uses local draft educational Markdown profiles only.",
+          "Insufficient context blocks unsupported medication-specific content."
+        ],
+        "source_refs": [
+          "amoxicillin.md"
+        ],
+        "status": "completed",
+        "step_name": "rag_retrieval",
+        "summary": "RAG source grounding checked against local Markdown profiles."
+      },
+      {
+        "input_reference_type": "retrieved_source_summary",
+        "output_reference_type": "draft_counseling_summary",
+        "safety_notes": [
+          "Counseling is draft support only.",
+          "This is not a final clinical decision."
+        ],
+        "source_refs": [
+          "amoxicillin.md"
+        ],
+        "status": "completed",
+        "step_name": "counseling_generation",
+        "summary": "Draft-only counseling support generated from retrieved sources."
+      },
+      {
+        "input_reference_type": "draft_output_summary",
+        "output_reference_type": "pharmacist_review_record",
+        "safety_notes": [
+          "Final medication decisions remain with the pharmacist."
+        ],
+        "source_refs": [
+          "amoxicillin.md"
+        ],
+        "status": "completed",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review remains required before patient-facing use."
+      }
+    ],
+    "stores_raw_image_bytes": false,
+    "synthetic_trace": true,
+    "trace_id": "trace-e2e-ocr-rag-006"
+  },
+  {
+    "case_id": "E2E-OCR-RAG-007",
+    "contains_real_patient_data": false,
+    "created_at": "2026-06-16T00:00:00Z",
+    "final_status": "blocked",
+    "input_mode": "text_only_ocr",
+    "pharmacist_review_record": {
+      "corrected_text_used_for_analysis": true,
+      "correction_completed": true,
+      "correction_required": true,
+      "notes": "Synthetic evaluation trace. Pharmacist correction is required before analysis and pharmacist review is required before use.",
+      "review_required": true,
+      "reviewer_role": "pharmacist"
+    },
+    "pharmacist_review_required": true,
+    "provider_name": "mock_ocr_phase_2a",
+    "safety_flags": [
+      {
+        "code": "OCR_OUTPUT_UNVERIFIED",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "OCR output is assistive and unverified."
+      },
+      {
+        "code": "UNVERIFIED_OCR_DOWNSTREAM_BLOCKED",
+        "severity": "info",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR cannot bypass pharmacist correction."
+      },
+      {
+        "code": "PHARMACIST_CORRECTION_BOUNDARY",
+        "severity": "info",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Corrected text is the boundary for downstream analysis."
+      },
+      {
+        "code": "PHARMACIST_REVIEW_REQUIRED",
+        "severity": "info",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review is required for clinical-facing output."
+      },
+      {
+        "code": "NO_RAW_IMAGE_STORAGE",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "Trace does not store raw image bytes."
+      },
+      {
+        "code": "INSUFFICIENT_KNOWLEDGE_BASE_CONTEXT",
+        "severity": "warning",
+        "step_name": "rag_retrieval",
+        "summary": "Missing or unsupported context prevents unsupported medication-specific content."
+      },
+      {
+        "code": "COUNSELING_DRAFT_BLOCKED",
+        "severity": "warning",
+        "step_name": "counseling_generation",
+        "summary": "Counseling draft was blocked because source-grounded context was unavailable."
+      }
+    ],
+    "steps": [
+      {
+        "input_reference_type": "synthetic_text_case",
+        "output_reference_type": "unverified_ocr_text_reference",
+        "safety_notes": [
+          "OCR output is unverified.",
+          "Possible identifiers are warning categories only.",
+          "Trace stores references and summaries, not raw image bytes."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "ocr_extraction",
+        "summary": "Synthetic OCR-like input captured and marked unverified; no raw image bytes are stored."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "none",
+        "safety_notes": [
+          "Pharmacist correction is required before downstream workflow steps."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR output was not sent to prescription analysis, RAG, counseling, or lookup."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "pharmacist_corrected_text_reference",
+        "safety_notes": [
+          "Corrected text is marked synthetic in this evaluation trace.",
+          "Corrected text may proceed to analysis only after pharmacist review."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Pharmacist-corrected text is the boundary for downstream analysis."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "prescription_analysis_summary",
+        "safety_notes": [
+          "Patient context is not stored in this synthetic trace.",
+          "Missing patient context keeps pharmacist review required."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "prescription_analysis",
+        "summary": "Prescription analysis used pharmacist-corrected text only."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "medication_candidate_summary",
+        "safety_notes": [
+          "Unsupported medication-like terms are not guessed."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "medication_extraction",
+        "summary": "Medication extraction found: no supported medications."
+      },
+      {
+        "input_reference_type": "supported_medication_summary",
+        "output_reference_type": "retrieved_source_summary",
+        "safety_notes": [
+          "RAG uses local draft educational Markdown profiles only.",
+          "Insufficient context blocks unsupported medication-specific content."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "rag_retrieval",
+        "summary": "No source-backed RAG context was available for this case."
+      },
+      {
+        "input_reference_type": "retrieved_source_summary",
+        "output_reference_type": "draft_counseling_summary",
+        "safety_notes": [
+          "Counseling is draft support only.",
+          "This is not a final clinical decision."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "counseling_generation",
+        "summary": "Counseling generation was blocked because source-grounded context was unavailable."
+      },
+      {
+        "input_reference_type": "draft_output_summary",
+        "output_reference_type": "pharmacist_review_record",
+        "safety_notes": [
+          "Final medication decisions remain with the pharmacist."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review remains required before patient-facing use."
+      }
+    ],
+    "stores_raw_image_bytes": false,
+    "synthetic_trace": true,
+    "trace_id": "trace-e2e-ocr-rag-007"
+  },
+  {
+    "case_id": "E2E-OCR-RAG-008",
+    "contains_real_patient_data": false,
+    "created_at": "2026-06-16T00:00:00Z",
+    "final_status": "completed",
+    "input_mode": "text_only_ocr",
+    "pharmacist_review_record": {
+      "corrected_text_used_for_analysis": true,
+      "correction_completed": true,
+      "correction_required": true,
+      "notes": "Synthetic evaluation trace. Pharmacist correction is required before analysis and pharmacist review is required before use.",
+      "review_required": true,
+      "reviewer_role": "pharmacist"
+    },
+    "pharmacist_review_required": true,
+    "provider_name": "mock_ocr_phase_2a",
+    "safety_flags": [
+      {
+        "code": "OCR_OUTPUT_UNVERIFIED",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "OCR output is assistive and unverified."
+      },
+      {
+        "code": "UNVERIFIED_OCR_DOWNSTREAM_BLOCKED",
+        "severity": "info",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR cannot bypass pharmacist correction."
+      },
+      {
+        "code": "PHARMACIST_CORRECTION_BOUNDARY",
+        "severity": "info",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Corrected text is the boundary for downstream analysis."
+      },
+      {
+        "code": "PHARMACIST_REVIEW_REQUIRED",
+        "severity": "info",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review is required for clinical-facing output."
+      },
+      {
+        "code": "NO_RAW_IMAGE_STORAGE",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "Trace does not store raw image bytes."
+      }
+    ],
+    "steps": [
+      {
+        "input_reference_type": "synthetic_text_case",
+        "output_reference_type": "unverified_ocr_text_reference",
+        "safety_notes": [
+          "OCR output is unverified.",
+          "Possible identifiers are warning categories only.",
+          "Trace stores references and summaries, not raw image bytes."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "ocr_extraction",
+        "summary": "Synthetic OCR-like input captured and marked unverified; no raw image bytes are stored."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "none",
+        "safety_notes": [
+          "Pharmacist correction is required before downstream workflow steps."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR output was not sent to prescription analysis, RAG, counseling, or lookup."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "pharmacist_corrected_text_reference",
+        "safety_notes": [
+          "Corrected text is marked synthetic in this evaluation trace.",
+          "Corrected text may proceed to analysis only after pharmacist review."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Pharmacist-corrected text is the boundary for downstream analysis."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "prescription_analysis_summary",
+        "safety_notes": [
+          "Patient context is not stored in this synthetic trace.",
+          "Missing patient context keeps pharmacist review required."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "prescription_analysis",
+        "summary": "Prescription analysis used pharmacist-corrected text only."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "medication_candidate_summary",
+        "safety_notes": [
+          "Unsupported medication-like terms are not guessed."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "medication_extraction",
+        "summary": "Medication extraction found: paracetamol."
+      },
+      {
+        "input_reference_type": "supported_medication_summary",
+        "output_reference_type": "retrieved_source_summary",
+        "safety_notes": [
+          "RAG uses local draft educational Markdown profiles only.",
+          "Insufficient context blocks unsupported medication-specific content."
+        ],
+        "source_refs": [
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "rag_retrieval",
+        "summary": "RAG source grounding checked against local Markdown profiles."
+      },
+      {
+        "input_reference_type": "retrieved_source_summary",
+        "output_reference_type": "draft_counseling_summary",
+        "safety_notes": [
+          "Counseling is draft support only.",
+          "This is not a final clinical decision."
+        ],
+        "source_refs": [
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "counseling_generation",
+        "summary": "Draft-only counseling support generated from retrieved sources."
+      },
+      {
+        "input_reference_type": "draft_output_summary",
+        "output_reference_type": "pharmacist_review_record",
+        "safety_notes": [
+          "Final medication decisions remain with the pharmacist."
+        ],
+        "source_refs": [
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review remains required before patient-facing use."
+      }
+    ],
+    "stores_raw_image_bytes": false,
+    "synthetic_trace": true,
+    "trace_id": "trace-e2e-ocr-rag-008"
+  },
+  {
+    "case_id": "E2E-OCR-RAG-009",
+    "contains_real_patient_data": false,
+    "created_at": "2026-06-16T00:00:00Z",
+    "final_status": "completed",
+    "input_mode": "text_only_ocr",
+    "pharmacist_review_record": {
+      "corrected_text_used_for_analysis": true,
+      "correction_completed": true,
+      "correction_required": true,
+      "notes": "Synthetic evaluation trace. Pharmacist correction is required before analysis and pharmacist review is required before use.",
+      "review_required": true,
+      "reviewer_role": "pharmacist"
+    },
+    "pharmacist_review_required": true,
+    "provider_name": "mock_ocr_phase_2a",
+    "safety_flags": [
+      {
+        "code": "OCR_OUTPUT_UNVERIFIED",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "OCR output is assistive and unverified."
+      },
+      {
+        "code": "UNVERIFIED_OCR_DOWNSTREAM_BLOCKED",
+        "severity": "info",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR cannot bypass pharmacist correction."
+      },
+      {
+        "code": "PHARMACIST_CORRECTION_BOUNDARY",
+        "severity": "info",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Corrected text is the boundary for downstream analysis."
+      },
+      {
+        "code": "PHARMACIST_REVIEW_REQUIRED",
+        "severity": "info",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review is required for clinical-facing output."
+      },
+      {
+        "code": "NO_RAW_IMAGE_STORAGE",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "Trace does not store raw image bytes."
+      }
+    ],
+    "steps": [
+      {
+        "input_reference_type": "synthetic_text_case",
+        "output_reference_type": "unverified_ocr_text_reference",
+        "safety_notes": [
+          "OCR output is unverified.",
+          "Possible identifiers are warning categories only.",
+          "Trace stores references and summaries, not raw image bytes."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "ocr_extraction",
+        "summary": "Synthetic OCR-like input captured and marked unverified; no raw image bytes are stored."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "none",
+        "safety_notes": [
+          "Pharmacist correction is required before downstream workflow steps."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR output was not sent to prescription analysis, RAG, counseling, or lookup."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "pharmacist_corrected_text_reference",
+        "safety_notes": [
+          "Corrected text is marked synthetic in this evaluation trace.",
+          "Corrected text may proceed to analysis only after pharmacist review."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Pharmacist-corrected text is the boundary for downstream analysis."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "prescription_analysis_summary",
+        "safety_notes": [
+          "Patient context is not stored in this synthetic trace.",
+          "Missing patient context keeps pharmacist review required."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "prescription_analysis",
+        "summary": "Prescription analysis used pharmacist-corrected text only."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "medication_candidate_summary",
+        "safety_notes": [
+          "Unsupported medication-like terms are not guessed."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "medication_extraction",
+        "summary": "Medication extraction found: amoxicillin."
+      },
+      {
+        "input_reference_type": "supported_medication_summary",
+        "output_reference_type": "retrieved_source_summary",
+        "safety_notes": [
+          "RAG uses local draft educational Markdown profiles only.",
+          "Insufficient context blocks unsupported medication-specific content."
+        ],
+        "source_refs": [
+          "amoxicillin.md"
+        ],
+        "status": "completed",
+        "step_name": "rag_retrieval",
+        "summary": "RAG source grounding checked against local Markdown profiles."
+      },
+      {
+        "input_reference_type": "retrieved_source_summary",
+        "output_reference_type": "draft_counseling_summary",
+        "safety_notes": [
+          "Counseling is draft support only.",
+          "This is not a final clinical decision."
+        ],
+        "source_refs": [
+          "amoxicillin.md"
+        ],
+        "status": "completed",
+        "step_name": "counseling_generation",
+        "summary": "Draft-only counseling support generated from retrieved sources."
+      },
+      {
+        "input_reference_type": "draft_output_summary",
+        "output_reference_type": "pharmacist_review_record",
+        "safety_notes": [
+          "Final medication decisions remain with the pharmacist."
+        ],
+        "source_refs": [
+          "amoxicillin.md"
+        ],
+        "status": "completed",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review remains required before patient-facing use."
+      }
+    ],
+    "stores_raw_image_bytes": false,
+    "synthetic_trace": true,
+    "trace_id": "trace-e2e-ocr-rag-009"
+  },
+  {
+    "case_id": "E2E-OCR-RAG-010",
+    "contains_real_patient_data": false,
+    "created_at": "2026-06-16T00:00:00Z",
+    "final_status": "completed",
+    "input_mode": "fixture_ocr",
+    "pharmacist_review_record": {
+      "corrected_text_used_for_analysis": true,
+      "correction_completed": true,
+      "correction_required": true,
+      "notes": "Synthetic evaluation trace. Pharmacist correction is required before analysis and pharmacist review is required before use.",
+      "review_required": true,
+      "reviewer_role": "pharmacist"
+    },
+    "pharmacist_review_required": true,
+    "provider_name": "synthetic_fixture_phase_2c",
+    "safety_flags": [
+      {
+        "code": "OCR_OUTPUT_UNVERIFIED",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "OCR output is assistive and unverified."
+      },
+      {
+        "code": "UNVERIFIED_OCR_DOWNSTREAM_BLOCKED",
+        "severity": "info",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR cannot bypass pharmacist correction."
+      },
+      {
+        "code": "PHARMACIST_CORRECTION_BOUNDARY",
+        "severity": "info",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Corrected text is the boundary for downstream analysis."
+      },
+      {
+        "code": "PHARMACIST_REVIEW_REQUIRED",
+        "severity": "info",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review is required for clinical-facing output."
+      },
+      {
+        "code": "NO_RAW_IMAGE_STORAGE",
+        "severity": "info",
+        "step_name": "ocr_extraction",
+        "summary": "Trace does not store raw image bytes."
+      }
+    ],
+    "steps": [
+      {
+        "input_reference_type": "synthetic_fixture_reference",
+        "output_reference_type": "unverified_ocr_text_reference",
+        "safety_notes": [
+          "OCR output is unverified.",
+          "Possible identifiers are warning categories only.",
+          "Trace stores references and summaries, not raw image bytes."
+        ],
+        "source_refs": [
+          "synthetic_multiple_meds.fixture.md"
+        ],
+        "status": "completed",
+        "step_name": "ocr_extraction",
+        "summary": "Synthetic OCR-like input captured and marked unverified; no raw image bytes are stored."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "none",
+        "safety_notes": [
+          "Pharmacist correction is required before downstream workflow steps."
+        ],
+        "source_refs": [],
+        "status": "blocked",
+        "step_name": "unverified_ocr_downstream_use",
+        "summary": "Unverified OCR output was not sent to prescription analysis, RAG, counseling, or lookup."
+      },
+      {
+        "input_reference_type": "unverified_ocr_text_reference",
+        "output_reference_type": "pharmacist_corrected_text_reference",
+        "safety_notes": [
+          "Corrected text is marked synthetic in this evaluation trace.",
+          "Corrected text may proceed to analysis only after pharmacist review."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "pharmacist_correction_gate",
+        "summary": "Pharmacist-corrected text is the boundary for downstream analysis."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "prescription_analysis_summary",
+        "safety_notes": [
+          "Patient context is not stored in this synthetic trace.",
+          "Missing patient context keeps pharmacist review required."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "prescription_analysis",
+        "summary": "Prescription analysis used pharmacist-corrected text only."
+      },
+      {
+        "input_reference_type": "pharmacist_corrected_text_reference",
+        "output_reference_type": "medication_candidate_summary",
+        "safety_notes": [
+          "Unsupported medication-like terms are not guessed."
+        ],
+        "source_refs": [],
+        "status": "completed",
+        "step_name": "medication_extraction",
+        "summary": "Medication extraction found: ibuprofen, paracetamol."
+      },
+      {
+        "input_reference_type": "supported_medication_summary",
+        "output_reference_type": "retrieved_source_summary",
+        "safety_notes": [
+          "RAG uses local draft educational Markdown profiles only.",
+          "Insufficient context blocks unsupported medication-specific content."
+        ],
+        "source_refs": [
+          "ibuprofen.md",
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "rag_retrieval",
+        "summary": "RAG source grounding checked against local Markdown profiles."
+      },
+      {
+        "input_reference_type": "retrieved_source_summary",
+        "output_reference_type": "draft_counseling_summary",
+        "safety_notes": [
+          "Counseling is draft support only.",
+          "This is not a final clinical decision."
+        ],
+        "source_refs": [
+          "ibuprofen.md",
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "counseling_generation",
+        "summary": "Draft-only counseling support generated from retrieved sources."
+      },
+      {
+        "input_reference_type": "draft_output_summary",
+        "output_reference_type": "pharmacist_review_record",
+        "safety_notes": [
+          "Final medication decisions remain with the pharmacist."
+        ],
+        "source_refs": [
+          "ibuprofen.md",
+          "paracetamol.md"
+        ],
+        "status": "completed",
+        "step_name": "pharmacist_review",
+        "summary": "Pharmacist review remains required before patient-facing use."
+      }
+    ],
+    "stores_raw_image_bytes": false,
+    "synthetic_trace": true,
+    "trace_id": "trace-e2e-ocr-rag-010"
+  }
+]

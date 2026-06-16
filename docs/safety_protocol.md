@@ -27,6 +27,8 @@ Phase 2C adds explicit OCR provider safety metadata. Current providers are local
 
 Phase 2G adds end-to-end synthetic workflow evaluation. It verifies that unverified OCR output is not sent downstream, corrected text is the boundary for prescription analysis, supported medications retrieve source-grounded RAG context, and counseling drafts remain pharmacist-support only. This evaluation is an engineering check, not clinical validation.
 
+Phase 2H adds workflow traceability for synthetic E2E cases. Traces explicitly record that unverified OCR downstream use is blocked, pharmacist correction is required, corrected text is used for downstream analysis, RAG sources are checked, counseling remains draft-only, and pharmacist review remains required. Traces do not store raw image bytes or real patient data.
+
 ## Unsafe Output Avoidance
 
 The system should avoid:

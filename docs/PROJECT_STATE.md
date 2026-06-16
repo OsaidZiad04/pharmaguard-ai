@@ -30,11 +30,13 @@ The current system includes:
 - OCR provider candidate registry and swap-readiness matrix.
 - Disabled-by-default Tesseract local OCR adapter skeleton and dependency checks.
 - End-to-end OCR-to-RAG workflow evaluation.
+- Workflow traceability and pharmacist review audit records for synthetic E2E cases.
 - Pharmacist OCR correction workflow.
 - OCR correction audit metadata returned by `/ocr/confirm-text`.
 - RAG evaluation with synthetic cases.
 - OCR evaluation with synthetic cases.
 - End-to-end OCR-to-RAG workflow evaluation with synthetic cases.
+- Deterministic synthetic workflow trace export and trace report.
 - OCR provider readiness report.
 - Knowledge-base coverage report.
 - Safety guardrails for low confidence, missing patient context, unknown medications, and insufficient local context.
@@ -179,6 +181,13 @@ The frontend is a pharmacist dashboard, not a chatbot. It includes prescription 
 - Key behavior added: Synthetic workflow cases, direct service-level evaluator, corrected-text downstream boundary checks, supported/unsupported medication checks, RAG source grounding checks, counseling availability checks, privacy-warning checks, and pharmacist-review-required checks.
 - Verification summary: Backend tests pass 103 tests; E2E workflow evaluation passes 10/10 synthetic cases.
 
+### Phase 2H: Workflow Traceability & Pharmacist Review Audit Records
+
+- Objective: Add structured synthetic workflow trace records for safe pharmacist-in-the-loop explainability and future audit readiness.
+- Main files/modules added: `backend/app/workflows/trace.py`, `backend/scripts/export_e2e_traces.py`, `backend/scripts/e2e_trace_report.py`, `data/evaluation/generated/e2e_traces.json`, `docs/workflow_traceability.md`.
+- Key behavior added: Trace models, E2E trace generation, deterministic synthetic trace export, trace reporting, correction-boundary trace steps, blocked unverified-OCR downstream step, RAG source refs, safety flags, and pharmacist review records.
+- Verification summary: Backend tests pass 113 tests; trace export produces 10 synthetic traces; trace report shows unverified OCR downstream use blocked in all 10 traces.
+
 ## 5. Supported Knowledge Base
 
 Current total drug profiles: 15.
@@ -215,10 +224,12 @@ Current registry status:
 
 Current verification status:
 
-- Backend tests: 103 passed.
+- Backend tests: 113 passed.
 - RAG evaluation: 46/46 passed.
 - OCR evaluation: 18/18 passed, including 10 fixture-backed cases.
 - E2E OCR-to-RAG workflow evaluation: 10/10 passed.
+- E2E trace export: 10 synthetic traces exported.
+- E2E trace report: PASS, unverified OCR downstream use blocked in 10/10 traces.
 - KB report: PASS, 0 blocking issues.
 - OCR provider report: PASS, 2 active local providers allowed in prototype mode and quality-gate eligible; Tesseract adapter shown as inactive and not prototype-allowed.
 - OCR candidate report: PASS, 5 candidates with 2 prototype allowed, Tesseract adapter-defined but inactive, and cloud OCR blocked.
@@ -235,8 +246,10 @@ cd backend && python scripts/evaluate_ocr.py
 cd backend && python scripts/ocr_provider_report.py
 cd backend && python scripts/ocr_candidate_report.py
 cd backend && python scripts/evaluate_e2e_workflow.py
-cd frontend && npm run typecheck
-cd frontend && npm run build
+cd backend && python scripts/export_e2e_traces.py
+cd backend && python scripts/e2e_trace_report.py
+cd frontend && npm.cmd run typecheck
+cd frontend && npm.cmd run build
 ```
 
 ## 7. Safety and Privacy Boundaries
@@ -253,6 +266,8 @@ Current non-negotiable boundaries:
 - OCR output is unverified.
 - OCR text must be corrected or confirmed by a pharmacist before analysis.
 - End-to-end workflow evaluation uses corrected text only for downstream prescription analysis, RAG, and counseling.
+- Workflow traces show the correction boundary and blocked unverified OCR downstream use.
+- Synthetic trace records do not store raw image bytes or real patient data.
 - Current OCR providers are local, non-networked, and non-storing.
 - Tesseract adapter exists only as disabled scaffolding and is not active OCR.
 - Explicit external OCR provider names are rejected in prototype mode.
@@ -271,13 +286,13 @@ Current non-negotiable boundaries:
 - `backend/app/rag/`: Local TF-IDF RAG components, generation, citation validation, and RAG evaluation.
 - `backend/app/kb/`: Drug registry loading, KB validation, coverage schema, and future ingestion scaffolding.
 - `backend/app/ocr/`: OCR provider interface, local provider implementations, inactive local adapter scaffolding, dependency checks, evaluation metrics, quality gates, provider candidates, swap-readiness checks, and synthetic OCR evaluation runner logic.
-- `backend/app/workflows/`: Synthetic end-to-end workflow evaluation from OCR-like input through corrected text, prescription analysis, RAG, and counseling.
-- `backend/scripts/`: CLI scripts for RAG evaluation, KB reporting, OCR evaluation, OCR provider reporting, and OCR candidate reporting.
+- `backend/app/workflows/`: Synthetic end-to-end workflow evaluation and trace models from OCR-like input through corrected text, prescription analysis, RAG, counseling, and pharmacist review.
+- `backend/scripts/`: CLI scripts for RAG evaluation, KB reporting, OCR evaluation, OCR provider reporting, OCR candidate reporting, E2E workflow evaluation, trace export, and trace reporting.
 - `backend/tests/`: Backend pytest regression tests.
 - `frontend/components/`: Pharmacist dashboard UI components.
 - `frontend/lib/`: Frontend API client and shared TypeScript types.
 - `data/drug_profiles/`: Draft educational Markdown profiles and drug registry.
-- `data/evaluation/`: Synthetic RAG and OCR evaluation datasets plus synthetic OCR fixtures.
+- `data/evaluation/`: Synthetic RAG, OCR, E2E workflow datasets, generated synthetic trace records, and synthetic OCR fixtures.
 - `docs/`: Architecture, safety, privacy, roadmap, OCR evaluation, KB scaling, and living project documentation.
 
 ## 9. Current Limitations
@@ -286,6 +301,7 @@ Current non-negotiable boundaries:
 - No real OCR provider is integrated.
 - Tesseract adapter is disabled by default and not benchmarked as active OCR.
 - E2E workflow evaluation is synthetic and does not prove clinical validity.
+- Workflow traces are synthetic engineering audit artifacts, not production audit logs.
 - Planned OCR engines are not installed or active; the Tesseract adapter skeleton is present but disabled.
 - No real prescription images are used.
 - No persistent audit database exists.
@@ -301,7 +317,7 @@ Current non-negotiable boundaries:
 
 Proposed roadmap:
 
-- Phase 2H: Local OCR Adapter Benchmarking.
+- Phase 2I: Local OCR Adapter Benchmarking.
 - Phase 3: End-to-End Prescription Workflow Evaluation.
 - Phase 4: Drug Knowledge Graph.
 - Phase 5: Deployment & Portfolio Polish.

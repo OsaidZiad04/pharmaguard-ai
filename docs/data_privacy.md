@@ -63,6 +63,30 @@ Possible identifier findings remain category-level warnings, such as `patient_na
 
 The current OCR providers expose safety metadata for whether a provider is external, stores images, or requires network access. Current providers are local, non-networked, and non-storing. Future providers that use networks or storage require explicit privacy review before being enabled.
 
+## Phase 2H Workflow Traces
+
+`data/evaluation/generated/e2e_traces.json` contains deterministic synthetic workflow traces generated from synthetic E2E cases.
+
+Trace records may include:
+
+- synthetic case identifiers
+- step names and statuses
+- source file references
+- possible identifier categories
+- safety flags
+- pharmacist review metadata
+
+Trace records must not include:
+
+- raw image bytes
+- real prescription images
+- real patient identifiers
+- real clinic identifiers
+- raw production OCR text
+- production audit logs
+
+Current generated traces are committed because they are small, deterministic, and synthetic. Regenerate them with `python scripts/export_e2e_traces.py` from `backend/`.
+
 ## TODO
 
 - Define a formal anonymization checklist.

@@ -72,3 +72,15 @@ python scripts/evaluate_e2e_workflow.py
 ```
 
 The evaluator verifies that unverified OCR does not go downstream automatically, pharmacist-corrected text can move into prescription analysis, supported medications retrieve source-backed RAG context, unknown medications remain insufficient context, and counseling drafts remain pharmacist-support only. It is synthetic workflow evaluation, not clinical validation.
+
+## Generated Workflow Traces
+
+`generated/e2e_traces.json` contains deterministic synthetic trace records generated from `e2e_workflow_cases.json`.
+
+Regenerate from `backend/`:
+
+```bash
+python scripts/export_e2e_traces.py
+```
+
+Trace records contain step summaries, source references, safety flags, and pharmacist review metadata. They do not contain raw image bytes, real prescription images, real patient data, or production audit logs.
