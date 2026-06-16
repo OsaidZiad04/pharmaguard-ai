@@ -34,6 +34,8 @@ The current system includes:
 - Knowledge-base governance metadata, source catalog, and governance reporting.
 - Retrieval strategy comparison, retrieval diagnostics, and query classification.
 - Deterministic medication safety-rule findings for pharmacist workflow support.
+- Final project evidence report, final demo report, final QA command list, and static evaluation summary page.
+- Portfolio-ready final documentation package with demo script, case studies, evaluation summary, project story, presentation outline, launch materials, and diagram prompts.
 - End-to-end OCR-to-RAG workflow evaluation.
 - Workflow traceability and pharmacist review audit records for synthetic E2E cases.
 - Pharmacist dashboard workflow polish with visible status and safety panels.
@@ -246,6 +248,13 @@ The frontend is a pharmacist dashboard, not a chatbot. It includes prescription 
 - Key behavior added: Existing default retriever comparison against lexical, metadata-boosted, and hybrid-local strategies; retrieval diagnostics returned as additive RAG metadata; deterministic query classification; prescription-analysis safety findings; synthetic safety-rule report; explicit interaction/contraindication-unavailable policy; trusted-source and pharmacist-review workflow design plans.
 - Verification summary: Retrieval strategy evaluation keeps `existing_default` as recommended default; safety rules report passes synthetic scenarios; patient-facing output remains disabled and pharmacist review remains mandatory.
 
+### Phase 4-Final: Demo Packaging, Evaluation Dashboard & Portfolio Story
+
+- Objective: Package the existing safe prototype as a credible final portfolio project without adding clinical functionality or weakening safety boundaries.
+- Main files/modules added: `data/evaluation/final_demo_cases.json`, `backend/scripts/project_evidence_report.py`, `backend/scripts/final_demo_report.py`, `backend/scripts/final_project_qa.py`, `frontend/app/evaluation/page.tsx`, `docs/final_project_report.md`, `docs/demo_script.md`, `docs/case_studies.md`, `docs/evaluation_summary.md`, `docs/portfolio_story.md`, `docs/final_qa_checklist.md`, `docs/github_showcase_guide.md`, `docs/presentation_outline.md`, `docs/launch_materials.md`, and `docs/diagram_prompts.md`.
+- Key behavior added: Final evidence aggregation, synthetic demo case reporting, QA command listing, static project evidence dashboard, final documentation package, presentation outline, launch text drafts, and diagram prompt descriptions.
+- Verification summary: Final scripts are lightweight reporting/planning tools. They do not add medical functionality, do not ingest real data, do not call external APIs, and preserve the prototype-only, pharmacist-review-required framing.
+
 ## 5. Supported Knowledge Base
 
 Current total drug profiles: 15.
@@ -301,7 +310,7 @@ Source catalog categories:
 
 Current verification status:
 
-- Backend tests: 169 passed, 1 skipped.
+- Backend tests: 177 passed, 1 skipped.
 - RAG evaluation: 46/46 passed.
 - Retrieval strategy evaluation: PASS, recommended default `existing_default`.
 - Safety rules report: PASS, 10/10 synthetic scenarios.
@@ -313,6 +322,10 @@ Current verification status:
 - OCR fixture inspection: PASS for six readable synthetic PNG fixtures.
 - Optional Tesseract benchmark: command runs; current runtime reports skipped because `tesseract_binary` is not detected on `PATH`.
 - OCR activation policy report: PASS.
+- Project evidence report: available through `python scripts/project_evidence_report.py`.
+- Final demo report: available through `python scripts/final_demo_report.py`.
+- Final QA command list: available through `python scripts/final_project_qa.py --list`.
+- Static evaluation page: available at `/evaluation` in the Next.js app after build/start.
 - KB report: PASS, 0 blocking issues.
 - KB governance report: PASS, 0 blocking issues and expected draft/placeholder warnings.
 - OCR provider report: PASS, 2 active local providers allowed in prototype mode and quality-gate eligible; Tesseract adapter shown as inactive and not prototype-allowed.
@@ -339,6 +352,9 @@ cd backend && python scripts/evaluate_e2e_workflow.py
 cd backend && python scripts/export_e2e_traces.py
 cd backend && python scripts/e2e_trace_report.py
 cd backend && python scripts/benchmark_tesseract_ocr.py
+cd backend && python scripts/project_evidence_report.py
+cd backend && python scripts/final_demo_report.py
+cd backend && python scripts/final_project_qa.py --list
 cd frontend && npm.cmd run typecheck
 cd frontend && npm.cmd run build
 ```
@@ -389,13 +405,14 @@ Current non-negotiable boundaries:
 - `backend/app/kb/`: Drug registry loading, KB validation, governance validation, coverage schema, and future ingestion scaffolding.
 - `backend/app/ocr/`: OCR provider interface, local provider implementations, activation policy, safe OCR config, inactive local adapter benchmarking, dependency checks, fixture inspection, evaluation metrics, quality gates, provider candidates, swap-readiness checks, and synthetic OCR evaluation runner logic.
 - `backend/app/workflows/`: Synthetic end-to-end workflow evaluation and trace models from OCR-like input through corrected text, prescription analysis, RAG, counseling, and pharmacist review.
-- `backend/scripts/`: CLI scripts for RAG evaluation, retrieval strategy evaluation, KB reporting, KB governance reporting, safety-rule reporting, OCR evaluation, OCR provider reporting, OCR candidate reporting, E2E workflow evaluation, trace export, and trace reporting.
+- `backend/scripts/`: CLI scripts for RAG evaluation, retrieval strategy evaluation, KB reporting, KB governance reporting, safety-rule reporting, OCR evaluation, OCR provider reporting, OCR candidate reporting, E2E workflow evaluation, trace export/reporting, final evidence reporting, final demo reporting, and final QA command listing.
 - `backend/tests/`: Backend pytest regression tests.
 - `frontend/components/`: Pharmacist dashboard UI components, including workflow status, safety review, and source-grounding panels.
+- `frontend/app/evaluation/`: Static evaluation summary page for portfolio/demo review.
 - `frontend/lib/`: Frontend API client and shared TypeScript types.
 - `data/drug_profiles/`: Draft educational Markdown profiles, drug registry, and source catalog.
 - `data/evaluation/`: Synthetic RAG, OCR, E2E workflow datasets, generated synthetic trace records, and synthetic OCR fixtures.
-- `docs/`: Architecture, safety, privacy, roadmap, OCR evaluation, retrieval intelligence, medication safety rules, KB scaling/governance, and living project documentation.
+- `docs/`: Architecture, safety, privacy, roadmap, OCR evaluation, retrieval intelligence, medication safety rules, KB scaling/governance, final packaging docs, and living project documentation.
 
 ## 9. Current Limitations
 
@@ -424,10 +441,10 @@ Current non-negotiable boundaries:
 
 Proposed roadmap:
 
-- Phase 3D: Demo Packaging, Case Study, and Final Portfolio QA.
+- Immediate post-implementation step: capture screenshots, run final QA from a clean shell, and prepare a demo recording using synthetic cases only.
 - Phase 4A: Trusted Source Ingestion Prototype after source governance approval.
-- Phase 4B: Drug Knowledge Graph.
-- Phase 5: Deployment & Portfolio Polish.
+- Phase 4B: Drug Knowledge Graph experiments after source provenance and review workflow are in place.
+- Phase 5: Deployment & Portfolio Polish with authentication, access control, and audit-retention planning.
 - Future: pharmacist review workflow, authentication, real validated sources, production database, audit persistence, retention policy, access control, and pharmacy-system integration.
 
 ## 11. Living Documentation Rule

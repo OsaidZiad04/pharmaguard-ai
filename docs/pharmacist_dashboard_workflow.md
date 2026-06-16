@@ -61,3 +61,7 @@ Phase 2J adds only an optional backend benchmark command for the disabled Tesser
 Phase 2L-M adds backend OCR activation policy. The dashboard still defaults to the existing safe OCR workflow. If a future UI exposes provider status, it must show blocked/allowed policy state clearly and must not let unverified OCR text bypass pharmacist correction.
 
 Phase 3B-C adds backend retrieval diagnostics and medication safety-rule findings. The dashboard can display these as compact pharmacist-review prompts in a future polish pass, but they must not be shown as final medical advice or as proof that a prescription is clinically appropriate.
+
+## Phase 4-Final Evaluation Page
+
+Phase 4-Final adds a static `/evaluation` page for portfolio review. It summarizes engineering evidence such as RAG, OCR, E2E, KB governance, safety rules, and Tesseract policy status. The page is intentionally static and does not claim clinical validation, production readiness, or patient-facing approval.

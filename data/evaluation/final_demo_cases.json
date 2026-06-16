@@ -1,0 +1,114 @@
+[
+  {
+    "case_id": "DEMO-001",
+    "title": "Clean single-medication prescription",
+    "scenario_type": "text_prescription",
+    "input_text": "SYNTHETIC PRESCRIPTION - NOT REAL. Medication: Paracetamol 500 mg. Directions: Take every 8 hours for 3 days. Pharmacist review required.",
+    "fixture_reference": null,
+    "expected_medications": ["paracetamol"],
+    "expected_safety_findings": ["not_clinically_validated", "patient_facing_not_allowed", "pharmacist_review_required"],
+    "expected_retrieval_behavior": "Supported medication retrieves paracetamol.md context with draft placeholder governance metadata.",
+    "expected_pharmacist_action": "Confirm prescription details, review retrieved sources, and keep counseling output draft-only.",
+    "demo_talking_points": [
+      "Shows baseline text analysis and local RAG retrieval.",
+      "Highlights that source context is draft and pharmacist-review-required.",
+      "Demonstrates no final medical decision is made."
+    ]
+  },
+  {
+    "case_id": "DEMO-002",
+    "title": "OCR correction boundary",
+    "scenario_type": "ocr_correction_boundary",
+    "input_text": "OCR text: Paracetarnol 500 mg every 8 hours. Corrected by pharmacist: Paracetamol 500 mg every 8 hours for 3 days.",
+    "fixture_reference": "data/evaluation/ocr_fixtures/synthetic_paracetamol_clean.png",
+    "expected_medications": ["paracetamol"],
+    "expected_safety_findings": ["pharmacist_review_required"],
+    "expected_retrieval_behavior": "Unverified OCR is not downstream input; corrected text can be analyzed after pharmacist action.",
+    "expected_pharmacist_action": "Correct OCR text before sending it to prescription analysis.",
+    "demo_talking_points": [
+      "OCR output is assistive and unverified.",
+      "Corrected text is the workflow boundary.",
+      "No automatic RAG or counseling occurs from raw OCR."
+    ]
+  },
+  {
+    "case_id": "DEMO-003",
+    "title": "Missing dose or frequency prompt",
+    "scenario_type": "safety_rules",
+    "input_text": "SYNTHETIC PRESCRIPTION - NOT REAL. Medication: Ibuprofen. Directions: Take as directed. Pharmacist review required.",
+    "fixture_reference": null,
+    "expected_medications": ["ibuprofen"],
+    "expected_safety_findings": ["missing_dose", "missing_frequency", "missing_duration", "patient_facing_not_allowed"],
+    "expected_retrieval_behavior": "Supported medication can retrieve context, but safety rules prompt pharmacist confirmation of missing details.",
+    "expected_pharmacist_action": "Verify missing prescription details before counseling or dispensing workflow decisions.",
+    "demo_talking_points": [
+      "Safety rules are deterministic prompts, not clinical decisions.",
+      "Missing fields increase review burden.",
+      "The system does not invent dose or frequency."
+    ]
+  },
+  {
+    "case_id": "DEMO-004",
+    "title": "Multiple medications detected",
+    "scenario_type": "multi_medication_review",
+    "input_text": "SYNTHETIC PRESCRIPTION - NOT REAL. Medication: Paracetamol 500 mg. Medication: Cetirizine 10 mg. Directions: Review each medication separately.",
+    "fixture_reference": "data/evaluation/ocr_fixtures/synthetic_multiple_meds.png",
+    "expected_medications": ["paracetamol", "cetirizine"],
+    "expected_safety_findings": ["multiple_medications_detected", "interaction_check_unavailable", "pharmacist_review_required"],
+    "expected_retrieval_behavior": "Supported medications retrieve separate source-backed contexts; interaction checking remains unavailable.",
+    "expected_pharmacist_action": "Review each medication separately and use validated professional references for interactions.",
+    "demo_talking_points": [
+      "Multiple medications trigger careful workflow review.",
+      "The prototype explicitly does not claim interaction validation.",
+      "Pharmacist judgment remains central."
+    ]
+  },
+  {
+    "case_id": "DEMO-005",
+    "title": "Unsupported medication",
+    "scenario_type": "unsupported_medication",
+    "input_text": "SYNTHETIC PRESCRIPTION - NOT REAL. Medication: Xyzmed 20 mg. Directions: Take daily for 3 days.",
+    "fixture_reference": null,
+    "expected_medications": [],
+    "expected_safety_findings": ["unsupported_medication_detected", "source_grounding_required"],
+    "expected_retrieval_behavior": "Unknown medication returns insufficient knowledge-base context and does not retrieve arbitrary profiles.",
+    "expected_pharmacist_action": "Do not guess. Verify medication identity and KB coverage before generating support text.",
+    "demo_talking_points": [
+      "Unsupported medication handling is safety-first.",
+      "No arbitrary RAG context is used.",
+      "Insufficient context is an acceptable safe outcome."
+    ]
+  },
+  {
+    "case_id": "DEMO-006",
+    "title": "Possible identifier warning",
+    "scenario_type": "privacy_warning",
+    "input_text": "SYNTHETIC ONLY. Fake Patient Code: SYN-000123. Fake Phone: 000-000-0000. Medication: Amoxicillin 500 mg. Directions: Take as directed.",
+    "fixture_reference": "data/evaluation/ocr_fixtures/synthetic_amoxicillin_possible_identifier.png",
+    "expected_medications": ["amoxicillin"],
+    "expected_safety_findings": ["possible_identifier_detected", "missing_frequency"],
+    "expected_retrieval_behavior": "Supported medication can retrieve context while privacy warnings remain visible.",
+    "expected_pharmacist_action": "Treat identifier-like text as sensitive and avoid committing real patient data.",
+    "demo_talking_points": [
+      "Possible identifiers are warnings, not confirmed PII determinations.",
+      "Privacy controls are part of the intake workflow.",
+      "Synthetic data only is used in the repository."
+    ]
+  },
+  {
+    "case_id": "DEMO-007",
+    "title": "Insufficient KB context",
+    "scenario_type": "insufficient_context",
+    "input_text": "SYNTHETIC NOTE - NOT REAL. General question: what should be used for severe symptoms?",
+    "fixture_reference": null,
+    "expected_medications": [],
+    "expected_safety_findings": ["no_medication_detected", "source_grounding_required"],
+    "expected_retrieval_behavior": "Ambiguous condition-like text does not map to a medication and returns insufficient context.",
+    "expected_pharmacist_action": "Ask for a confirmed medication and patient context; do not infer treatment.",
+    "demo_talking_points": [
+      "Condition-only or ambiguous queries do not select a drug.",
+      "The system avoids treatment inference.",
+      "Pharmacist review and source grounding are required."
+    ]
+  }
+]

@@ -76,3 +76,5 @@ The report is an engineering benchmark only. It is not clinical validation and d
 ## Current Policy
 
 `existing_default` remains the recommended default strategy. Any future retriever change must preserve unknown-medication insufficient-context behavior, citation validation, pharmacist review framing, and governance metadata.
+
+Phase 4-Final packages retrieval strategy evidence in the final project reports and static evaluation page. This does not change the default retriever and does not promote any strategy based on portfolio presentation alone.

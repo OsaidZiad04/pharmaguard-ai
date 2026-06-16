@@ -109,3 +109,7 @@ Before any profile could be treated as clinically reliable, the project would ne
 - formal clinical governance outside this prototype
 
 Until then, all outputs remain pharmacist-support drafts only.
+
+## Final Packaging Note
+
+Phase 4-Final includes KB governance status in final reports, the static evaluation page, and portfolio documentation. This improves project communication only. It does not mark any profile as reviewed, clinically validated, trusted-source-ready, or patient-facing.

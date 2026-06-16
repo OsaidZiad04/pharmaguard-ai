@@ -143,3 +143,7 @@ Phase 3B-C adds retrieval diagnostics and medication safety-rule findings that c
 - patient-facing output disabled findings
 
 These checks are deterministic engineering safeguards. They do not implement clinical interaction checking or contraindication checking, and they do not make workflow evaluation clinical validation.
+
+## Final Demo Packaging
+
+Phase 4-Final adds `data/evaluation/final_demo_cases.json` and `backend/scripts/final_demo_report.py` for demo planning. These cases reuse the same synthetic workflow boundaries: unverified OCR cannot go downstream, corrected text is the analysis boundary, RAG must be source-grounded, and pharmacist review remains mandatory.

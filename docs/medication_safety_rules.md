@@ -30,8 +30,9 @@ Current deterministic rules include:
 - `patient_facing_not_allowed`
 - `duplicate_medication_mention`
 - `ambiguous_strength_or_units`
-- `counseling_requires_context`
 - `source_grounding_required`
+- `interaction_check_unavailable`
+- `contraindication_check_unavailable`
 
 Each finding includes:
 
@@ -75,3 +76,5 @@ This is an engineering safety support report, not clinical validation.
 ## Pharmacist Boundary
 
 All safety findings are prompts for pharmacist review. They must not be presented as final medical advice or as proof that a prescription is clinically appropriate.
+
+Phase 4-Final surfaces safety-rule evidence in reports and demo materials only. It does not add new clinical rules and does not change patient-facing restrictions.

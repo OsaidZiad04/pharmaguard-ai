@@ -26,6 +26,8 @@ Phase 3A adds `data/drug_profiles/source_catalog.json` and governance metadata f
 
 Phase 3B-C adds retrieval diagnostics and medication safety-rule findings. These findings may reference prescription text patterns, possible identifiers, and medication terms in runtime responses. They are not persisted to a production database in this phase and must not be populated with real patient data in repository tests or fixtures.
 
+Phase 4-Final adds demo cases, evidence reports, and portfolio materials. These assets must remain synthetic. Screenshots, demo recordings, launch text, and final documentation must not include real prescriptions, patient names, phone numbers, IDs, addresses, clinic identifiers, or real OCR outputs from patient records.
+
 ## Real Prescription Handling
 
 If real prescriptions are ever used for local experimentation:

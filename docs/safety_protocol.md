@@ -37,6 +37,8 @@ Phase 3A adds knowledge-base governance metadata. Current drug profiles remain d
 
 Phase 3B-C adds retrieval diagnostics, deterministic query classification, and medication safety-rule findings. These findings are pharmacist-review prompts only. They do not validate drug-drug interactions, contraindications, diagnosis, treatment choice, patient-specific dosing, or prescription appropriateness.
 
+Phase 4-Final adds demo reports, final QA scripts, a static evaluation summary page, and portfolio documentation. These materials must preserve prototype-only language, must not claim clinical validation, and must not show real patient data.
+
 ## Unsafe Output Avoidance
 
 The system should avoid:

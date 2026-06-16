@@ -2,9 +2,9 @@
 
 ## PharmaGuard AI
 
-PharmaGuard AI is a pharmacist-centered AI copilot foundation for prescription text review, trusted medication information retrieval, patient counseling note drafting, and safety-first workflow enforcement.
+PharmaGuard AI is a pharmacist-centered AI copilot prototype for prescription intake, pharmacist correction, local RAG retrieval, knowledge-base governance, safety-rule prompts, workflow traceability, and evaluation-driven review.
 
-This repository is being developed incrementally toward a pharmacy-ready architecture, but the current implementation uses synthetic data and local placeholder knowledge only. It is not a medical device, does not diagnose, and must never make final medical decisions.
+This repository has been developed incrementally toward a pharmacy-ready architecture, but the current implementation uses synthetic data and local placeholder knowledge only. It is not a medical device, is not clinically validated, does not diagnose, and must never make final medical decisions.
 
 ## Problem Statement
 
@@ -72,6 +72,7 @@ Implemented now:
 - Phase 2L-M controlled OCR activation policy and safe explicit Tesseract prototype mode.
 - Phase 3A knowledge base governance upgrade: explicit source/review/clinical-validation metadata, source catalog, governance report, and source-aware RAG metadata.
 - Phase 3B-C retrieval intelligence and medication safety rules: deterministic query classification, retrieval diagnostics, strategy comparison, safety-rule findings, and trusted-source/review workflow plans.
+- Phase 4-Final demo packaging: final evidence report, final demo cases, final demo report, final QA command list, static evaluation summary page, and portfolio documentation package.
 - Direct `POST /rag/query` endpoint.
 - Next.js dashboard that calls backend endpoints.
 - Pytest coverage for core placeholder behavior, RAG retrieval, citation validation, KB registry validation, OCR intake, and safety regressions.
@@ -276,6 +277,15 @@ cd backend
 python scripts/benchmark_tesseract_ocr.py
 ```
 
+Run final packaging reports:
+
+```bash
+cd backend
+python scripts/project_evidence_report.py
+python scripts/final_demo_report.py
+python scripts/final_project_qa.py --list
+```
+
 The evaluation currently contains 46 synthetic cases. It reports retrieval checks (`top_k_hit`, `source_file_hit`, `section_hit`, `insufficient_context_correct`) and generation safety checks for required terms, forbidden terms, draft/pharmacist-review framing, unavailable information, and fabricated citations.
 
 Retrieval strategy evaluation compares `existing_default`, `lexical_overlap`, `metadata_boosted`, and `hybrid_local`. The current default retriever remains `existing_default`; comparison metrics are engineering checks only and do not validate clinical correctness.
@@ -284,11 +294,24 @@ The OCR evaluation currently contains 18 synthetic cases, including 10 fixture-b
 
 The KB report summarizes profile counts, aliases, review/source status, missing sections, alias conflicts, disabled profiles, and unreviewed draft profiles. The KB governance report summarizes source/review/clinical-validation status, patient-facing restrictions, counseling draft allowance, pharmacist review requirements, source catalog categories, blockers, and warnings. The safety rules report exercises deterministic workflow-support rules such as missing dose/frequency/duration/route, unsupported medication text, possible identifiers, placeholder KB context, and patient-facing output blocks. Dense retrieval remains deferred until the TF-IDF baseline and KB governance are stronger. Production OCR and external OCR providers remain deferred.
 
+## Demo And Portfolio Package
+
+Final demo assets are included for a portfolio-ready walkthrough:
+
+- Static evaluation summary page: `frontend/app/evaluation/page.tsx` at `/evaluation`.
+- Synthetic final demo cases: `data/evaluation/final_demo_cases.json`.
+- Project evidence report: `backend/scripts/project_evidence_report.py`.
+- Final demo report: `backend/scripts/final_demo_report.py`.
+- Final QA command list: `backend/scripts/final_project_qa.py --list`.
+- Final docs: `docs/final_project_report.md`, `docs/demo_script.md`, `docs/case_studies.md`, `docs/evaluation_summary.md`, `docs/portfolio_story.md`, `docs/final_qa_checklist.md`, `docs/github_showcase_guide.md`, `docs/presentation_outline.md`, `docs/launch_materials.md`, and `docs/diagram_prompts.md`.
+
+All demo material is synthetic and must preserve the same boundaries: prototype only, not clinical validation, pharmacist review mandatory, patient-facing output disabled, and current KB content draft placeholder educational only.
+
 ## Future Roadmap
 
 See [docs/roadmap.md](docs/roadmap.md).
 
-For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For KB governance, see [docs/kb_governance.md](docs/kb_governance.md). For retrieval intelligence, see [docs/retrieval_intelligence.md](docs/retrieval_intelligence.md). For medication safety rules, see [docs/medication_safety_rules.md](docs/medication_safety_rules.md). For trusted-source planning, see [docs/trusted_source_ingestion_plan.md](docs/trusted_source_ingestion_plan.md). For pharmacist review workflow planning, see [docs/pharmacist_review_workflow.md](docs/pharmacist_review_workflow.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR activation policy, see [docs/ocr_activation_policy.md](docs/ocr_activation_policy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For optional Tesseract benchmarking, see [docs/tesseract_benchmarking.md](docs/tesseract_benchmarking.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md). For dashboard workflow notes, see [docs/pharmacist_dashboard_workflow.md](docs/pharmacist_dashboard_workflow.md).
+For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For the final project narrative, see [docs/final_project_report.md](docs/final_project_report.md), [docs/demo_script.md](docs/demo_script.md), [docs/evaluation_summary.md](docs/evaluation_summary.md), and [docs/portfolio_story.md](docs/portfolio_story.md). For KB governance, see [docs/kb_governance.md](docs/kb_governance.md). For retrieval intelligence, see [docs/retrieval_intelligence.md](docs/retrieval_intelligence.md). For medication safety rules, see [docs/medication_safety_rules.md](docs/medication_safety_rules.md). For trusted-source planning, see [docs/trusted_source_ingestion_plan.md](docs/trusted_source_ingestion_plan.md). For pharmacist review workflow planning, see [docs/pharmacist_review_workflow.md](docs/pharmacist_review_workflow.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR activation policy, see [docs/ocr_activation_policy.md](docs/ocr_activation_policy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For optional Tesseract benchmarking, see [docs/tesseract_benchmarking.md](docs/tesseract_benchmarking.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md). For dashboard workflow notes, see [docs/pharmacist_dashboard_workflow.md](docs/pharmacist_dashboard_workflow.md).
 
 ## Data Warning
 

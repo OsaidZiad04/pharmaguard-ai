@@ -182,6 +182,16 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Add trusted-source ingestion and pharmacist review workflow design docs. Complete.
 - Keep patient-facing output disabled and pharmacist review mandatory. Complete.
 
+## Phase 4-Final: Demo Packaging, Evaluation Dashboard & Portfolio Story - Complete
+
+- Add final project evidence aggregator. Complete.
+- Add synthetic final demo cases and final demo report. Complete.
+- Add final QA command list. Complete.
+- Add static evaluation summary page. Complete.
+- Polish README and living project state. Complete.
+- Add final project report, demo script, case studies, evaluation summary, portfolio story, QA checklist, GitHub showcase guide, presentation outline, launch materials, and diagram prompts. Complete.
+- Preserve prototype-only, pharmacist-review-required, patient-facing-disabled, not-clinically-validated framing. Complete.
+
 ## Phase 2N: Production-Ready OCR Integration Planning
 
 - Add production-ready OCR workflow only after provider validation.
@@ -201,10 +211,9 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Add graph-backed lookup experiments.
 - Use graph constraints to reduce unsafe guesses.
 
-## Phase 5: Portfolio Polish
+## Phase 5: Deployment & Portfolio Polish
 
-- Improve UX and accessibility.
-- Add architecture diagrams.
-- Add demo script and sample screenshots.
+- Improve accessibility and deployment documentation.
+- Capture screenshots from synthetic demo cases.
 - Add deployment documentation.
-- Prepare a concise project case study.
+- Add production authentication, authorization, retention, and audit planning before any real pharmacy workflow use.

@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, Phase 2G end-to-end OCR-to-RAG workflow evaluation, Phase 2H workflow traceability, Phase 2I pharmacist dashboard workflow polish, Phase 2J optional local Tesseract benchmarking with synthetic fixtures, Phase 2K OCR-readable synthetic fixtures, Phase 2L-M controlled OCR activation policy, Phase 3A knowledge base governance, and Phase 3B-C retrieval intelligence with deterministic medication safety rules.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, Phase 2G end-to-end OCR-to-RAG workflow evaluation, Phase 2H workflow traceability, Phase 2I pharmacist dashboard workflow polish, Phase 2J optional local Tesseract benchmarking with synthetic fixtures, Phase 2K OCR-readable synthetic fixtures, Phase 2L-M controlled OCR activation policy, Phase 3A knowledge base governance, Phase 3B-C retrieval intelligence with deterministic medication safety rules, and Phase 4-Final demo/evaluation packaging.
 
 ## Pipeline
 
@@ -248,6 +248,18 @@ Phase 3B-C adds diagnostic intelligence around retrieval and deterministic safet
 This phase does not implement clinical interaction checking, contraindication checking, patient-specific recommendations, or final medical advice. Interaction and contraindication checks are explicitly marked unavailable pending trusted-source ingestion and pharmacist review workflow.
 
 This phase prepares the project for hundreds of future medication profiles without encouraging hundreds of manually maintained Markdown files as the long-term architecture. Future ingestion should preserve provenance and require pharmacist approval before enabling RAG.
+
+## Phase 4-Final Demo Packaging
+
+Phase 4-Final adds presentation and evidence layers around the existing architecture without changing clinical behavior:
+
+- `backend/scripts/project_evidence_report.py` aggregates existing engineering evidence.
+- `backend/scripts/final_demo_report.py` summarizes synthetic demo cases.
+- `backend/scripts/final_project_qa.py` lists or runs final verification commands.
+- `frontend/app/evaluation/page.tsx` provides a static evidence summary page.
+- Final docs explain the demo story, evaluation status, portfolio narrative, launch materials, and diagram prompts.
+
+These additions are packaging and reporting surfaces only. They do not add clinical validation, patient-facing advice, external APIs, real data, or new autonomous workflow paths.
 
 ## Phase 1.5 RAG Hardening
 
