@@ -28,6 +28,8 @@ class RetrievedContext:
     requires_pharmacist_review: bool | None = None
     patient_facing_allowed: bool | None = None
     counseling_draft_allowed: bool | None = None
+    strategy_name: str | None = None
+    score_explanation: str | None = None
 
 
 class LocalRagIndex:
@@ -81,6 +83,8 @@ class LocalRagIndex:
                     section_title=metadata["section_title"],
                     text=result.chunk.text,
                     score=result.score,
+                    strategy_name="current_tfidf",
+                    score_explanation="TF-IDF cosine similarity after medication-aware filtering.",
                     **governance_metadata,
                 )
             )

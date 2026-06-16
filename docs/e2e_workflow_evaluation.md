@@ -130,3 +130,16 @@ Phase 3A adds governance metadata to retrieved RAG context. Workflow evaluation 
 - counseling draft allowance
 
 Current profiles remain draft placeholder material and not clinically validated. This metadata supports safer workflow review; it does not make E2E evaluation a clinical validation process.
+
+## Retrieval And Safety Diagnostics
+
+Phase 3B-C adds retrieval diagnostics and medication safety-rule findings that can support E2E workflow review:
+
+- query type and risk classification
+- insufficient or weak retrieval status
+- placeholder-only and not-clinically-validated source warnings
+- missing prescription field prompts
+- unsupported/no medication blockers
+- patient-facing output disabled findings
+
+These checks are deterministic engineering safeguards. They do not implement clinical interaction checking or contraindication checking, and they do not make workflow evaluation clinical validation.

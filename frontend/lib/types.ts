@@ -12,6 +12,20 @@ export interface SafetyAlert {
   requires_pharmacist_review: boolean;
 }
 
+export interface MedicationSafetyRuleResult {
+  rule_id: string;
+  severity: "info" | "caution" | "warning" | "blocker";
+  message: string;
+  detected_terms: string[];
+  pharmacist_action: string;
+  evidence_source:
+    | "prescription_text"
+    | "retrieval_metadata"
+    | "kb_governance"
+    | "system_policy";
+  patient_facing_allowed: boolean;
+}
+
 export interface ExtractedMedication {
   name: string;
   matched_text: string;
@@ -27,6 +41,7 @@ export interface PrescriptionAnalysisResponse {
   confidence_score: number;
   missing_information: string[];
   safety_alerts: SafetyAlert[];
+  safety_findings?: MedicationSafetyRuleResult[];
   pharmacist_review_required: boolean;
 }
 
@@ -43,6 +58,8 @@ export interface RetrievedChunk {
   requires_pharmacist_review?: boolean | null;
   patient_facing_allowed?: boolean | null;
   counseling_draft_allowed?: boolean | null;
+  strategy_name?: string | null;
+  score_explanation?: string | null;
 }
 
 export interface RagDrugCard {
@@ -54,6 +71,7 @@ export interface RagDrugCard {
   retrieved_sources: RetrievedChunk[];
   grounded_answer: string;
   insufficient_context: boolean;
+  retrieval_diagnostics?: Record<string, unknown> | null;
   source: string;
   pharmacist_review_required: boolean;
 }
@@ -107,6 +125,7 @@ export interface RagQueryResponse {
   grounded_answer: string;
   review_required: boolean;
   insufficient_context: boolean;
+  retrieval_diagnostics?: Record<string, unknown> | null;
 }
 
 export interface PrivacyWarning {

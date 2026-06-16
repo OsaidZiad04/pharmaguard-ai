@@ -1,6 +1,6 @@
 # Architecture
 
-PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, Phase 2G end-to-end OCR-to-RAG workflow evaluation, Phase 2H workflow traceability, Phase 2I pharmacist dashboard workflow polish, Phase 2J optional local Tesseract benchmarking with synthetic fixtures, Phase 2K OCR-readable synthetic fixtures, Phase 2L-M controlled OCR activation policy, and Phase 3A knowledge base governance.
+PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current implementation includes a local Phase 1 RAG MVP using Markdown drug profiles and TF-IDF retrieval, Phase 1.5 hardening for evaluation and citation validation, Phase 1.6 knowledge base/evaluation expansion, Phase 1.7 controlled knowledge base expansion, Phase 1.8 scalable knowledge base architecture, Phase 2A privacy-safe OCR intake foundation, Phase 2B OCR evaluation/correction audit, Phase 2C OCR provider interface with synthetic fixtures, Phase 2D OCR quality benchmarking/provider swap readiness, Phase 2E OCR provider candidate comparison, Phase 2F disabled local OCR adapter scaffolding, Phase 2G end-to-end OCR-to-RAG workflow evaluation, Phase 2H workflow traceability, Phase 2I pharmacist dashboard workflow polish, Phase 2J optional local Tesseract benchmarking with synthetic fixtures, Phase 2K OCR-readable synthetic fixtures, Phase 2L-M controlled OCR activation policy, Phase 3A knowledge base governance, and Phase 3B-C retrieval intelligence with deterministic medication safety rules.
 
 ## Pipeline
 
@@ -29,6 +29,7 @@ PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current im
 5. Safety Layer
    - Current: warns on low confidence, missing patient context, and unknown medication names.
    - Current: OCR output remains unverified and requires pharmacist correction before downstream analysis.
+   - Phase 3C: deterministic medication safety findings can flag missing prescription fields, unsupported/no medication, possible identifiers, placeholder KB context, not-clinically-validated profiles, patient-facing blocks, and unavailable interaction/contraindication checking.
    - Always: final decisions remain with the pharmacist.
 
 6. RAG Retrieval
@@ -36,6 +37,7 @@ PharmaGuard AI is structured as a pharmacist-in-the-loop copilot. The current im
    - Phase 1.5: validates retrieved source metadata, checks generated citations, and runs synthetic RAG evaluation cases before OCR work begins.
    - Phase 1.8: uses `drug_registry.json` for supported identities, aliases, review status, source status, and RAG enablement metadata.
    - Phase 3A: adds governance metadata for source status, review status, clinical validation status, pharmacist review requirements, patient-facing restrictions, and counseling-draft allowance. Retrieved chunks expose this metadata without changing retrieval ranking.
+   - Phase 3B: adds strategy comparison, query classification, and retrieval diagnostics around the existing retriever. The production default remains the current TF-IDF retriever.
    - Later: replace or supplement TF-IDF with dense vector retrieval after baseline evaluation.
 
 7. Pharmacist Review
@@ -231,6 +233,19 @@ Phase 3A adds source-aware and review-aware governance around the local knowledg
 - Retrieved RAG chunks now include governance fields where available.
 
 All current profiles remain `draft`, `placeholder_educational`, and `not_validated`. They are enabled for engineering RAG only, are not patient-facing, and require pharmacist review.
+
+## Phase 3B-C Retrieval Intelligence And Medication Safety Rules
+
+Phase 3B-C adds diagnostic intelligence around retrieval and deterministic safety-rule prompts around prescription analysis.
+
+- `backend/app/rag/retrieval_strategies.py` compares the existing TF-IDF retriever with local lexical, metadata-boosted, and hybrid strategies.
+- `backend/app/rag/retrieval_diagnostics.py` identifies insufficient, weak, single-source, placeholder-only, draft/unvalidated, and pharmacist-review-required retrieval.
+- `backend/app/rag/query_classifier.py` classifies queries with deterministic registry-based rules.
+- `backend/scripts/evaluate_retrieval_strategies.py` reports strategy metrics and keeps `existing_default` as the recommended default.
+- `backend/app/safety/medication_rules.py` produces pharmacist-support safety findings for missing fields, unsupported medication text, no medication, possible identifiers, KB governance risk, and patient-facing blocks.
+- `backend/scripts/safety_rules_report.py` runs synthetic safety-rule scenarios.
+
+This phase does not implement clinical interaction checking, contraindication checking, patient-specific recommendations, or final medical advice. Interaction and contraindication checks are explicitly marked unavailable pending trusted-source ingestion and pharmacist review workflow.
 
 This phase prepares the project for hundreds of future medication profiles without encouraging hundreds of manually maintained Markdown files as the long-term architecture. Future ingestion should preserve provenance and require pharmacist approval before enabling RAG.
 

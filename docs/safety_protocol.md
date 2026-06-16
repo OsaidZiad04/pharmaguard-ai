@@ -35,6 +35,8 @@ Phase 2L-M adds controlled OCR activation policy. Tesseract remains blocked in d
 
 Phase 3A adds knowledge-base governance metadata. Current drug profiles remain draft educational placeholders, not clinically validated sources. `patient_facing_allowed` is false for every current profile, `requires_pharmacist_review` is true, and counseling output remains draft-only under pharmacist review. The governance report is an engineering safety check, not clinical validation.
 
+Phase 3B-C adds retrieval diagnostics, deterministic query classification, and medication safety-rule findings. These findings are pharmacist-review prompts only. They do not validate drug-drug interactions, contraindications, diagnosis, treatment choice, patient-specific dosing, or prescription appropriateness.
+
 ## Unsafe Output Avoidance
 
 The system should avoid:
@@ -46,6 +48,7 @@ The system should avoid:
 - claims that a medication is appropriate for a specific patient
 - claims that draft placeholder KB content is clinically validated
 - hidden assumptions about allergies, pregnancy, age, renal function, or drug interactions
+- claims that retrieval diagnostics or safety rules prove a prescription is safe or appropriate
 
 ## Human Control
 
@@ -58,6 +61,7 @@ The pharmacist must verify:
 - patient-specific risk factors
 - counseling note correctness
 - retrieved source governance status and whether profile content is draft or validated
+- deterministic safety-rule findings and their limitations
 - whether the output is appropriate to share
 
 ## TODO
@@ -69,3 +73,4 @@ The pharmacist must verify:
 - Add synthetic image fixtures before any production OCR provider is considered.
 - Expand synthetic fixture coverage before any production OCR provider is considered.
 - Add pharmacist sign-off and audit-retention policy before correction audits are stored.
+- Add validated source ingestion before any real interaction or contraindication checking.

@@ -32,6 +32,8 @@ The current system includes:
 - OCR-readable synthetic PNG fixtures with fixture inspection.
 - Controlled OCR activation policy with safe defaults and policy reporting.
 - Knowledge-base governance metadata, source catalog, and governance reporting.
+- Retrieval strategy comparison, retrieval diagnostics, and query classification.
+- Deterministic medication safety-rule findings for pharmacist workflow support.
 - End-to-end OCR-to-RAG workflow evaluation.
 - Workflow traceability and pharmacist review audit records for synthetic E2E cases.
 - Pharmacist dashboard workflow polish with visible status and safety panels.
@@ -46,6 +48,8 @@ The current system includes:
 - OCR provider readiness report.
 - Knowledge-base coverage report.
 - Knowledge-base governance report.
+- Retrieval strategy evaluation report.
+- Medication safety rules report.
 - Safety guardrails for low confidence, missing patient context, unknown medications, and insufficient local context.
 
 The current system does not include:
@@ -54,6 +58,7 @@ The current system does not include:
 - External OCR APIs.
 - External medical APIs.
 - Dense retrieval.
+- Real clinical interaction or contraindication checking.
 - Production OCR.
 - Default Tesseract, EasyOCR, or cloud OCR provider integration.
 - Clinical validation claims.
@@ -68,7 +73,11 @@ Current workflow:
 
 ### RAG Pipeline
 
-The local RAG pipeline loads Markdown drug profiles from `data/drug_profiles/`, chunks them by headings and paragraphs, embeds chunks with local TF-IDF, stores them in an in-memory vector index, retrieves medication-specific context, validates citations, and generates grounded pharmacist-support drafts. If relevant context is missing or weak, the system returns insufficient knowledge-base context instead of guessing.
+The local RAG pipeline loads Markdown drug profiles from `data/drug_profiles/`, chunks them by headings and paragraphs, embeds chunks with local TF-IDF, stores them in an in-memory vector index, retrieves medication-specific context, validates citations, and generates grounded pharmacist-support drafts. If relevant context is missing or weak, the system returns insufficient knowledge-base context instead of guessing. Phase 3B adds diagnostic retrieval strategies, query classification, and retrieval-quality reporting around the existing retriever. The default production path remains the current medication-aware TF-IDF retriever.
+
+### Safety Rules Pipeline
+
+Phase 3C adds deterministic medication safety-rule findings to prescription analysis. Rules can flag missing dose/frequency/duration/route, multiple medications, unsupported medication-like text, no medication detected, possible identifiers, placeholder-only KB context, not-clinically-validated profiles, pharmacist review requirements, and patient-facing output blocks. Interaction and contraindication checks are explicitly unavailable and require future trusted-source ingestion. These findings are pharmacist-support prompts only.
 
 ### KB Registry Pipeline
 
@@ -230,6 +239,13 @@ The frontend is a pharmacist dashboard, not a chatbot. It includes prescription 
 - Key behavior added: Governance metadata for all 15 profiles, source catalog categories, patient-facing output restrictions, counseling draft allowance under pharmacist review, clinical validation status checks, source-reference requirements for trusted-source-ready profiles, governance summary in `kb_report.py`, and governance metadata on retrieved RAG chunks.
 - Verification summary: Current profiles remain draft, placeholder educational, not clinically validated, not patient-facing, and pharmacist-review-required; governance report passes with 0 blockers and expected draft/placeholder warnings.
 
+### Phase 3B-C: Retrieval Intelligence & Medication Safety Rules
+
+- Objective: Add retrieval diagnostics, strategy comparison, query/risk classification, and deterministic medication safety-rule prompts without replacing the RAG architecture or creating a clinical decision engine.
+- Main files/modules added: `backend/app/rag/retrieval_strategies.py`, `backend/app/rag/retrieval_diagnostics.py`, `backend/app/rag/query_classifier.py`, `backend/app/rag/retrieval_evaluation.py`, `backend/app/safety/medication_rules.py`, `backend/app/safety/safety_models.py`, `backend/scripts/evaluate_retrieval_strategies.py`, `backend/scripts/safety_rules_report.py`, `docs/retrieval_intelligence.md`, `docs/medication_safety_rules.md`, `docs/trusted_source_ingestion_plan.md`, `docs/pharmacist_review_workflow.md`.
+- Key behavior added: Existing default retriever comparison against lexical, metadata-boosted, and hybrid-local strategies; retrieval diagnostics returned as additive RAG metadata; deterministic query classification; prescription-analysis safety findings; synthetic safety-rule report; explicit interaction/contraindication-unavailable policy; trusted-source and pharmacist-review workflow design plans.
+- Verification summary: Retrieval strategy evaluation keeps `existing_default` as recommended default; safety rules report passes synthetic scenarios; patient-facing output remains disabled and pharmacist review remains mandatory.
+
 ## 5. Supported Knowledge Base
 
 Current total drug profiles: 15.
@@ -285,8 +301,10 @@ Source catalog categories:
 
 Current verification status:
 
-- Backend tests: 145 passed, 1 skipped.
+- Backend tests: 169 passed, 1 skipped.
 - RAG evaluation: 46/46 passed.
+- Retrieval strategy evaluation: PASS, recommended default `existing_default`.
+- Safety rules report: PASS, 10/10 synthetic scenarios.
 - OCR evaluation: 18/18 passed, including 10 fixture-backed cases.
 - E2E OCR-to-RAG workflow evaluation: 10/10 passed.
 - E2E trace export: 10 synthetic traces exported.
@@ -309,8 +327,10 @@ cd backend && python -m pytest
 cd backend && python scripts/generate_ocr_fixtures.py
 cd backend && python scripts/inspect_ocr_fixtures.py
 cd backend && python scripts/evaluate_rag.py
+cd backend && python scripts/evaluate_retrieval_strategies.py
 cd backend && python scripts/kb_report.py
 cd backend && python scripts/kb_governance_report.py
+cd backend && python scripts/safety_rules_report.py
 cd backend && python scripts/evaluate_ocr.py
 cd backend && python scripts/ocr_provider_report.py
 cd backend && python scripts/ocr_candidate_report.py
@@ -332,6 +352,9 @@ Current non-negotiable boundaries:
 - The system must not provide final medical advice.
 - Unknown medications must not be guessed.
 - Weak or missing local context returns insufficient knowledge-base context.
+- Retrieval diagnostics and strategy comparisons are engineering checks, not clinical validation.
+- Medication safety-rule findings are pharmacist-support prompts, not clinical decisions.
+- Interaction and contraindication checks are explicitly unavailable in this prototype.
 - No real patient data belongs in the repository.
 - Uploaded images are not stored by default.
 - OCR output is unverified.
@@ -344,6 +367,7 @@ Current non-negotiable boundaries:
 - Current KB profiles are not allowed for patient-facing output.
 - Counseling drafts are allowed only as pharmacist-review-required support.
 - KB governance reports are engineering checks, not clinical validation.
+- Patient-facing output remains disabled by KB governance and safety-rule policy.
 - Current OCR providers are local, non-networked, and non-storing.
 - Tesseract adapter exists only as disabled/benchmark-only scaffolding and is not active OCR.
 - Tesseract is blocked in default workflow and can only be used in explicit prototype workflow mode when policy gates pass.
@@ -360,17 +384,18 @@ Current non-negotiable boundaries:
 - `backend/app/main.py`: FastAPI application factory and route wiring.
 - `backend/app/api/`: HTTP route modules for health, prescriptions, drugs, counseling, RAG, and OCR.
 - `backend/app/services/`: Application services for extraction, safety, lookup, counseling, RAG orchestration, OCR, and OCR audit.
-- `backend/app/rag/`: Local TF-IDF RAG components, generation, citation validation, and RAG evaluation.
+- `backend/app/rag/`: Local TF-IDF RAG components, generation, citation validation, RAG evaluation, retrieval diagnostics, strategy comparison, and query classification.
+- `backend/app/safety/`: Deterministic medication safety-rule models and rule evaluation.
 - `backend/app/kb/`: Drug registry loading, KB validation, governance validation, coverage schema, and future ingestion scaffolding.
 - `backend/app/ocr/`: OCR provider interface, local provider implementations, activation policy, safe OCR config, inactive local adapter benchmarking, dependency checks, fixture inspection, evaluation metrics, quality gates, provider candidates, swap-readiness checks, and synthetic OCR evaluation runner logic.
 - `backend/app/workflows/`: Synthetic end-to-end workflow evaluation and trace models from OCR-like input through corrected text, prescription analysis, RAG, counseling, and pharmacist review.
-- `backend/scripts/`: CLI scripts for RAG evaluation, KB reporting, KB governance reporting, OCR evaluation, OCR provider reporting, OCR candidate reporting, E2E workflow evaluation, trace export, and trace reporting.
+- `backend/scripts/`: CLI scripts for RAG evaluation, retrieval strategy evaluation, KB reporting, KB governance reporting, safety-rule reporting, OCR evaluation, OCR provider reporting, OCR candidate reporting, E2E workflow evaluation, trace export, and trace reporting.
 - `backend/tests/`: Backend pytest regression tests.
 - `frontend/components/`: Pharmacist dashboard UI components, including workflow status, safety review, and source-grounding panels.
 - `frontend/lib/`: Frontend API client and shared TypeScript types.
 - `data/drug_profiles/`: Draft educational Markdown profiles, drug registry, and source catalog.
 - `data/evaluation/`: Synthetic RAG, OCR, E2E workflow datasets, generated synthetic trace records, and synthetic OCR fixtures.
-- `docs/`: Architecture, safety, privacy, roadmap, OCR evaluation, KB scaling/governance, and living project documentation.
+- `docs/`: Architecture, safety, privacy, roadmap, OCR evaluation, retrieval intelligence, medication safety rules, KB scaling/governance, and living project documentation.
 
 ## 9. Current Limitations
 
@@ -384,6 +409,8 @@ Current non-negotiable boundaries:
 - No real prescription images are used.
 - No persistent audit database exists.
 - Retrieval uses local TF-IDF only.
+- Retrieval strategy comparison is synthetic and does not validate clinical relevance.
+- Medication safety rules are deterministic workflow prompts and do not perform real interaction, contraindication, diagnosis, or appropriateness checking.
 - The knowledge base is draft educational placeholder content only.
 - Source catalog categories are governance scaffolding only; trusted sources have not been ingested.
 - No current drug profile has pharmacist-reviewed source evidence, reviewer role, review timestamp, or clinical validation.
@@ -397,10 +424,9 @@ Current non-negotiable boundaries:
 
 Proposed roadmap:
 
-- Phase 2N: Production-Ready OCR Integration Planning.
-- Phase 3B: Trusted Source Ingestion Design and Review Workflow Planning.
-- Phase 3: End-to-End Prescription Workflow Evaluation.
-- Phase 4: Drug Knowledge Graph.
+- Phase 3D: Demo Packaging, Case Study, and Final Portfolio QA.
+- Phase 4A: Trusted Source Ingestion Prototype after source governance approval.
+- Phase 4B: Drug Knowledge Graph.
 - Phase 5: Deployment & Portfolio Polish.
 - Future: pharmacist review workflow, authentication, real validated sources, production database, audit persistence, retention policy, access control, and pharmacy-system integration.
 

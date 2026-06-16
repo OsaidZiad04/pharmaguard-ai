@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 
+from app.safety.safety_models import MedicationSafetyRuleResult
 from app.schemas.safety import SafetyAlert
 
 
@@ -30,4 +31,5 @@ class PrescriptionAnalysisResponse(BaseModel):
     confidence_score: float = Field(ge=0.0, le=1.0)
     missing_information: list[str]
     safety_alerts: list[SafetyAlert]
+    safety_findings: list[MedicationSafetyRuleResult] = Field(default_factory=list)
     pharmacist_review_required: bool = True

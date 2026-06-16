@@ -59,3 +59,5 @@ This phase does not add real OCR, activate Tesseract, call external APIs, store 
 Phase 2J adds only an optional backend benchmark command for the disabled Tesseract adapter. The dashboard continues to use the existing safe OCR workflow and does not expose Tesseract as an active provider.
 
 Phase 2L-M adds backend OCR activation policy. The dashboard still defaults to the existing safe OCR workflow. If a future UI exposes provider status, it must show blocked/allowed policy state clearly and must not let unverified OCR text bypass pharmacist correction.
+
+Phase 3B-C adds backend retrieval diagnostics and medication safety-rule findings. The dashboard can display these as compact pharmacist-review prompts in a future polish pass, but they must not be shown as final medical advice or as proof that a prescription is clinically appropriate.

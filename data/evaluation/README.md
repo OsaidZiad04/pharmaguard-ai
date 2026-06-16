@@ -33,6 +33,14 @@ Metrics:
 
 All evaluation content is synthetic and non-clinical.
 
+Phase 3B adds retrieval strategy comparison around the same RAG evaluation baseline. Run from `backend/`:
+
+```bash
+python scripts/evaluate_retrieval_strategies.py
+```
+
+The report compares the existing default retriever with local lexical, metadata-boosted, and hybrid strategies. It is an engineering benchmark only; it does not validate clinical relevance.
+
 Phase 1.8 adds KB registry and validation checks around the same evaluation baseline. Run the KB coverage report from `backend/`:
 
 ```bash
@@ -84,3 +92,13 @@ python scripts/export_e2e_traces.py
 ```
 
 Trace records contain step summaries, source references, safety flags, and pharmacist review metadata. They do not contain raw image bytes, real prescription images, real patient data, or production audit logs.
+
+## Medication Safety Rules Report
+
+Phase 3C adds deterministic synthetic safety-rule scenarios. Run from `backend/`:
+
+```bash
+python scripts/safety_rules_report.py
+```
+
+The report checks missing prescription fields, unsupported/no medication text, possible identifiers, placeholder KB context, not-clinically-validated profiles, pharmacist review requirements, and patient-facing output blocks. These are workflow safety prompts, not clinical validation.

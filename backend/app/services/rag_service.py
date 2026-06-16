@@ -5,6 +5,7 @@ from app.rag.generator import (
     generate_counseling_draft,
     generate_grounded_answer,
 )
+from app.rag.retrieval_diagnostics import summarize_retrieval_quality
 from app.rag.retriever import RetrievedContext, retrieve_contexts
 from app.schemas.rag import RagDrugCard, RagQueryResponse, RetrievedChunk
 
@@ -21,6 +22,7 @@ def query_local_knowledge_base(query: str, top_k: int = 5) -> RagQueryResponse:
         grounded_answer=grounded_answer,
         review_required=True,
         insufficient_context=_is_insufficient(grounded_answer),
+        retrieval_diagnostics=summarize_retrieval_quality(query, retrieved_chunks),
     )
 
 
@@ -48,6 +50,7 @@ def build_rag_drug_card(drug_name: str, top_k: int = 8) -> RagDrugCard:
         retrieved_sources=retrieved_sources,
         grounded_answer=grounded_answer,
         insufficient_context=_is_insufficient(grounded_answer),
+        retrieval_diagnostics=summarize_retrieval_quality(query, retrieved_sources),
         pharmacist_review_required=True,
     )
 
@@ -95,6 +98,8 @@ def _to_retrieved_chunk(context: RetrievedContext) -> RetrievedChunk:
         requires_pharmacist_review=context.requires_pharmacist_review,
         patient_facing_allowed=context.patient_facing_allowed,
         counseling_draft_allowed=context.counseling_draft_allowed,
+        strategy_name=context.strategy_name,
+        score_explanation=context.score_explanation,
     )
 
 

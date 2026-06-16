@@ -14,6 +14,8 @@ class RetrievedChunk(BaseModel):
     requires_pharmacist_review: bool | None = None
     patient_facing_allowed: bool | None = None
     counseling_draft_allowed: bool | None = None
+    strategy_name: str | None = None
+    score_explanation: str | None = None
 
 
 class RagQueryRequest(BaseModel):
@@ -27,6 +29,7 @@ class RagQueryResponse(BaseModel):
     grounded_answer: str
     review_required: bool = True
     insufficient_context: bool = False
+    retrieval_diagnostics: dict | None = None
 
 
 class RagDrugCard(BaseModel):
@@ -38,5 +41,6 @@ class RagDrugCard(BaseModel):
     retrieved_sources: list[RetrievedChunk] = Field(default_factory=list)
     grounded_answer: str
     insufficient_context: bool = False
+    retrieval_diagnostics: dict | None = None
     source: str = "local_markdown_tfidf_rag"
     pharmacist_review_required: bool = True

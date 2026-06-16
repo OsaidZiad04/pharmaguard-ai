@@ -90,6 +90,12 @@ Retrieved chunks now include governance metadata where available:
 
 The metadata helps the dashboard and API consumers show that current RAG context is draft, placeholder, and not patient-facing.
 
+## Retrieval Diagnostics And Safety Rules
+
+Phase 3B-C uses governance metadata in retrieval diagnostics and safety-rule findings. Placeholder-only or not-clinically-validated retrieved context produces pharmacist-review warnings and patient-facing output remains blocked.
+
+These checks do not promote a profile and do not validate clinical content. They only make the current governance limits explicit in workflow outputs and reports.
+
 ## Requirements Before Clinical Use
 
 Before any profile could be treated as clinically reliable, the project would need:

@@ -170,6 +170,18 @@ For the living project status, see [PROJECT_STATE.md](PROJECT_STATE.md). Future 
 - Add governance metadata to retrieved RAG source chunks without changing retrieval ranking. Complete.
 - Keep RAG outputs pharmacist-support only and avoid clinical validation claims. Complete.
 
+## Phase 3B-C: Retrieval Intelligence & Medication Safety Rules - Complete
+
+- Add retrieval strategy abstraction for existing default, lexical overlap, metadata-boosted, and hybrid-local comparison. Complete.
+- Keep the existing default TF-IDF retriever as the production path. Complete.
+- Add retrieval diagnostics for insufficient, weak, single-source, placeholder-only, draft/unvalidated, and pharmacist-review-required context. Complete.
+- Add deterministic query classification for lookup, counseling, safety, dose/frequency, multiple medication, unknown, and ambiguous queries. Complete.
+- Add retrieval strategy evaluation report. Complete.
+- Add deterministic medication safety rules for missing prescription fields, unsupported/no medication, possible identifiers, KB governance risk, and patient-facing blocks. Complete.
+- Mark interaction and contraindication checks unavailable instead of inventing clinical validation. Complete.
+- Add trusted-source ingestion and pharmacist review workflow design docs. Complete.
+- Keep patient-facing output disabled and pharmacist review mandatory. Complete.
+
 ## Phase 2N: Production-Ready OCR Integration Planning
 
 - Add production-ready OCR workflow only after provider validation.
