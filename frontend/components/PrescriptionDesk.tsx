@@ -13,6 +13,7 @@ import type {
 } from "@/lib/types";
 import { AppHeader } from "@/components/AppHeader";
 import { DrugInfoCard } from "@/components/DrugInfoCard";
+import { HeroStatusSection } from "@/components/HeroStatusSection";
 import { KnowledgeBaseContextPanel } from "@/components/KnowledgeBaseContextPanel";
 import { PatientCounselingSheet } from "@/components/PatientCounselingSheet";
 import { PharmacistReviewPanel } from "@/components/PharmacistReviewPanel";
@@ -141,10 +142,12 @@ export function PrescriptionDesk() {
   }
 
   return (
-    <main className="min-h-screen bg-pharma-wash">
+    <main className="pg-app-bg min-h-screen">
       <AppHeader />
-      <div className="mx-auto flex max-w-7xl flex-col gap-5 px-5 py-6 sm:px-6 lg:px-8">
-        <section className="flex gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 text-amber-900">
+      <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-5 sm:px-6 lg:px-8">
+        <HeroStatusSection />
+
+        <section className="flex gap-3 rounded-2xl border border-amber-200 bg-amber-50/90 p-4 text-amber-950 shadow-sm">
           <ShieldAlert aria-hidden="true" className="mt-0.5 shrink-0" size={20} />
           <p className="text-sm leading-6">
             Safety-first: PharmaGuard AI provides draft support for pharmacists only. It does not make final
@@ -214,7 +217,7 @@ export function PrescriptionDesk() {
 function SectionLabel({ title, detail }: { title: string; detail: string }) {
   return (
     <div className="mb-3 flex flex-col gap-1">
-      <p className="text-xs font-semibold uppercase tracking-wide text-pharma-teal">{title}</p>
+      <p className="text-xs font-semibold uppercase text-pharma-teal">{title}</p>
       <p className="text-sm text-pharma-muted">{detail}</p>
     </div>
   );

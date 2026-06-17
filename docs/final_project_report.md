@@ -29,6 +29,8 @@ The backend uses FastAPI. The frontend is a Next.js pharmacist dashboard. Data i
 
 The knowledge base is governed through `drug_registry.json` and `source_catalog.json`. All current profiles remain draft placeholder educational content and not clinically validated.
 
+The frontend uses the PharmaGuard AI brand assets from `frontend/public/brand/` to present a premium pharmacist command-center interface. The visual polish improves screenshot readiness, responsive hierarchy, and future bilingual layout readiness without changing backend behavior.
+
 ## Safety Controls
 
 - Pharmacist review is always required.
@@ -68,6 +70,7 @@ These are engineering checks using synthetic data. They are not clinical validat
 ## Future Work
 
 - Capture final screenshots and demo recording using synthetic cases only.
+- Add final screenshot set for the branded dashboard and `/evaluation` page.
 - Trusted-source ingestion prototype after governance approval.
 - Pharmacist review workflow persistence.
 - Drug knowledge graph experiments.

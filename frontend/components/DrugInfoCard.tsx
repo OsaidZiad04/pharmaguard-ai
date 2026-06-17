@@ -11,12 +11,13 @@ export function DrugInfoCard({ lookup }: DrugInfoCardProps) {
   const ragCard = lookup?.rag_drug_card;
 
   return (
-    <section className="rounded-lg border border-pharma-line bg-white p-5 shadow-panel">
+    <section className="pg-card rounded-2xl p-5">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-md bg-pharma-mint text-pharma-teal">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pharma-mint text-pharma-teal">
           <BookOpenCheck aria-hidden="true" size={18} />
         </div>
         <div>
+          <p className="text-xs font-semibold uppercase text-pharma-teal">RAG card</p>
           <h2 className="text-lg font-semibold text-pharma-ink">Drug Information</h2>
           <p className="text-sm text-pharma-muted">Local Markdown RAG</p>
         </div>
@@ -47,7 +48,7 @@ export function DrugInfoCard({ lookup }: DrugInfoCardProps) {
           <InfoList title="Safety considerations" items={drug.safety_considerations} />
         </div>
       ) : (
-        <div className="rounded-md border border-dashed border-pharma-line p-4 text-sm text-pharma-muted">
+        <div className="rounded-xl border border-dashed border-pharma-line bg-white/70 p-4 text-sm text-pharma-muted">
           {lookup?.found === false ? "No local profile matched." : "Drug card appears after analysis."}
         </div>
       )}
@@ -61,7 +62,7 @@ function InfoList({ title, items }: { title: string; items: string[] }) {
       <h3 className="mb-2 text-sm font-semibold text-pharma-ink">{title}</h3>
       <ul className="space-y-2 text-sm text-pharma-muted">
         {(items.length > 0 ? items : ["Not available in current knowledge base."]).map((item) => (
-          <li key={item} className="rounded-md bg-pharma-wash px-3 py-2">
+          <li key={item} className="rounded-xl border border-pharma-line bg-white px-3 py-2 shadow-sm">
             {item}
           </li>
         ))}
@@ -78,7 +79,7 @@ function SourceList({ sources }: { sources: RetrievedChunk[] }) {
         {sources.map((source) => (
           <span
             key={source.chunk_id}
-            className="rounded-md border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-pharma-teal"
+            className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-1 text-xs font-medium text-pharma-teal"
           >
             {source.source_file} / {source.section_title}
           </span>

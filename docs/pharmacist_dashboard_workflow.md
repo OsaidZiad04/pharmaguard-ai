@@ -65,3 +65,13 @@ Phase 3B-C adds backend retrieval diagnostics and medication safety-rule finding
 ## Phase 4-Final Evaluation Page
 
 Phase 4-Final adds a static `/evaluation` page for portfolio review. It summarizes engineering evidence such as RAG, OCR, E2E, KB governance, safety rules, and Tesseract policy status. The page is intentionally static and does not claim clinical validation, production readiness, or patient-facing approval.
+
+## Brand And Bilingual-Ready Polish
+
+The dashboard now uses PharmaGuard AI brand assets from `frontend/public/brand/`:
+
+- `/brand/pharmaguard-logo-main.png`
+- `/brand/pharmaguard-logo-icon.png`
+- `/brand/pharmaguard-hero-visual.png`
+
+The visual system uses flexible cards, wrapping badges, and an EN/AR placeholder so future Arabic/RTL support can be added without redesigning the workflow. No translation system is active yet.

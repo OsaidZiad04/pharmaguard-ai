@@ -299,6 +299,7 @@ The KB report summarizes profile counts, aliases, review/source status, missing 
 Final demo assets are included for a portfolio-ready walkthrough:
 
 - Static evaluation summary page: `frontend/app/evaluation/page.tsx` at `/evaluation`.
+- Branded frontend assets: `frontend/public/brand/`, referenced through `/brand/...` public paths.
 - Synthetic final demo cases: `data/evaluation/final_demo_cases.json`.
 - Project evidence report: `backend/scripts/project_evidence_report.py`.
 - Final demo report: `backend/scripts/final_demo_report.py`.
@@ -306,6 +307,8 @@ Final demo assets are included for a portfolio-ready walkthrough:
 - Final docs: `docs/final_project_report.md`, `docs/demo_script.md`, `docs/case_studies.md`, `docs/evaluation_summary.md`, `docs/portfolio_story.md`, `docs/final_qa_checklist.md`, `docs/github_showcase_guide.md`, `docs/presentation_outline.md`, `docs/launch_materials.md`, and `docs/diagram_prompts.md`.
 
 All demo material is synthetic and must preserve the same boundaries: prototype only, not clinical validation, pharmacist review mandatory, patient-facing output disabled, and current KB content draft placeholder educational only.
+
+The frontend now uses the PharmaGuard AI logo/icon and command-center hero visual to present a premium pharmacist dashboard. The UI includes a visual EN/AR placeholder and flexible card layouts for future Arabic/RTL support, but no translation system is enabled yet.
 
 ## Future Roadmap
 

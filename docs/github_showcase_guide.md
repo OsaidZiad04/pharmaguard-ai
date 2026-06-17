@@ -11,6 +11,7 @@ PharmaGuard AI demonstrates a safety-first healthcare AI workflow: OCR output st
 ## Suggested Screenshots
 
 - Pharmacist dashboard main workflow.
+- Branded command-center hero and header.
 - OCR upload and correction card.
 - Source grounding and KB context panels.
 - Safety review panel.
@@ -28,6 +29,10 @@ Use static badges only if desired:
 - No clinical validation
 
 Avoid badges that imply production deployment, regulatory approval, or clinical validation.
+
+## Brand Assets
+
+Use assets from `frontend/public/brand/` in screenshots and demo material. In Next.js, reference them from public paths such as `/brand/pharmaguard-logo-main.png` and `/brand/pharmaguard-hero-visual.png`.
 
 ## Suggested GitHub Topics
 

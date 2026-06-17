@@ -18,6 +18,7 @@ All evaluations use synthetic data and engineering checks. They do not establish
 - Trace export/report: PASS, 10 synthetic traces.
 - Tesseract benchmark: optional; completes or safely skips when dependency is unavailable.
 - Frontend typecheck/build: PASS.
+- Static `/evaluation` page: PASS; portfolio evidence dashboard with safety disclaimers.
 
 ## Evaluation Commands
 
@@ -52,3 +53,5 @@ npm.cmd run build
 ## Interpretation
 
 Passing reports mean the prototype follows its synthetic safety and engineering requirements. They do not mean the knowledge base is clinically valid, complete, or approved for patient-facing use.
+
+The evaluation page is a static visual summary. It does not call backend APIs and does not replace the CLI reports as the source of current verification truth.

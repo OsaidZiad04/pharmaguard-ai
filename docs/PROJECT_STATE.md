@@ -36,6 +36,8 @@ The current system includes:
 - Deterministic medication safety-rule findings for pharmacist workflow support.
 - Final project evidence report, final demo report, final QA command list, and static evaluation summary page.
 - Portfolio-ready final documentation package with demo script, case studies, evaluation summary, project story, presentation outline, launch materials, and diagram prompts.
+- Branded pharmacist command-center frontend using assets from `frontend/public/brand/`.
+- Bilingual-ready visual placeholder for future EN/AR support without a live translation system.
 - End-to-end OCR-to-RAG workflow evaluation.
 - Workflow traceability and pharmacist review audit records for synthetic E2E cases.
 - Pharmacist dashboard workflow polish with visible status and safety panels.
@@ -409,6 +411,7 @@ Current non-negotiable boundaries:
 - `backend/tests/`: Backend pytest regression tests.
 - `frontend/components/`: Pharmacist dashboard UI components, including workflow status, safety review, and source-grounding panels.
 - `frontend/app/evaluation/`: Static evaluation summary page for portfolio/demo review.
+- `frontend/public/brand/`: PharmaGuard AI logo, icon, light/dark variants, and hero visual used by the dashboard and evaluation page.
 - `frontend/lib/`: Frontend API client and shared TypeScript types.
 - `data/drug_profiles/`: Draft educational Markdown profiles, drug registry, and source catalog.
 - `data/evaluation/`: Synthetic RAG, OCR, E2E workflow datasets, generated synthetic trace records, and synthetic OCR fixtures.

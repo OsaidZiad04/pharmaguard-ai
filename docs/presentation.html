@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PharmaGuard AI Presentation</title>
+    <style>
+      :root {
+        --teal: #0f766e;
+        --green: #10b981;
+        --mint: #d1fae5;
+        --bg: #f6fbfa;
+        --slate: #0f172a;
+        --muted: #475569;
+        --amber: #f59e0b;
+        --red: #ef4444;
+        --line: #d9e4df;
+        --white: #ffffff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background:
+          radial-gradient(circle at 12% 0%, rgba(16, 185, 129, 0.2), transparent 30%),
+          radial-gradient(circle at 88% 8%, rgba(15, 118, 110, 0.14), transparent 28%),
+          linear-gradient(135deg, var(--bg), #eefaf6 48%, #f8fafc);
+        color: var(--slate);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+        line-height: 1.6;
+      }
+
+      main {
+        width: min(1180px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 32px 0 56px;
+      }
+
+      .deck {
+        display: grid;
+        gap: 22px;
+      }
+
+      .slide {
+        min-height: 520px;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        border-radius: 26px;
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 24px 80px rgba(15, 23, 42, 0.1);
+        overflow: hidden;
+        page-break-after: always;
+      }
+
+      .slide-inner {
+        min-height: inherit;
+        padding: clamp(28px, 5vw, 56px);
+        display: grid;
+        align-content: center;
+        gap: 24px;
+      }
+
+      .cover {
+        background:
+          linear-gradient(135deg, rgba(15, 23, 42, 0.94), rgba(15, 118, 110, 0.9)),
+          radial-gradient(circle at 25% 20%, rgba(16, 185, 129, 0.38), transparent 35%);
+        color: white;
+      }
+
+      .eyebrow {
+        color: var(--teal);
+        font-size: 0.78rem;
+        font-weight: 800;
+        text-transform: uppercase;
+      }
+
+      .cover .eyebrow {
+        color: #a7f3d0;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        margin: 0;
+      }
+
+      h1 {
+        max-width: 860px;
+        font-size: clamp(2.7rem, 7vw, 5.8rem);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      h2 {
+        max-width: 860px;
+        font-size: clamp(2rem, 4vw, 3.5rem);
+        line-height: 1.04;
+        letter-spacing: 0;
+      }
+
+      h3 {
+        font-size: 1.05rem;
+      }
+
+      .lead {
+        max-width: 780px;
+        color: var(--muted);
+        font-size: 1.12rem;
+      }
+
+      .cover .lead {
+        color: rgba(255, 255, 255, 0.82);
+      }
+
+      .badges,
+      .grid,
+      .metrics {
+        display: grid;
+        gap: 14px;
+      }
+
+      .badges {
+        grid-template-columns: repeat(auto-fit, minmax(190px, max-content));
+      }
+
+      .badge {
+        width: fit-content;
+        border: 1px solid rgba(16, 185, 129, 0.35);
+        border-radius: 999px;
+        background: rgba(209, 250, 229, 0.7);
+        color: var(--teal);
+        padding: 8px 13px;
+        font-size: 0.86rem;
+        font-weight: 800;
+      }
+
+      .cover .badge {
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+      }
+
+      .grid {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        background: white;
+        padding: 18px;
+      }
+
+      .card strong {
+        color: var(--slate);
+      }
+
+      .card p,
+      li {
+        color: var(--muted);
+      }
+
+      .metrics {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      }
+
+      .metric {
+        border-radius: 18px;
+        background: linear-gradient(180deg, white, #f0fdfa);
+        border: 1px solid var(--line);
+        padding: 18px;
+      }
+
+      .metric .value {
+        color: var(--teal);
+        font-size: 2.2rem;
+        font-weight: 900;
+        line-height: 1;
+      }
+
+      ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .warning {
+        border-left: 5px solid var(--amber);
+        border-radius: 14px;
+        background: #fffbeb;
+        color: #78350f;
+        padding: 16px 18px;
+      }
+
+      .footer-note {
+        color: var(--muted);
+        font-size: 0.92rem;
+      }
+
+      @media print {
+        body {
+          background: white;
+        }
+
+        main {
+          width: 100%;
+          padding: 0;
+        }
+
+        .slide {
+          min-height: 100vh;
+          border-radius: 0;
+          box-shadow: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="deck">
+        <section class="slide cover">
+          <div class="slide-inner">
+            <p class="eyebrow">PharmaGuard AI</p>
+            <h1>Pharmacist-centered AI prescription support.</h1>
+            <p class="lead">
+              A safety-first prototype demonstrating OCR intake, pharmacist correction,
+              local RAG, KB governance, safety rules, traceability, and synthetic evaluation.
+            </p>
+            <div class="badges">
+              <span class="badge">Prototype only</span>
+              <span class="badge">Not clinical validation</span>
+              <span class="badge">Pharmacist review required</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="slide-inner">
+            <p class="eyebrow">Problem</p>
+            <h2>Prescription support needs structure, not autonomous advice.</h2>
+            <div class="grid">
+              <div class="card"><strong>Pressure</strong><p>Pharmacists review incomplete prescription text and missing context under time constraints.</p></div>
+              <div class="card"><strong>Risk</strong><p>Generic AI can appear authoritative even when context is weak or unsupported.</p></div>
+              <div class="card"><strong>Need</strong><p>The workflow must preserve pharmacist control, privacy boundaries, and source grounding.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="slide-inner">
+            <p class="eyebrow">Solution</p>
+            <h2>A command center for draft support and review.</h2>
+            <p class="lead">
+              PharmaGuard AI separates OCR intake, correction, extraction, retrieval, safety
+              review, and counseling draft generation so unverified inputs cannot become final
+              medical output.
+            </p>
+            <div class="badges">
+              <span class="badge">Draft support only</span>
+              <span class="badge">Synthetic data only</span>
+              <span class="badge">Patient-facing output disabled</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="slide-inner">
+            <p class="eyebrow">Architecture</p>
+            <h2>Local, modular, evaluation-driven.</h2>
+            <div class="grid">
+              <div class="card"><strong>Frontend</strong><p>Next.js pharmacist dashboard with workflow status, correction boundary, source grounding, and evidence page.</p></div>
+              <div class="card"><strong>Backend</strong><p>FastAPI services for prescription analysis, OCR intake, local RAG, counseling drafts, and safety findings.</p></div>
+              <div class="card"><strong>Data</strong><p>Local Markdown drug profiles, governed registry metadata, synthetic fixtures, and evaluation cases.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="slide-inner">
+            <p class="eyebrow">OCR Workflow</p>
+            <h2>OCR is assistive and unverified.</h2>
+            <ul>
+              <li>Images are not stored by default.</li>
+              <li>Mock/synthetic providers remain the safe default.</li>
+              <li>Tesseract is optional, disabled by default, and policy-gated.</li>
+              <li>Only pharmacist-corrected text can move to prescription analysis.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="slide-inner">
+            <p class="eyebrow">RAG Grounding</p>
+            <h2>Retrieved context stays local and source-visible.</h2>
+            <div class="grid">
+              <div class="card"><strong>TF-IDF baseline</strong><p>Local retrieval over Markdown profiles with chunk metadata.</p></div>
+              <div class="card"><strong>Citations</strong><p>Retrieved source files, sections, scores, and governance status are displayed.</p></div>
+              <div class="card"><strong>Insufficient context</strong><p>Unknown or weak-context cases return insufficient knowledge-base context instead of guessing.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="slide-inner">
+            <p class="eyebrow">KB Governance</p>
+            <h2>Current knowledge is draft and unvalidated.</h2>
+            <ul>
+              <li>15 local draft drug profiles.</li>
+              <li>Registry tracks source status, review status, and clinical-validation status.</li>
+              <li>All current profiles are placeholder educational content.</li>
+              <li>Patient-facing output remains disabled.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="slide-inner">
+            <p class="eyebrow">Safety Rules</p>
+            <h2>Deterministic prompts, not clinical decisions.</h2>
+            <div class="grid">
+              <div class="card"><strong>Flags</strong><p>Missing dose, frequency, duration, route, no medication, unsupported medication, possible identifiers, and governance risk.</p></div>
+              <div class="card"><strong>Unavailable checks</strong><p>No real interaction, contraindication, diagnosis, treatment, or patient-specific appropriateness engine.</p></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="slide-inner">
+            <p class="eyebrow">Evaluation Evidence</p>
+            <h2>Synthetic engineering checks are passing.</h2>
+            <div class="metrics">
+              <div class="metric"><div class="value">46/46</div><p>RAG evaluation</p></div>
+              <div class="metric"><div class="value">18/18</div><p>OCR evaluation</p></div>
+              <div class="metric"><div class="value">10/10</div><p>E2E workflow</p></div>
+              <div class="metric"><div class="value">177</div><p>Backend tests passed</p></div>
+            </div>
+            <p class="footer-note">These are engineering checks with synthetic data, not clinical validation.</p>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="slide-inner">
+            <p class="eyebrow">Demo Flow</p>
+            <h2>Show the workflow boundaries.</h2>
+            <ul>
+              <li>Open the pharmacist dashboard.</li>
+              <li>Show OCR output as unverified and correction-gated.</li>
+              <li>Analyze corrected text or synthetic prescription text.</li>
+              <li>Review RAG sources, KB governance badges, and safety prompts.</li>
+              <li>Generate draft-only counseling after pharmacist confirmation.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="slide-inner">
+            <p class="eyebrow">Limitations</p>
+            <h2>Clear boundaries make the prototype credible.</h2>
+            <div class="warning">
+              This project is not a medical device, not clinically validated, not a patient-facing advisor,
+              and not a replacement for pharmacists.
+            </div>
+            <ul>
+              <li>No real patient data.</li>
+              <li>No trusted clinical source ingestion yet.</li>
+              <li>No production OCR default.</li>
+              <li>No production auth, database, or audit retention system.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="slide">
+          <div class="slide-inner">
+            <p class="eyebrow">Future Work</p>
+            <h2>Path toward a governed pharmacy workflow.</h2>
+            <div class="grid">
+              <div class="card"><strong>Trusted sources</strong><p>Ingest reviewed references with provenance and review metadata.</p></div>
+              <div class="card"><strong>Review workflow</strong><p>Add pharmacist sign-off, audit persistence, and access controls.</p></div>
+              <div class="card"><strong>Scaling</strong><p>Explore knowledge graph and deployment hardening after privacy and validation planning.</p></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>

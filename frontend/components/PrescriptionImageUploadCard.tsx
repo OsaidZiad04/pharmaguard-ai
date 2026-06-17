@@ -104,21 +104,22 @@ export function PrescriptionImageUploadCard({
   }
 
   return (
-    <section className="rounded-lg border border-pharma-line bg-white p-5 shadow-panel">
+    <section className="pg-card rounded-2xl p-5">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div>
+          <p className="text-xs font-semibold uppercase text-pharma-teal">OCR intake</p>
           <h2 className="text-lg font-semibold text-pharma-ink">Prescription Image Intake</h2>
           <p className="text-sm text-pharma-muted">Synthetic image upload only</p>
         </div>
-        <div className="inline-flex items-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900">
+        <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-2 text-xs font-semibold text-amber-900">
           <ShieldAlert aria-hidden="true" size={15} />
           Pharmacist correction required
         </div>
       </div>
 
-      <div className="flex flex-col gap-3 rounded-md border border-dashed border-pharma-line bg-emerald-50/40 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex flex-col gap-3 rounded-2xl border border-dashed border-emerald-200 bg-gradient-to-br from-emerald-50 to-white p-4 sm:flex-row sm:items-center sm:justify-between">
         <label className="flex min-w-0 flex-1 items-center gap-3 text-sm text-pharma-ink">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-white text-pharma-teal shadow-sm">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-white text-pharma-teal shadow-sm">
             <ImageUp aria-hidden="true" size={19} />
           </span>
           <span className="min-w-0">
@@ -139,7 +140,7 @@ export function PrescriptionImageUploadCard({
           type="button"
           onClick={handleUpload}
           disabled={!selectedFile || isUploading}
-          className="inline-flex min-w-32 items-center justify-center gap-2 rounded-md bg-pharma-teal px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-gray-300"
+          className="inline-flex min-w-32 items-center justify-center gap-2 rounded-xl bg-pharma-teal px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-300"
         >
           <Upload aria-hidden="true" size={16} />
           {isUploading ? "Extracting" : "Extract OCR"}
@@ -170,7 +171,7 @@ export function PrescriptionImageUploadCard({
             <StatusItem label="Network" value={ocrResult.requires_network ? "Networked" : "Local only"} />
           </div>
 
-          <div className="rounded-md border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-900">
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm leading-6 text-amber-900">
             Unverified OCR cannot move to analysis automatically. Confirmed pharmacist-corrected text is the
             only path into the prescription text panel.
           </div>
@@ -195,7 +196,7 @@ export function PrescriptionImageUploadCard({
               value={correctedText}
               onChange={(event) => setCorrectedText(event.target.value)}
               rows={7}
-              className="min-h-44 w-full rounded-md border border-pharma-line bg-white p-4 text-sm leading-6 text-pharma-ink outline-none transition placeholder:text-gray-400 focus:border-pharma-teal focus:ring-2 focus:ring-emerald-100"
+              className="min-h-44 w-full rounded-xl border border-pharma-line bg-white p-4 text-sm leading-6 text-pharma-ink shadow-inner outline-none transition placeholder:text-slate-400 focus:border-pharma-teal focus:ring-2 focus:ring-emerald-100"
             />
           </div>
 
@@ -215,7 +216,7 @@ export function PrescriptionImageUploadCard({
               type="button"
               onClick={handleUseCorrectedText}
               disabled={isConfirming || correctedText.trim().length === 0}
-              className="inline-flex items-center justify-center gap-2 rounded-md border border-pharma-teal px-4 py-2.5 text-sm font-semibold text-pharma-teal transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:border-gray-300 disabled:text-gray-400"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-pharma-teal bg-white px-4 py-2.5 text-sm font-semibold text-pharma-teal shadow-sm transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:border-slate-300 disabled:text-slate-400"
             >
               <CheckCircle2 aria-hidden="true" size={16} />
               {isConfirming ? "Confirming" : "Use corrected text for prescription analysis"}
@@ -233,7 +234,7 @@ export function PrescriptionImageUploadCard({
 
 function StatusItem({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border border-pharma-line bg-white px-3 py-2">
+    <div className="rounded-xl border border-pharma-line bg-white px-3 py-2 shadow-sm">
       <div className="text-xs font-medium uppercase text-pharma-muted">{label}</div>
       <div className="mt-1 break-words font-semibold text-pharma-ink">{value}</div>
     </div>
@@ -252,7 +253,7 @@ function PrivacyWarnings({
   }
 
   return (
-    <div className="rounded-md border border-amber-200 bg-amber-50 p-3">
+    <div className="rounded-xl border border-amber-200 bg-amber-50 p-3">
       <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-amber-900">
         <ShieldAlert aria-hidden="true" size={16} />
         {title}
@@ -277,7 +278,7 @@ function CorrectionAuditSummary({
   }
 
   return (
-    <div className="rounded-md border border-pharma-line bg-slate-50 p-4">
+    <div className="rounded-xl border border-pharma-line bg-slate-50 p-4">
       <div className="mb-3 flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-sm font-semibold text-pharma-ink">Correction audit</h3>
         <span className="text-xs font-medium text-pharma-muted">

@@ -78,12 +78,13 @@ export function SafetyReviewPanel({
   ] as const;
 
   return (
-    <section className="rounded-lg border border-pharma-line bg-white p-5 shadow-panel">
+    <section className="pg-card rounded-2xl p-5">
       <div className="mb-4 flex items-center gap-3">
-        <div className="flex h-9 w-9 items-center justify-center rounded-md bg-amber-50 text-pharma-amber">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-700">
           <ShieldCheck aria-hidden="true" size={18} />
         </div>
         <div>
+          <p className="text-xs font-semibold uppercase text-pharma-teal">Guardrail map</p>
           <h2 className="text-lg font-semibold text-pharma-ink">Safety Review</h2>
           <p className="text-sm text-pharma-muted">Workflow guardrails</p>
         </div>
@@ -93,7 +94,7 @@ export function SafetyReviewPanel({
         {indicators.map((indicator) => (
           <div
             key={indicator.label}
-            className="flex gap-3 rounded-md border border-pharma-line bg-pharma-wash p-3"
+            className="flex gap-3 rounded-xl border border-pharma-line bg-white p-3 shadow-sm"
           >
             <span className={indicatorIconClassName(indicator.tone)}>
               {indicator.tone === "blocked" ? (
@@ -118,7 +119,7 @@ export function SafetyReviewPanel({
 }
 
 function indicatorIconClassName(tone: "warning" | "ready" | "blocked" | "waiting") {
-  const base = "mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-md";
+  const base = "mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-xl";
   if (tone === "ready") {
     return `${base} bg-emerald-100 text-pharma-teal`;
   }
@@ -126,7 +127,7 @@ function indicatorIconClassName(tone: "warning" | "ready" | "blocked" | "waiting
     return `${base} bg-red-50 text-red-700`;
   }
   if (tone === "warning") {
-    return `${base} bg-amber-50 text-pharma-amber`;
+    return `${base} bg-amber-50 text-amber-700`;
   }
   return `${base} bg-white text-pharma-muted`;
 }

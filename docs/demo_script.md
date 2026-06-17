@@ -4,6 +4,7 @@
 
 1. Open the pharmacist dashboard.
    - Say: "This is a pharmacist-centered prototype, not a clinical decision engine."
+   - Point out the PharmaGuard AI command-center identity, safety badges, and EN/AR placeholder for future bilingual support.
 
 2. Show OCR intake.
    - Upload or reference a synthetic fixture.
@@ -41,7 +42,7 @@ Use the five-minute flow, then add:
    - Show warning language: possible identifiers, not confirmed PII.
 
 4. Evaluation page or project evidence report.
-   - Show how the project is evaluation-driven and governance-aware.
+   - Show how the project is evaluation-driven, governance-aware, and portfolio-ready without claiming clinical validation.
 
 ## Fallback If Tesseract Is Unavailable
 
