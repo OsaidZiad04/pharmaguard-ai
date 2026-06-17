@@ -35,7 +35,8 @@ The current system includes:
 - Retrieval strategy comparison, retrieval diagnostics, and query classification.
 - Deterministic medication safety-rule findings for pharmacist workflow support.
 - Final project evidence report, final demo report, final QA command list, and static evaluation summary page.
-- Portfolio-ready final documentation package with demo script, case studies, evaluation summary, project story, presentation outline, launch materials, and diagram prompts.
+- Portfolio-ready final documentation package with full academic-style project documentation, demo script, case studies, evaluation summary, project story, presentation outline, launch materials, and diagram prompts.
+- One-click Windows demo launch and stop scripts, a cross-platform demo checker, demo health check, and local demo guide.
 - Branded pharmacist command-center frontend using assets from `frontend/public/brand/`.
 - Bilingual-ready visual placeholder for future EN/AR support without a live translation system.
 - End-to-end OCR-to-RAG workflow evaluation.
@@ -254,8 +255,15 @@ The frontend is a pharmacist dashboard, not a chatbot. It includes prescription 
 
 - Objective: Package the existing safe prototype as a credible final portfolio project without adding clinical functionality or weakening safety boundaries.
 - Main files/modules added: `data/evaluation/final_demo_cases.json`, `backend/scripts/project_evidence_report.py`, `backend/scripts/final_demo_report.py`, `backend/scripts/final_project_qa.py`, `frontend/app/evaluation/page.tsx`, `docs/final_project_report.md`, `docs/demo_script.md`, `docs/case_studies.md`, `docs/evaluation_summary.md`, `docs/portfolio_story.md`, `docs/final_qa_checklist.md`, `docs/github_showcase_guide.md`, `docs/presentation_outline.md`, `docs/launch_materials.md`, and `docs/diagram_prompts.md`.
-- Key behavior added: Final evidence aggregation, synthetic demo case reporting, QA command listing, static project evidence dashboard, final documentation package, presentation outline, launch text drafts, and diagram prompt descriptions.
+- Key behavior added: Final evidence aggregation, synthetic demo case reporting, QA command listing, static project evidence dashboard, full academic-style project documentation, presentation outline, launch text drafts, and diagram prompt descriptions.
 - Verification summary: Final scripts are lightweight reporting/planning tools. They do not add medical functionality, do not ingest real data, do not call external APIs, and preserve the prototype-only, pharmacist-review-required framing.
+
+### Phase 5: One-Click Demo & Local Launch Experience
+
+- Objective: Make the local prototype easier for non-developer reviewers to launch and stop without changing backend, frontend, RAG, OCR, KB governance, or safety behavior.
+- Main files/modules added: `start-pharmaguard-demo.bat`, `start-pharmaguard-demo.ps1`, `stop-pharmaguard-demo.bat`, `stop-pharmaguard-demo.ps1`, `scripts/start_demo.py`, `backend/scripts/demo_health_check.py`, `docs/local_demo_guide.md`, and `docs/troubleshooting.md`.
+- Key behavior added: Windows one-click launch for backend and frontend, browser opening to `http://localhost:3000`, Windows stop helper for demo ports, cross-platform guided launch checks, demo health check, quick-start README guidance, and troubleshooting documentation.
+- Verification summary: Launch tooling is packaging-only. Tesseract remains optional and disabled by default; safety disclaimers, pharmacist review requirements, and synthetic-data-only boundaries remain intact.
 
 ## 5. Supported Knowledge Base
 
@@ -357,6 +365,7 @@ cd backend && python scripts/benchmark_tesseract_ocr.py
 cd backend && python scripts/project_evidence_report.py
 cd backend && python scripts/final_demo_report.py
 cd backend && python scripts/final_project_qa.py --list
+cd backend && python scripts/demo_health_check.py
 cd frontend && npm.cmd run typecheck
 cd frontend && npm.cmd run build
 ```
@@ -409,13 +418,16 @@ Current non-negotiable boundaries:
 - `backend/app/workflows/`: Synthetic end-to-end workflow evaluation and trace models from OCR-like input through corrected text, prescription analysis, RAG, counseling, and pharmacist review.
 - `backend/scripts/`: CLI scripts for RAG evaluation, retrieval strategy evaluation, KB reporting, KB governance reporting, safety-rule reporting, OCR evaluation, OCR provider reporting, OCR candidate reporting, E2E workflow evaluation, trace export/reporting, final evidence reporting, final demo reporting, and final QA command listing.
 - `backend/tests/`: Backend pytest regression tests.
+- `start-pharmaguard-demo.bat` / `start-pharmaguard-demo.ps1`: Windows launch helpers for the local backend and frontend demo.
+- `stop-pharmaguard-demo.bat` / `stop-pharmaguard-demo.ps1`: Windows stop helpers for the default demo ports.
+- `scripts/start_demo.py`: Cross-platform guided demo checker and optional launcher.
 - `frontend/components/`: Pharmacist dashboard UI components, including workflow status, safety review, and source-grounding panels.
 - `frontend/app/evaluation/`: Static evaluation summary page for portfolio/demo review.
 - `frontend/public/brand/`: PharmaGuard AI logo, icon, light/dark variants, and hero visual used by the dashboard and evaluation page.
 - `frontend/lib/`: Frontend API client and shared TypeScript types.
 - `data/drug_profiles/`: Draft educational Markdown profiles, drug registry, and source catalog.
 - `data/evaluation/`: Synthetic RAG, OCR, E2E workflow datasets, generated synthetic trace records, and synthetic OCR fixtures.
-- `docs/`: Architecture, safety, privacy, roadmap, OCR evaluation, retrieval intelligence, medication safety rules, KB scaling/governance, final packaging docs, and living project documentation.
+- `docs/`: Architecture, safety, privacy, roadmap, OCR evaluation, retrieval intelligence, medication safety rules, KB scaling/governance, full project documentation, final packaging docs, and living project documentation.
 
 ## 9. Current Limitations
 
@@ -447,7 +459,7 @@ Proposed roadmap:
 - Immediate post-implementation step: capture screenshots, run final QA from a clean shell, and prepare a demo recording using synthetic cases only.
 - Phase 4A: Trusted Source Ingestion Prototype after source governance approval.
 - Phase 4B: Drug Knowledge Graph experiments after source provenance and review workflow are in place.
-- Phase 5: Deployment & Portfolio Polish with authentication, access control, and audit-retention planning.
+- Future deployment phase: Deployment hardening with authentication, access control, and audit-retention planning.
 - Future: pharmacist review workflow, authentication, real validated sources, production database, audit persistence, retention policy, access control, and pharmacy-system integration.
 
 ## 11. Living Documentation Rule

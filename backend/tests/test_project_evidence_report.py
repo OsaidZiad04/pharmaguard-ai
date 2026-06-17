@@ -14,7 +14,7 @@ def test_project_evidence_report_contains_core_sections() -> None:
     report = "\n".join(build_project_evidence_report_lines())
 
     assert "PharmaGuard AI Project Evidence Report" in report
-    assert "Phase 4-Final" in report
+    assert "Phase 5" in report
     assert "RAG evaluation" in report
     assert "Retrieval strategy evaluation" in report
     assert "KB governance" in report

@@ -35,7 +35,7 @@ def build_project_evidence_report_lines() -> list[str]:
 
     lines = [
         "PharmaGuard AI Project Evidence Report",
-        "current phase: Phase 4-Final - Demo Packaging, Evaluation Dashboard & Portfolio Story",
+        "current phase: Phase 5 - One-Click Demo & Local Launch Experience",
         "safety positioning: pharmacist-centered prototype; not clinical validation; not patient-facing final advice.",
         "backend test status: run `python -m pytest` from backend/ for the current authoritative count.",
         "frontend build status: run `npm.cmd run typecheck` and `npm.cmd run build` from frontend/.",
@@ -62,6 +62,8 @@ def build_project_evidence_report_lines() -> list[str]:
         "- No real patient data, external medical APIs, or trusted-source ingestion.",
         "",
         "Demo readiness checklist:",
+        "- Use the one-click Windows launch scripts or the manual launch fallback.",
+        "- Run the demo health check before reviewer sessions.",
         "- Run final QA commands before recording or presenting.",
         "- Use only synthetic demo cases and fixtures.",
         "- Show OCR correction boundary before analysis.",

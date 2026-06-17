@@ -6,6 +6,55 @@ PharmaGuard AI is a pharmacist-centered AI copilot prototype for prescription in
 
 This repository has been developed incrementally toward a pharmacy-ready architecture, but the current implementation uses synthetic data and local placeholder knowledge only. It is not a medical device, is not clinically validated, does not diagnose, and must never make final medical decisions.
 
+## Quick Demo Start
+
+For a reviewer-friendly local demo on Windows, double-click:
+
+```text
+start-pharmaguard-demo.bat
+```
+
+This starts:
+
+- Backend API: `http://localhost:8000`
+- Frontend dashboard: `http://localhost:3000`
+- Evidence page: `http://localhost:3000/evaluation`
+
+To stop the demo, double-click:
+
+```text
+stop-pharmaguard-demo.bat
+```
+
+Manual developer fallback:
+
+```powershell
+cd backend
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+```powershell
+cd frontend
+npm.cmd run dev -- --hostname 127.0.0.1 --port 3000
+```
+
+Run a local packaging check:
+
+```powershell
+cd backend
+python scripts/demo_health_check.py
+```
+
+Cross-platform guided checker from the repository root:
+
+```powershell
+python scripts/start_demo.py
+```
+
+Safety note: use synthetic data only. PharmaGuard AI is a prototype, not clinical validation, not a medical device, and pharmacist review is mandatory. Tesseract is optional and not required for demo startup.
+
+Troubleshooting: see [docs/troubleshooting.md](docs/troubleshooting.md). Full demo guide: see [docs/local_demo_guide.md](docs/local_demo_guide.md).
+
 ## Problem Statement
 
 Pharmacists often need to interpret incomplete prescription text, verify medication context, identify missing patient details, and prepare clear counseling notes under time pressure. AI can help organize information, but unsafe automation can introduce risk if it appears to replace professional judgment.
@@ -304,7 +353,7 @@ Final demo assets are included for a portfolio-ready walkthrough:
 - Project evidence report: `backend/scripts/project_evidence_report.py`.
 - Final demo report: `backend/scripts/final_demo_report.py`.
 - Final QA command list: `backend/scripts/final_project_qa.py --list`.
-- Final docs: `docs/final_project_report.md`, `docs/demo_script.md`, `docs/case_studies.md`, `docs/evaluation_summary.md`, `docs/portfolio_story.md`, `docs/final_qa_checklist.md`, `docs/github_showcase_guide.md`, `docs/presentation_outline.md`, `docs/launch_materials.md`, and `docs/diagram_prompts.md`.
+- Final docs: `docs/PharmaGuard_AI_Full_Project_Documentation.md`, `docs/final_project_report.md`, `docs/demo_script.md`, `docs/case_studies.md`, `docs/evaluation_summary.md`, `docs/portfolio_story.md`, `docs/final_qa_checklist.md`, `docs/github_showcase_guide.md`, `docs/presentation_outline.md`, `docs/launch_materials.md`, and `docs/diagram_prompts.md`.
 
 All demo material is synthetic and must preserve the same boundaries: prototype only, not clinical validation, pharmacist review mandatory, patient-facing output disabled, and current KB content draft placeholder educational only.
 
@@ -314,7 +363,7 @@ The frontend now uses the PharmaGuard AI logo/icon and command-center hero visua
 
 See [docs/roadmap.md](docs/roadmap.md).
 
-For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For the final project narrative, see [docs/final_project_report.md](docs/final_project_report.md), [docs/demo_script.md](docs/demo_script.md), [docs/evaluation_summary.md](docs/evaluation_summary.md), and [docs/portfolio_story.md](docs/portfolio_story.md). For KB governance, see [docs/kb_governance.md](docs/kb_governance.md). For retrieval intelligence, see [docs/retrieval_intelligence.md](docs/retrieval_intelligence.md). For medication safety rules, see [docs/medication_safety_rules.md](docs/medication_safety_rules.md). For trusted-source planning, see [docs/trusted_source_ingestion_plan.md](docs/trusted_source_ingestion_plan.md). For pharmacist review workflow planning, see [docs/pharmacist_review_workflow.md](docs/pharmacist_review_workflow.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR activation policy, see [docs/ocr_activation_policy.md](docs/ocr_activation_policy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For optional Tesseract benchmarking, see [docs/tesseract_benchmarking.md](docs/tesseract_benchmarking.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md). For dashboard workflow notes, see [docs/pharmacist_dashboard_workflow.md](docs/pharmacist_dashboard_workflow.md).
+For the living current-state summary, see [docs/PROJECT_STATE.md](docs/PROJECT_STATE.md). For the complete academic-style project documentation, see [docs/PharmaGuard_AI_Full_Project_Documentation.md](docs/PharmaGuard_AI_Full_Project_Documentation.md). For future Codex phase rules, see [docs/AI_DEVELOPMENT_PROTOCOL.md](docs/AI_DEVELOPMENT_PROTOCOL.md). For the final project narrative, see [docs/final_project_report.md](docs/final_project_report.md), [docs/demo_script.md](docs/demo_script.md), [docs/evaluation_summary.md](docs/evaluation_summary.md), and [docs/portfolio_story.md](docs/portfolio_story.md). For KB governance, see [docs/kb_governance.md](docs/kb_governance.md). For retrieval intelligence, see [docs/retrieval_intelligence.md](docs/retrieval_intelligence.md). For medication safety rules, see [docs/medication_safety_rules.md](docs/medication_safety_rules.md). For trusted-source planning, see [docs/trusted_source_ingestion_plan.md](docs/trusted_source_ingestion_plan.md). For pharmacist review workflow planning, see [docs/pharmacist_review_workflow.md](docs/pharmacist_review_workflow.md). For OCR provider boundaries, see [docs/ocr_provider_strategy.md](docs/ocr_provider_strategy.md). For OCR activation policy, see [docs/ocr_activation_policy.md](docs/ocr_activation_policy.md). For OCR candidate comparison, see [docs/ocr_candidate_comparison.md](docs/ocr_candidate_comparison.md). For the disabled local adapter plan, see [docs/local_ocr_adapter_plan.md](docs/local_ocr_adapter_plan.md). For optional Tesseract benchmarking, see [docs/tesseract_benchmarking.md](docs/tesseract_benchmarking.md). For E2E workflow evaluation, see [docs/e2e_workflow_evaluation.md](docs/e2e_workflow_evaluation.md). For workflow traceability, see [docs/workflow_traceability.md](docs/workflow_traceability.md). For dashboard workflow notes, see [docs/pharmacist_dashboard_workflow.md](docs/pharmacist_dashboard_workflow.md).
 
 ## Data Warning
 
